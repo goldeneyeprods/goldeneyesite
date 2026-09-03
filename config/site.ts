@@ -1,0 +1,505 @@
+// ============================================================================
+//  GOLDEN EYE PRODS. — CONFIGURAÇÃO CENTRAL
+//
+//  >>> ESTE É O ÚNICO ARQUIVO QUE VOCÊ PRECISA EDITAR. <<<
+//  Tudo marcado com  >>> SUBSTITUIR  são dados que ainda faltam.
+//
+//  ESTRUTURA DO SITE:
+//    /                      → a produtora (marca, manifesto, agenda, arquivo)
+//    /eventos               → todos os eventos
+//    /eventos/<slug>        → a página (LP) de cada evento
+//
+//  PARA CRIAR UM EVENTO NOVO: copie um bloco da lista `eventos` lá embaixo,
+//  troque o slug e os dados, e rode `npm run db:seed`. Pronto — ele ganha
+//  página própria, contador, venda de ingresso e entra na agenda da home.
+//
+//  ATENÇÃO: este arquivo é lido também pelo script de seed, que roda fora do
+//  Next.js. Por isso ele não pode ter `import` de nada.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+//  A PRODUTORA
+// ----------------------------------------------------------------------------
+export const produtora = {
+  nome: 'Golden Eye Prods.',
+  nomeCurto: 'Golden Eye',
+  tagline: 'Rock psicodélico, ritual e reverberação',
+
+  manifesto:
+    'Ocupar espaços improváveis de Joinville e transformar a noite em ' +
+    'ritual. É isso que a Golden Eye faz desde a primeira edição, tocada ' +
+    'entre as estantes de um sebo em troca de doações.',
+
+  descricao:
+    'A Golden Eye Prods. nasceu da vontade de transformar a noite em ritual. ' +
+    'Produzimos eventos de rock psicodélico onde luz, som e imagem se dissolvem ' +
+    'numa mesma viagem — do fuzz saturado à discotecagem que atravessa a ' +
+    'madrugada. Começamos em Joinville, entre as estantes de um sebo, ' +
+    'tocando Raul Seixas e Pink Floyd em troca de doações para o Lar ' +
+    'Betânia. A ideia segue a mesma: ocupar espaços improváveis e devolver ' +
+    'alguma coisa para a cidade.',
+
+  // >>> SUBSTITUIR: dados fiscais obrigatórios no rodapé
+  razaoSocial: 'GOLDEN EYE PRODUÇÕES LTDA',
+  cnpj: '00.000.000/0001-00',
+
+  // Cidade base. Aparece no SEO e nos dados estruturados — é o que faz o
+  // site ser achado por quem busca "show de rock em Joinville".
+  cidade: 'Joinville',
+  estado: 'SC',
+
+  // >>> SUBSTITUIR: seus contatos reais
+  email: 'contato@goldeneyeprods.com.br',
+  emailIngressos: 'ingressos@goldeneyeprods.com.br',
+  whatsapp: '5500000000000', // internacional, só dígitos
+  whatsappLabel: '(00) 00000-0000',
+
+  // >>> SUBSTITUIR: suas redes
+  redes: {
+    instagram: 'https://instagram.com/goldeneyeprods',
+    // >>> SUBSTITUIR: a URL do CANAL do Delírio Parabólico.
+    // Para achar: abra um vídeo do canal e clique no nome do canal embaixo do
+    // título. A URL da página que abrir é esta (termina em /@algumacoisa).
+    // Enquanto estiver vazio, o botão "Ver o canal" simplesmente não aparece.
+    youtube: '',
+    spotify: '',
+    tiktok: '',
+  },
+
+  // Os pilares mostrados na home
+  pilares: [
+    { titulo: 'Rock', texto: 'Psicodélico, garage, krautrock e o que vier junto.' },
+    { titulo: 'Ritual', texto: 'Luz, projeção e som tratados como uma coisa só.' },
+    { titulo: 'Causa', texto: 'Toda edição devolve alguma coisa para a cidade.' },
+  ],
+}
+
+// ----------------------------------------------------------------------------
+//  TIPOS
+// ----------------------------------------------------------------------------
+export interface Ato {
+  horario: string
+  titulo: string
+  descricao: string
+  /** true = atração principal, ganha destaque visual e entra no SEO */
+  destaque: boolean
+}
+
+export interface LoteConfig {
+  nome: string
+  tipo: 'inteira' | 'meia'
+  /** SEMPRE em centavos, inteiro. 6000 = R$ 60,00. Nunca use float p/ dinheiro. */
+  precoCentavos: number
+  quantidade: number
+  ordem: number
+}
+
+export interface EventoConfig {
+  /** vira a URL: /eventos/<slug> */
+  slug: string
+  nome: string
+  subtitulo: string
+  descricao: string
+
+  /** ISO com fuso de São Paulo (-03:00) */
+  dataInicio: string
+  aberturaPortoes: string
+
+  local: string
+  endereco: string
+  /** link "Incorporar um mapa" do Google Maps (opcional) */
+  mapaEmbed: string
+  mapaLink: string
+
+  classificacaoEtaria: string
+  capacidade: number
+
+  lineup: Ato[]
+  permitido: string[]
+  proibido: string[]
+
+  /** false = a página existe, mas não vende ingresso pelo site */
+  vendaAberta: boolean
+  lotes: LoteConfig[]
+
+  /**
+   * Para eventos sem venda de ingresso — entrada franca, por doação, por
+   * convite. Se preenchido, a LP mostra este bloco no lugar do checkout,
+   * em vez de um "vendas em breve" que não faria sentido.
+   */
+  entrada?: { titulo: string; texto: string }
+
+  /** imagem de fundo do hero da LP (opcional) */
+  imagemHero?: string
+  /** cartaz do evento (opcional) — usado no card e no compartilhamento */
+  cartaz?: string
+  /** fotos do evento, depois que ele acontece */
+  galeria?: string[]
+
+  /** linhas extras de crédito, ex.: apoio cultural, causa apoiada */
+  creditos?: { rotulo: string; valor: string }[]
+
+  /**
+   * Vídeos do YouTube deste evento.
+   * O `id` é a parte depois de "v=" na URL:
+   *   https://www.youtube.com/watch?v=ABC123xyz   →   id: 'ABC123xyz'
+   * Só a miniatura é carregada; o player entra quando a pessoa clica.
+   */
+  videos?: { id: string; titulo: string; descricao?: string }[]
+}
+
+// ----------------------------------------------------------------------------
+//  OS EVENTOS
+//  O mais recente primeiro. A home separa sozinha o que é futuro e passado.
+// ----------------------------------------------------------------------------
+export const eventos: EventoConfig[] = [
+  // ==========================================================================
+  //  TROPICÁLIA SESSIONS — sábado, 12/09, 17h
+  //  Solidário: entrada por doação ao Lar Betânia, sem venda de ingresso.
+  //  >>> FALTA: a arte, o endereço completo e a capacidade do espaço.
+  // ==========================================================================
+  {
+    slug: 'tropicalia-sessions',
+    nome: 'Tropicália Sessions',
+    subtitulo: 'Delírio Parabólico revisita o tropicalismo',
+
+    dataInicio: '2026-09-12T17:00:00-03:00',
+    aberturaPortoes: '2026-09-12T17:00:00-03:00',
+
+    local: 'Salvador Vegan Café',
+    // >>> SUBSTITUIR: endereço completo do Salvador Vegan Café
+    endereco: 'Joinville/SC',
+    // >>> SUBSTITUIR: cole o link "Incorporar um mapa" do Google Maps
+    mapaEmbed: '',
+    mapaLink: 'https://maps.google.com/?q=Salvador+Vegan+Caf%C3%A9+Joinville',
+
+    classificacaoEtaria: 'Livre',
+    // >>> SUBSTITUIR: capacidade do espaço
+    capacidade: 120,
+
+    // Provisório até sair a arte: o plano de cima do show no Sebo. É a mesma
+    // banda, e no hero a imagem entra a 26% de opacidade, então plano aberto
+    // funciona melhor que retrato.  >>> TROCAR quando o cartaz ficar pronto.
+    imagemHero: '/imagens/eventos/2026-08-concerto-solidario/foto-03.jpg',
+
+    descricao:
+      'Em 1968 um punhado de gente decidiu que era possível engolir tudo de ' +
+      'uma vez — a guitarra elétrica e o berimbau, o Beatles e o baião — e ' +
+      'devolver aquilo em forma de canção. Tropicália Sessions é o Delírio ' +
+      'Parabólico atravessando esse repertório: Caetano, Gil, Gal, Tom Zé e ' +
+      'Os Mutantes, com o fuzz e a distorção que a banda já traz de casa.',
+
+    lineup: [
+      {
+        horario: '17:00',
+        titulo: 'Abertura',
+        descricao: 'Recepção das doações e o café aberto.',
+        destaque: false,
+      },
+      {
+        horario: '17:30',
+        titulo: 'Delírio Parabólico',
+        descricao:
+          'Tropicália em versão psicodélica: Caetano Veloso, Gilberto Gil, ' +
+          'Gal Costa, Tom Zé e Os Mutantes.',
+        destaque: true,
+      },
+    ],
+
+    permitido: [
+      'Alimento não perecível, roupa ou doação em dinheiro',
+      'Crianças acompanhadas — o evento é livre',
+    ],
+
+    proibido: [],
+
+    vendaAberta: false,
+
+    entrada: {
+      titulo: 'Entrada solidária',
+      texto:
+        'A entrada é uma doação ao Lar Betânia, de Joinville. Leve alimento ' +
+        'não perecível, peça de roupa em bom estado ou uma contribuição em ' +
+        'dinheiro — tudo vai direto para o lar. Não há venda de ingresso: é ' +
+        'só chegar.',
+    },
+
+    creditos: [
+      { rotulo: 'Doações revertidas ao', valor: 'Lar Betânia — Joinville' },
+      { rotulo: 'Espaço', valor: 'Salvador Vegan Café' },
+      { rotulo: 'Entrada', valor: 'Alimento, roupa ou doação em dinheiro' },
+    ],
+
+    lotes: [],
+  },
+
+  // ==========================================================================
+  //  TO THE OTHER SIDE — 20/11
+  // ==========================================================================
+  {
+    slug: 'totheotherside',
+    nome: 'TO THE OTHER SIDE',
+    subtitulo: 'Uma noite de tributo, fuzz e viagem',
+
+    dataInicio: '2026-11-20T19:00:00-03:00',
+    aberturaPortoes: '2026-11-20T19:00:00-03:00',
+
+    local: 'Hangar7',
+    // >>> SUBSTITUIR: endereço completo do Hangar7
+    endereco: 'Joinville/SC', // >>> SUBSTITUIR pelo endereço completo do Hangar7
+    // >>> SUBSTITUIR: cole o link "Incorporar um mapa" do Google Maps
+    mapaEmbed: '',
+    mapaLink: 'https://maps.google.com/?q=Hangar7+Joinville',
+
+    classificacaoEtaria: '18 anos',
+    // >>> SUBSTITUIR: capacidade real da casa
+    capacidade: 400,
+
+    descricao:
+      'Break on through. TO THE OTHER SIDE é uma travessia em três atos: o ' +
+      'tributo que invoca os Doors, o fuzz original que empurra o chão pra ' +
+      'longe, e a discotecagem que segura a viagem até o sol raiar. Luz, ' +
+      'projeção e reverb — do outro lado.',
+
+    imagemHero: '/imagens/hero-beco.jpg',
+
+    lineup: [
+      {
+        horario: '19:00',
+        titulo: 'Abertura dos portões',
+        descricao: 'Discotecagem de recepção, projeções e mercado de arte.',
+        destaque: false,
+      },
+      {
+        horario: '21:00',
+        titulo: 'Delírio Parabólico',
+        descricao:
+          'Rock psicodélico autoral. Fuzz, delay infinito e uma parede de som ' +
+          'que vira paisagem.',
+        destaque: true,
+      },
+      {
+        horario: '22:30',
+        titulo: 'Reverb Band',
+        descricao:
+          'Tributo a The Doors. O repertório inteiro do Rei Lagarto, do órgão ' +
+          'Vox Continental ao último grito.',
+        destaque: true,
+      },
+      {
+        horario: '00:00',
+        titulo: 'Discotecagem',
+        descricao:
+          'Psicodelia dos anos 60 e 70, krautrock, garage e o que mais couber ' +
+          'na madrugada.',
+        destaque: false,
+      },
+    ],
+
+    permitido: [
+      'Documento com foto (obrigatório)',
+      'Comprovante de meia-entrada, se for o caso',
+      'Protetor auricular',
+    ],
+    proibido: [
+      'Bebidas e alimentos de fora',
+      'Garrafas, latas e objetos de vidro',
+      'Qualquer tipo de arma ou objeto cortante',
+      'Guarda-chuvas de ponta metálica',
+    ],
+
+    vendaAberta: true,
+
+    // >>> SUBSTITUIR: preços e quantidades reais.
+    // A Lei 12.933/13 exige no mínimo 40% do total em meia-entrada — o
+    // `npm run db:seed` recusa rodar se ficar abaixo disso.
+    lotes: [
+      { nome: '1º Lote — Inteira', tipo: 'inteira', precoCentavos: 6000, quantidade: 120, ordem: 1 },
+      { nome: '1º Lote — Meia-entrada', tipo: 'meia', precoCentavos: 3000, quantidade: 80, ordem: 2 },
+      { nome: '2º Lote — Inteira', tipo: 'inteira', precoCentavos: 8000, quantidade: 120, ordem: 3 },
+      { nome: '2º Lote — Meia-entrada', tipo: 'meia', precoCentavos: 4000, quantidade: 80, ordem: 4 },
+    ],
+  },
+
+  // ==========================================================================
+  //  EDIÇÃO ANTERIOR
+  //  Fica no ar para sempre: é prova social, memória e SEO da produtora.
+  // ==========================================================================
+  {
+    slug: 'concerto-solidario',
+    nome: 'Concerto Solidário de Rock Psicodélico',
+    subtitulo: 'Delírio Parabólico entre as estantes do O Sebo',
+
+    dataInicio: '2026-08-14T19:00:00-03:00',
+    aberturaPortoes: '2026-08-14T19:00:00-03:00',
+
+    local: 'O Sebo',
+    endereco: 'Joinville/SC', // >>> SUBSTITUIR pelo endereço completo, se quiser
+    mapaEmbed: '',
+    mapaLink: '',
+
+    classificacaoEtaria: 'Livre',
+    capacidade: 120,
+
+    descricao:
+      'A primeira edição da Golden Eye. Delírio Parabólico tocando Raul ' +
+      'Seixas, Os Mutantes, Pink Floyd e The Beatles no meio das estantes do ' +
+      'O Sebo. A entrada foi uma doação de alimento, roupa ou dinheiro ao Lar ' +
+      'Betânia — e a casa encheu.',
+
+    // A banda inteira é uma capa muito melhor que o cartaz para o card.
+    imagemHero: '/imagens/eventos/2026-08-concerto-solidario/foto-01.jpg',
+    cartaz: '/imagens/eventos/cartaz-2026-08.png',
+
+    lineup: [
+      {
+        horario: '19:00',
+        titulo: 'Delírio Parabólico',
+        descricao:
+          'Raul Seixas, Os Mutantes, Pink Floyd e The Beatles, entre livros.',
+        destaque: true,
+      },
+    ],
+
+    permitido: [],
+    proibido: [],
+
+    vendaAberta: false,
+    lotes: [],
+
+    creditos: [
+      { rotulo: 'Apoio cultural', valor: 'O Sebo' },
+      { rotulo: 'Doações revertidas ao', valor: 'Lar Betânia — Joinville' },
+      { rotulo: 'Entrada', valor: 'Alimento, roupa ou doação em dinheiro' },
+    ],
+
+    // >>> SUBSTITUIR: cole os ids dos vídeos do canal Delírio Parabólico.
+    // Da URL https://www.youtube.com/watch?v=ABC123xyz  use  id: 'ABC123xyz'
+    // Enquanto a lista estiver vazia, a seção de vídeos simplesmente não aparece.
+    videos: [
+      {
+        id: 'RFNxL4hsnLM',
+        titulo: 'Como Vovó Já Dizia — Raul Seixas',
+        descricao: 'Cover do Delírio Parabólico, ao vivo no O Sebo.',
+      },
+      // Para adicionar mais, copie o trecho depois de "v=" na URL do YouTube:
+      // https://www.youtube.com/watch?v=ABC123xyz  →  id: 'ABC123xyz'
+    ],
+
+    // As 9 fotos que mostram a banda e o público — as fotos só da
+    // loja saíram: bonitas, mas não contam o show.
+    galeria: Array.from(
+      { length: 9 },
+      (_, i) =>
+        `/imagens/eventos/2026-08-concerto-solidario/foto-${String(i + 1).padStart(2, '0')}.jpg`
+    ),
+  },
+]
+
+// ----------------------------------------------------------------------------
+//  AJUDANTES
+// ----------------------------------------------------------------------------
+export function eventoPorSlug(slug: string): EventoConfig | undefined {
+  return eventos.find((e) => e.slug === slug)
+}
+
+/** Um evento é "futuro" até a hora em que ele começa. */
+export function ehFuturo(e: EventoConfig): boolean {
+  return new Date(e.dataInicio).getTime() > Date.now()
+}
+
+/** Agenda: do mais próximo ao mais distante. */
+export function proximosEventos(): EventoConfig[] {
+  return eventos
+    .filter(ehFuturo)
+    .sort((a, b) => +new Date(a.dataInicio) - +new Date(b.dataInicio))
+}
+
+/** Arquivo: do mais recente ao mais antigo. */
+export function eventosPassados(): EventoConfig[] {
+  return eventos
+    .filter((e) => !ehFuturo(e))
+    .sort((a, b) => +new Date(b.dataInicio) - +new Date(a.dataInicio))
+}
+
+/** O evento em destaque na home. Se não houver futuro, mostra o último. */
+export function eventoDestaque(): EventoConfig | undefined {
+  return proximosEventos()[0] ?? eventosPassados()[0]
+}
+
+/** Todos os vídeos de todas as edições, para a home. */
+export function todosOsVideos(): { id: string; titulo: string; descricao?: string }[] {
+  return eventos.flatMap((e) =>
+    (e.videos ?? []).map((v) => ({
+      ...v,
+      // na home, o título ganha o nome da edição para dar contexto
+      descricao: v.descricao ?? e.nome,
+    }))
+  )
+}
+
+/** Todas as fotos de todas as edições, para a galeria geral da home. */
+export function todasAsFotos(): { src: string; evento: string; slug: string }[] {
+  return eventos.flatMap((e) =>
+    (e.galeria ?? []).map((src) => ({ src, evento: e.nome, slug: e.slug }))
+  )
+}
+
+// ----------------------------------------------------------------------------
+//  REGRAS DE VENDA
+// ----------------------------------------------------------------------------
+/** Máximo de ingressos por CPF, para dificultar cambista. */
+export const MAX_INGRESSOS_POR_CPF = 6
+
+/** Minutos até o PIX expirar e a reserva voltar ao estoque. */
+export const MINUTOS_EXPIRACAO_PIX = 30
+
+// ----------------------------------------------------------------------------
+//  FAQ (vale para todos os eventos)
+// ----------------------------------------------------------------------------
+export const faq = [
+  {
+    p: 'Como recebo meu ingresso?',
+    r:
+      'Assim que o PIX é confirmado (leva segundos), o ingresso com QR Code vai ' +
+      'automaticamente para o seu e-mail, em PDF e também na tela. Ele fica ' +
+      'sempre disponível na página Meus Ingressos.',
+  },
+  {
+    p: 'Quem tem direito à meia-entrada?',
+    r:
+      'Conforme a Lei 12.933/2013: estudantes, pessoas com deficiência e um ' +
+      'acompanhante, pessoas com 60 anos ou mais, e jovens de 15 a 29 anos de ' +
+      'baixa renda inscritos no CadÚnico. A comprovação é obrigatória na entrada ' +
+      '— sem documento válido, será cobrada a diferença para a inteira.',
+  },
+  {
+    p: 'Posso transferir meu ingresso para outra pessoa?',
+    r:
+      'Sim. Entre em Meus Ingressos, escolha o ingresso e troque o nome e o CPF ' +
+      'do titular até 24 horas antes da abertura dos portões. Depois disso o ' +
+      'ingresso fica travado no nome cadastrado.',
+  },
+  {
+    p: 'E se eu desistir? Tem reembolso?',
+    r:
+      'Tem. Pelo Artigo 49 do Código de Defesa do Consumidor você pode cancelar ' +
+      'e receber 100% do valor de volta em até 7 dias corridos após o pagamento, ' +
+      'desde que faça o pedido com no mínimo 48 horas de antecedência da abertura ' +
+      'dos portões. Dá pra fazer sozinho, na página Meus Ingressos, e o dinheiro ' +
+      'volta pelo mesmo PIX.',
+  },
+  {
+    p: 'Esqueci de levar o celular carregado. E agora?',
+    r:
+      'Sem problema. Nossa equipe consegue localizar sua compra na portaria pelo ' +
+      'seu nome ou CPF, com documento com foto em mãos.',
+  },
+  {
+    p: 'Os eventos têm acessibilidade?',
+    r:
+      'Buscamos sempre espaços com acesso para cadeirantes. Se você precisar de ' +
+      'qualquer suporte específico, chame a gente no WhatsApp antes do evento ' +
+      'que a produção organiza tudo.',
+  },
+]

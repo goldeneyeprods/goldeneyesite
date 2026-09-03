@@ -1,0 +1,384 @@
+@import 'tailwindcss';
+
+/* ============================================================================
+   GOLDEN EYE PRODS. — Sistema visual
+   Paleta tirada da própria identidade: ouro do olho de Hórus sobre o roxo
+   profundo do beco psicodélico, com o verde-água que aparece no paisley.
+   ============================================================================ */
+
+@theme {
+  /* Fundos — do mais escuro ao mais claro */
+  --color-noite: #0a0610;
+  --color-noite-2: #120b1d;
+  --color-noite-3: #1b1030;
+  --color-borda: #2c1f42;
+
+  /* Ouro do logo */
+  --color-ouro: #d4a64a;
+  --color-ouro-claro: #f6e2a8;
+  --color-ouro-escuro: #8a6520;
+
+  /* Psicodelia */
+  --color-violeta: #9d4edd;
+  --color-magenta: #c64bc0;
+  --color-turquesa: #3ec7b0;
+
+  /* Texto */
+  --color-texto: #ede7f6;
+  --color-texto-suave: #a99bbd;
+  --color-texto-fraco: #6d6285;
+
+  /* Estados */
+  --color-ok: #3ddc97;
+  --color-alerta: #f4c542;
+  --color-erro: #ef4770;
+
+  --font-display: var(--fonte-display), Georgia, serif;
+  --font-sans: var(--fonte-sans), system-ui, sans-serif;
+
+  --radius-card: 1rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* compensa o header fixo quando o link pula para uma seção */
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--color-noite);
+  color: var(--color-texto);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-ouro);
+  color: var(--color-noite);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ouro);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Barra de rolagem combinando com o tema */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-noite);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-borda);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ouro-escuro);
+}
+
+/* ---------------------------------------------------------------------------
+   Textura de grão — dá peso analógico e disfarça o banding dos gradientes
+   --------------------------------------------------------------------------- */
+.grao::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------------------------------------------------------
+   Tipografia dourada
+   --------------------------------------------------------------------------- */
+.texto-ouro {
+  background: linear-gradient(
+    100deg,
+    #8a6520 0%,
+    #d4a64a 22%,
+    #f6e2a8 44%,
+    #d4a64a 62%,
+    #b8862f 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: brilho-ouro 9s ease-in-out infinite;
+}
+
+@keyframes brilho-ouro {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.rotulo {
+  font-size: 0.688rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-ouro);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   Aurora psicodélica de fundo
+   --------------------------------------------------------------------------- */
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aurora span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.32;
+  mix-blend-mode: screen;
+  animation: derivar 26s ease-in-out infinite;
+}
+
+.aurora span:nth-child(1) {
+  width: 46vw;
+  height: 46vw;
+  background: var(--color-violeta);
+  top: -12%;
+  left: -8%;
+}
+.aurora span:nth-child(2) {
+  width: 38vw;
+  height: 38vw;
+  background: var(--color-magenta);
+  top: 22%;
+  right: -10%;
+  animation-delay: -9s;
+}
+.aurora span:nth-child(3) {
+  width: 32vw;
+  height: 32vw;
+  background: var(--color-turquesa);
+  bottom: -14%;
+  left: 28%;
+  animation-delay: -17s;
+  opacity: 0.2;
+}
+
+@keyframes derivar {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(6vw, -4vh, 0) scale(1.14);
+  }
+  66% {
+    transform: translate3d(-5vw, 5vh, 0) scale(0.92);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Componentes
+   --------------------------------------------------------------------------- */
+.botao-ouro {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #f6e2a8, #d4a64a 45%, #a87c26);
+  color: #0a0610;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 999px;
+  padding: 0.95rem 2rem;
+  cursor: pointer;
+  transition:
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease,
+    filter 0.2s ease;
+  box-shadow:
+    0 0 0 1px rgba(246, 226, 168, 0.35),
+    0 10px 34px -12px rgba(212, 166, 74, 0.7);
+}
+
+.botao-ouro:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow:
+    0 0 0 1px rgba(246, 226, 168, 0.6),
+    0 18px 46px -12px rgba(212, 166, 74, 0.85);
+}
+
+.botao-ouro:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.botao-ouro:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: saturate(0.4);
+}
+
+.botao-fantasma {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid var(--color-borda);
+  color: var(--color-texto);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 999px;
+  padding: 0.9rem 1.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.botao-fantasma:hover {
+  border-color: var(--color-ouro);
+  color: var(--color-ouro-claro);
+  background: rgba(212, 166, 74, 0.07);
+}
+
+.cartao {
+  background: linear-gradient(
+    160deg,
+    rgba(27, 16, 48, 0.82),
+    rgba(10, 6, 16, 0.92)
+  );
+  border: 1px solid var(--color-borda);
+  border-radius: var(--radius-card);
+  backdrop-filter: blur(12px);
+}
+
+.cartao-ouro {
+  border-color: rgba(212, 166, 74, 0.4);
+  box-shadow: 0 0 44px -16px rgba(212, 166, 74, 0.4);
+}
+
+.campo {
+  width: 100%;
+  background: rgba(10, 6, 16, 0.72);
+  border: 1px solid var(--color-borda);
+  border-radius: 0.625rem;
+  padding: 0.85rem 1rem;
+  color: var(--color-texto);
+  font-size: 0.95rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.campo::placeholder {
+  color: var(--color-texto-fraco);
+}
+
+.campo:focus {
+  outline: none;
+  border-color: var(--color-ouro);
+  box-shadow: 0 0 0 3px rgba(212, 166, 74, 0.16);
+}
+
+.campo[aria-invalid='true'] {
+  border-color: var(--color-erro);
+}
+
+/* Linha ornamental que separa as seções */
+.divisor {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 166, 74, 0.45),
+    transparent
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   Animações de entrada
+   --------------------------------------------------------------------------- */
+@keyframes surgir {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.surgir {
+  animation: surgir 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pulsar-olho {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.04);
+  }
+}
+
+.pulsar-olho {
+  animation: pulsar-olho 5s ease-in-out infinite;
+}
+
+@keyframes girar-lento {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.girar-lento {
+  animation: girar-lento 90s linear infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Acessibilidade: quem pediu menos movimento, recebe menos movimento.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Impressão (ingresso em PDF pelo navegador)
+   --------------------------------------------------------------------------- */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .sem-impressao {
+    display: none !important;
+  }
+}

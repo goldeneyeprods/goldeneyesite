@@ -1,0 +1,11 @@
+Coloque aqui as fotos dos eventos anteriores.
+
+Sugestao de organizacao:
+  public/imagens/eventos/2025-nome-da-edicao/foto-01.jpg
+
+Depois liste os caminhos em config/site.ts -> galeria
+
+Tambem faltam nesta pasta public/imagens/:
+  og.jpg          1200x630  (previa no WhatsApp/Instagram)
+  icone-192.png   192x192   (icone do app de portaria)
+  icone-512.png   512x512

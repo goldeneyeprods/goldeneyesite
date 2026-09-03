@@ -1,0 +1,10 @@
+# Normaliza quebras de linha: o projeto é editado no Windows e roda em Linux
+# (Vercel). Sem isto, todo arquivo aparece como "modificado" sem motivo.
+* text=auto eol=lf
+
+# Binários — nunca normalizar
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
