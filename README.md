@@ -95,16 +95,33 @@ npm run dev
 
 ---
 
-## Deploy na Vercel
+## Deploy na Netlify
+
+**Por que Netlify e não Vercel.** O plano gratuito da Vercel (Hobby) proíbe
+uso comercial nos termos, e vender ingresso é uso comercial — marcar o
+projeto como "pessoal" não resolve, é declarar errado e o site pode cair
+justamente quando estiver vendendo. O plano gratuito da Netlify permite uso
+comercial, não pede cartão no cadastro, e tem limite rígido: acabaram os
+créditos do mês, o serviço para em vez de gerar fatura.
 
 1. Suba o projeto para o GitHub (o `.gitignore` já protege o `.env.local`).
-2. [vercel.com](https://vercel.com) → **Add New → Project** → importe o repositório.
-3. Em **Environment Variables**, cadastre **todas** as variáveis do `.env.local`.
-4. `NEXT_PUBLIC_SITE_URL` = a URL final do site (ex.: `https://goldeneyeprods.vercel.app`).
-5. Deploy.
-6. **Volte no Mercado Pago** e cadastre a URL do webhook com o domínio real.
+2. [netlify.com](https://netlify.com) → **Sign up** → **GitHub**.
+3. **Add new site** → **Import an existing project** → escolha o repositório.
+4. Ela detecta o Next.js sozinha. Antes de clicar em Deploy, abra
+   **Environment variables** e cadastre todas as chaves do `.env.local`.
+5. `NEXT_PUBLIC_SITE_URL` = a URL final (ex.: `https://goldeneye.netlify.app`).
+6. Deploy.
+7. **Volte no Mercado Pago** e cadastre a URL do webhook com o domínio real.
 
-O `vercel.json` já configura o cron que devolve ao estoque os PIX não pagos, a cada 5 minutos.
+O `netlify.toml` e a função em `netlify/functions/expirar-pix.mts` já cuidam
+da rotina que devolve ao estoque os PIX não pagos, a cada 5 minutos.
+
+### Dá para publicar antes de ter banco e pagamento
+
+O site público — home, agenda, LP dos eventos, galeria, páginas legais — não
+toca no banco de dados. Ele sobe e funciona sem nenhuma variável configurada.
+Isso permite publicar hoje e divulgar um evento de entrada gratuita, deixando
+Supabase e Mercado Pago para quando a venda de ingresso realmente começar.
 
 ---
 
@@ -194,11 +211,19 @@ Também falta:
 
 ---
 
-## Alternativa: GitHub Pages
+## E o GitHub Pages?
 
-Dá para fazer, mas **não recomendo**: o GitHub Pages só serve arquivos estáticos, então você precisaria de dois deploys (site lá, backend na Vercel), dois domínios e configuração de CORS — sem ganhar nada, já que a Vercel hospeda o site estático de graça igual.
+**Não dá.** O GitHub Pages só entrega arquivos estáticos — não executa nada
+no servidor. E o servidor é justamente quem gera o PIX, recebe o webhook de
+pagamento, assina o ingresso, valida o QR na portaria e processa o estorno.
+Nenhuma dessas coisas pode rodar no navegador: a chave do Mercado Pago e o
+segredo que assina os ingressos ficariam expostos.
 
-Se ainda assim quiser: mantenha `app/api/` num projeto Node/Express separado na Vercel, exporte o front com `output: 'export'` no `next.config.mjs`, troque as chamadas `fetch('/api/...')` pela URL absoluta do backend, e libere o CORS só para a origem do GitHub Pages.
+Se o Pages estiver ligado no repositório, ele publica o README como se fosse
+o site. Desligue em **Settings → Pages → Source: None**, para não deixar um
+endereço quebrado no ar com o nome da produtora.
+
+O GitHub é onde o código mora; a Netlify é onde o site roda.
 
 ---
 
@@ -208,7 +233,7 @@ Problemas comuns:
 
 | Sintoma | Causa provável |
 |---|---|
-| "MP_ACCESS_TOKEN não configurado" | Falta cadastrar a variável na Vercel |
+| "MP_ACCESS_TOKEN não configurado" | Falta cadastrar a variável na Netlify |
 | PIX gera mas nunca confirma | Webhook não cadastrado, ou `MP_WEBHOOK_SECRET` errado |
 | E-mail não chega | Domínio não verificado no Resend |
 | Câmera não abre na portaria | Precisa de HTTPS — em `localhost` funciona; em rede local, não |

@@ -1,0 +1,43 @@
+# ============================================================================
+#  Netlify — configuração do deploy
+#
+#  POR QUE NETLIFY E NÃO VERCEL:
+#  O plano gratuito da Vercel (Hobby) proíbe uso comercial nos termos, e
+#  vender ingresso é uso comercial. Marcar o projeto como "pessoal" não
+#  resolve — é declarar errado, e o site pode ser derrubado exatamente
+#  quando estiver vendendo.
+#
+#  O plano gratuito da Netlify permite uso comercial, não pede cartão no
+#  cadastro, e tem limite rígido: quando os créditos do mês acabam, o
+#  serviço para em vez de gerar fatura. Sem surpresa no cartão.
+# ============================================================================
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Plugin oficial do Next.js. A Netlify costuma detectar sozinha, mas deixamos
+# explícito para não depender de detecção automática.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# ---------------------------------------------------------------------------
+#  Cabeçalhos de segurança
+#  (o next.config.mjs também os define; aqui garantimos no nível da CDN)
+# ---------------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(self), microphone=(), geolocation=()"
+
+# O ingresso de uma pessoa nunca pode ficar em cache compartilhado da CDN.
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store"

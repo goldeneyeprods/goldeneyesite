@@ -57,8 +57,19 @@ export default function Portaria() {
   // ---- restaura sessão ----------------------------------------------------
   useEffect(() => {
     // Registra o service worker: é ele que faz a portaria abrir sem internet.
+    // Só em produção — em desenvolvimento os arquivos mudam a cada
+    // recompilação, e um worker guardando versões velhas faz a tela abrir
+    // sem estilo. Aqui também limpamos qualquer worker que tenha sobrado.
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => {})
+      if (process.env.NODE_ENV === 'production') {
+        navigator.serviceWorker.register('/sw.js').catch(() => {})
+      } else {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then((rs) => rs.forEach((r) => r.unregister()))
+          .catch(() => {})
+        caches?.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {})
+      }
     }
 
     const t = localStorage.getItem(CHAVE_TOKEN)
