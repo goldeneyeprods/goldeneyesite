@@ -54,9 +54,8 @@ export const produtora = {
   whatsapp: '5500000000000', // internacional, só dígitos
   whatsappLabel: '(00) 00000-0000',
 
-  // >>> SUBSTITUIR: suas redes
   redes: {
-    instagram: 'https://instagram.com/goldeneyeprods',
+    instagram: 'https://www.instagram.com/goldeneye.prods/',
     // >>> SUBSTITUIR: a URL do CANAL do Delírio Parabólico.
     // Para achar: abra um vídeo do canal e clique no nome do canal embaixo do
     // título. A URL da página que abrir é esta (termina em /@algumacoisa).
@@ -167,11 +166,11 @@ export const eventos: EventoConfig[] = [
     aberturaPortoes: '2026-09-12T17:00:00-03:00',
 
     local: 'Salvador Vegan Café',
-    // >>> SUBSTITUIR: endereço completo do Salvador Vegan Café
-    endereco: 'Joinville/SC',
+    endereco: 'Rua Henrique Meyer, 61 — Centro, Joinville/SC · CEP 89201-000',
     // >>> SUBSTITUIR: cole o link "Incorporar um mapa" do Google Maps
     mapaEmbed: '',
-    mapaLink: 'https://maps.google.com/?q=Salvador+Vegan+Caf%C3%A9+Joinville',
+    mapaLink:
+      'https://maps.google.com/?q=Rua+Henrique+Meyer,+61+-+Centro,+Joinville+-+SC,+89201-000',
 
     classificacaoEtaria: 'Livre',
     // >>> SUBSTITUIR: capacidade do espaço
