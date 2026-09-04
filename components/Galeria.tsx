@@ -43,6 +43,16 @@ export function Galeria({
 
   const visiveis = expandido ? fotos : fotos.slice(0, limite)
 
+  // A grade se adapta à quantidade. Com poucas fotos, 4 colunas deixariam
+  // uma sobrando sozinha na linha de baixo — e ainda por cima pequenas.
+  // Menos colunas = fotos maiores e nenhuma órfã.
+  const colunas =
+    visiveis.length <= 3
+      ? 'grid-cols-1 sm:grid-cols-3'
+      : visiveis.length <= 6
+        ? 'grid-cols-2 sm:grid-cols-3'
+        : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'
+
   const navegar = useCallback(
     (passo: number) => {
       setAberta((atual) => {
@@ -135,7 +145,7 @@ export function Galeria({
 
         <Ornamento className="my-12" />
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <div className={`grid gap-3 ${colunas}`}>
           {visiveis.map((foto, i) => (
             <button
               key={foto.src}
