@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { eventos, ehFuturo } from '@/config/site'
+import { eventos, ehFuturo, bandas } from '@/config/site'
 
 // ============================================================================
 //  /sitemap.xml — gerado sozinho a partir do config
@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const paginas: MetadataRoute.Sitemap = [
     { url: base, changeFrequency: 'weekly', priority: 1 },
     { url: `${base}/eventos`, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${base}/bandas`, changeFrequency: 'monthly', priority: 0.85 },
     { url: `${base}/termos`, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${base}/privacidade`, changeFrequency: 'yearly', priority: 0.2 },
   ]
@@ -26,6 +27,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       // com frequência. Edição passada é conteúdo estável.
       changeFrequency: ehFuturo(e) ? 'daily' : 'monthly',
       priority: ehFuturo(e) ? 0.95 : 0.6,
+    })
+  }
+
+  for (const b of bandas) {
+    paginas.push({
+      url: `${base}/bandas/${b.slug}`,
+      changeFrequency: 'monthly',
+      priority: 0.7,
     })
   }
 

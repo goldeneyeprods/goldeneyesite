@@ -65,6 +65,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2.5 text-sm">
               <li><Link href="/" className="text-texto-suave transition-colors hover:text-ouro">Início</Link></li>
               <li><Link href="/eventos" className="text-texto-suave transition-colors hover:text-ouro">Todos os eventos</Link></li>
+              <li><Link href="/bandas" className="text-texto-suave transition-colors hover:text-ouro">Bandas / Casting</Link></li>
               <li><Link href="/#sobre" className="text-texto-suave transition-colors hover:text-ouro">A produtora</Link></li>
               <li><Link href="/#faq" className="text-texto-suave transition-colors hover:text-ouro">Dúvidas</Link></li>
               <li><Link href="/meus-ingressos" className="text-texto-suave transition-colors hover:text-ouro">Meus ingressos</Link></li>

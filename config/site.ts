@@ -39,28 +39,25 @@ export const produtora = {
     'Betânia. A ideia segue a mesma: ocupar espaços improváveis e devolver ' +
     'alguma coisa para a cidade.',
 
-  // >>> SUBSTITUIR: dados fiscais obrigatórios no rodapé
+  // >>> CONFIRMAR: a razão social exata que consta no cartão CNPJ
   razaoSocial: 'GOLDEN EYE PRODUÇÕES LTDA',
-  cnpj: '00.000.000/0001-00',
+  cnpj: '40.561.137/0001-30',
 
   // Cidade base. Aparece no SEO e nos dados estruturados — é o que faz o
   // site ser achado por quem busca "show de rock em Joinville".
   cidade: 'Joinville',
   estado: 'SC',
 
-  // >>> SUBSTITUIR: seus contatos reais
-  email: 'contato@goldeneyeprods.com.br',
-  emailIngressos: 'ingressos@goldeneyeprods.com.br',
-  whatsapp: '5500000000000', // internacional, só dígitos
-  whatsappLabel: '(00) 00000-0000',
+  email: 'goldeneyeprodutora@gmail.com',
+  emailIngressos: 'goldeneyeprodutora@gmail.com',
+  whatsapp: '5547996665826', // internacional, só dígitos
+  whatsappLabel: '(47) 99666-5826',
 
   redes: {
     instagram: 'https://www.instagram.com/goldeneye.prods/',
-    // >>> SUBSTITUIR: a URL do CANAL do Delírio Parabólico.
-    // Para achar: abra um vídeo do canal e clique no nome do canal embaixo do
-    // título. A URL da página que abrir é esta (termina em /@algumacoisa).
-    // Enquanto estiver vazio, o botão "Ver o canal" simplesmente não aparece.
-    youtube: '',
+    // Por ora o canal do Delírio Parabólico.
+    // >>> TROCAR quando o canal próprio da Golden Eye existir.
+    youtube: 'https://www.youtube.com/@DelírioParabólico',
     spotify: '',
     tiktok: '',
   },
@@ -441,6 +438,176 @@ export function todasAsFotos(): { src: string; evento: string; slug: string }[] 
   return eventos.flatMap((e) =>
     (e.galeria ?? []).map((src) => ({ src, evento: e.nome, slug: e.slug }))
   )
+}
+
+// ----------------------------------------------------------------------------
+//  O CASTING — as bandas com que a produtora trabalha
+//
+//  Esta seção atende um público diferente do resto do site: aqui quem chega
+//  é dono de bar, produtor cultural, quem contrata. Por isso cada banda tem
+//  release, formação, repertório e um caminho direto para o orçamento.
+//
+//  A ordem da lista é a ordem que aparece no site.
+// ----------------------------------------------------------------------------
+export interface BandaConfig {
+  slug: string
+  nome: string
+  /** uma linha, aparece no card */
+  resumo: string
+  /** o gênero, curto — vira etiqueta */
+  genero: string
+  /** cidade de origem */
+  cidade: string
+
+  /** os blocos de texto do release */
+  conceito: string
+  sonoridade: string
+  aoVivo: string
+  /** opcional: discos, EPs, planos */
+  discografia?: string
+
+  /** o que a banda leva ao palco — vira lista de etiquetas */
+  formacao: string[]
+  /** referências sonoras — vira lista de etiquetas */
+  referencias: string[]
+
+  logo?: string
+  /** a primeira é a capa */
+  fotos: string[]
+  videos?: { id: string; titulo: string; descricao?: string }[]
+
+  redes?: { instagram?: string; youtube?: string; spotify?: string }
+}
+
+export const bandas: BandaConfig[] = [
+  // ==========================================================================
+  //  REVERB BAND
+  //  >>> REVISAR: escrevi o release a partir do que dava para ver nas fotos
+  //  e do fato de ser tributo aos Doors. Corrija o que estiver errado — não
+  //  quero texto inventado no ar sobre gente de verdade.
+  // ==========================================================================
+  {
+    slug: 'reverb-band',
+    nome: 'Reverb Band',
+    resumo: 'O repertório do Rei Lagarto, do órgão ao último grito',
+    genero: 'Tributo a The Doors',
+    cidade: 'Joinville/SC',
+
+    conceito:
+      'A Reverb Band existe para devolver ao palco o repertório que The ' +
+      'Doors gravou entre 1967 e 1971 — não como imitação, mas como leitura ' +
+      'de banda, com o peso e a liberdade de quem toca junto há tempo.',
+
+    sonoridade:
+      'O desenho é o dos Doors: órgão à frente, guitarra de blues elétrico e ' +
+      'uma cozinha que segura a viagem sem pressa. Do organ groove de "Light ' +
+      'My Fire" ao arrasto sombrio de "Riders on the Storm".',
+
+    aoVivo:
+      'Show de banda inteira, construído para casa cheia. O repertório passa ' +
+      'pelos hits que todo mundo canta e pelos blocos longos que só fazem ' +
+      'sentido ao vivo — quando a música abre e ninguém sabe quando fecha.',
+
+    formacao: ['Vocal', 'Teclados / órgão', 'Guitarra', 'Baixo', 'Bateria'],
+    referencias: ['The Doors', 'Blues elétrico', 'Psicodelia dos anos 60'],
+
+    logo: '/imagens/bandas/reverbband/logo.png',
+    fotos: [
+      '/imagens/bandas/reverbband/img-2616.jpg',
+      '/imagens/bandas/reverbband/img-8028.jpg',
+      '/imagens/bandas/reverbband/img-7931.jpg',
+      '/imagens/bandas/reverbband/img-7959.jpg',
+      '/imagens/bandas/reverbband/img-2599.jpg',
+    ],
+
+    // >>> SUBSTITUIR: as redes da Reverb Band
+    redes: {},
+  },
+
+  // ==========================================================================
+  //  DELÍRIO PARABÓLICO
+  // ==========================================================================
+  {
+    slug: 'delirio-parabolico',
+    nome: 'Delírio Parabólico',
+    resumo: 'Rock psicodélico autoral e a contracultura dos anos 60 e 70',
+    genero: 'Rock psicodélico',
+    cidade: 'Joinville/SC',
+
+    conceito:
+      'O Delírio Parabólico é uma banda de rock psicodélico que resgata a ' +
+      'essência da contracultura e da vanguarda dos anos 60 e 70. O projeto ' +
+      'une a energia das apresentações ao vivo com a reverência aos clássicos ' +
+      'da época, criando um repertório híbrido que transita com naturalidade ' +
+      'entre homenagens e composições próprias.',
+
+    sonoridade:
+      'A identidade sonora flutua entre o rock progressivo, a lisergia ' +
+      'clássica e o rock barroco. Com raízes cravadas na ousadia d\'Os ' +
+      'Mutantes, no experimentalismo de estúdio dos Beatles, nas atmosferas ' +
+      'espaciais do Pink Floyd e na acidez filosófica de Raul Seixas, a banda ' +
+      'constrói um som robusto que reverencia seus ídolos enquanto consolida ' +
+      'a própria voz.',
+
+    aoVivo:
+      'No palco, o Delírio Parabólico entrega uma performance imersiva de ' +
+      'banda, equilibrando a execução de covers consagrados com o impacto do ' +
+      'material autoral. Com arranjos ricos que envolvem vocais expressivos, ' +
+      'guitarras, teclados, sintetizadores e flauta, a apresentação é ' +
+      'construída para transportar o público direto para a efervescência ' +
+      'musical da época.',
+
+    discografia:
+      'Prestes a estrear o primeiro EP, antecedido por um single duplo, a ' +
+      'banda tem um roteiro claro de expansão: da densidade atmosférica e ' +
+      'progressiva de "Céu de Outono", inspirada na fase final de David ' +
+      'Gilmour, passando pela energia hard rock setentista do disco homônimo ' +
+      '"Delírio Parabólico", até as texturas do futuro "Hotel Lunar Base ' +
+      'Tranquila".',
+
+    formacao: [
+      'Vocais',
+      'Guitarras',
+      'Teclados e sintetizadores',
+      'Flauta',
+      'Baixo',
+      'Bateria',
+      'Saxofone',
+    ],
+    referencias: [
+      'Os Mutantes',
+      'The Beatles',
+      'Pink Floyd',
+      'Raul Seixas',
+      'Rock progressivo',
+    ],
+
+    fotos: [
+      '/imagens/bandas/delirioparabolico/banda-01-completa.jpg',
+      '/imagens/bandas/delirioparabolico/banda-02-tocando.jpg',
+      '/imagens/bandas/delirioparabolico/banda-03-plano-de-cima.jpg',
+      '/imagens/bandas/delirioparabolico/integrante-01.jpg',
+      '/imagens/bandas/delirioparabolico/integrante-02-sax.jpg',
+      '/imagens/bandas/delirioparabolico/integrante-03-violao.jpg',
+      '/imagens/bandas/delirioparabolico/integrante-04-baixo.jpg',
+      '/imagens/bandas/delirioparabolico/integrante-05-guitarra.jpg',
+      '/imagens/bandas/delirioparabolico/integrante-06-teclado.jpg',
+    ],
+
+    videos: [
+      {
+        id: 'RFNxL4hsnLM',
+        titulo: 'Como Vovó Já Dizia — Raul Seixas',
+        descricao: 'Ao vivo no O Sebo, Joinville.',
+      },
+    ],
+
+    redes: { youtube: 'https://www.youtube.com/@DelírioParabólico' },
+  },
+]
+
+export function bandaPorSlug(slug: string): BandaConfig | undefined {
+  return bandas.find((b) => b.slug === slug)
 }
 
 // ----------------------------------------------------------------------------

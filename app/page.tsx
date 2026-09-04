@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Header } from '@/components/Header'
 import { HeroProdutora } from '@/components/HeroProdutora'
 import { CardEvento } from '@/components/CardEvento'
+import { CardBanda } from '@/components/CardBanda'
 import { Contador } from '@/components/Contador'
 import { Galeria } from '@/components/Galeria'
 import { Videos } from '@/components/Videos'
@@ -15,6 +16,7 @@ import {
   eventosPassados,
   todasAsFotos,
   todosOsVideos,
+  bandas,
 } from '@/config/site'
 
 // ============================================================================
@@ -25,6 +27,7 @@ import {
 
 const LINKS = [
   { href: '#agenda', rotulo: 'Agenda' },
+  { href: '#bandas', rotulo: 'Bandas' },
   { href: '#arquivo', rotulo: 'Arquivo' },
   { href: '#registros', rotulo: 'Registros' },
   { href: '#sobre', rotulo: 'A produtora' },
@@ -133,6 +136,42 @@ export default function Home() {
         </section>
 
         <div className="divisor mx-auto max-w-5xl" />
+
+        {/* ================= BANDAS (casting) ================= */}
+        {bandas.length > 0 && (
+          <>
+            <section id="bandas" className="relative px-5 py-24 sm:py-32">
+              <div className="mx-auto max-w-5xl">
+                <div className="text-center">
+                  <p className="rotulo">Quem toca com a gente</p>
+                  <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
+                    Bandas
+                  </h2>
+                  <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-texto-suave">
+                    Tem uma casa, um festival ou uma data para preencher?
+                    Estas são as bandas do nosso casting.
+                  </p>
+                </div>
+
+                <Ornamento className="my-12" />
+
+                <div className="grid gap-6 sm:grid-cols-2">
+                  {bandas.map((b) => (
+                    <CardBanda key={b.slug} banda={b} />
+                  ))}
+                </div>
+
+                <div className="mt-10 text-center">
+                  <Link href="/bandas" className="botao-fantasma !py-3 !text-sm">
+                    Ver o casting completo
+                  </Link>
+                </div>
+              </div>
+            </section>
+
+            <div className="divisor mx-auto max-w-5xl" />
+          </>
+        )}
 
         {/* ================= ARQUIVO ================= */}
         {passados.length > 0 && (
