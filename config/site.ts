@@ -180,7 +180,7 @@ export const eventos: EventoConfig[] = [
     // Provisório até sair a arte: o plano de cima do show no Sebo. É a mesma
     // banda, e no hero a imagem entra a 26% de opacidade, então plano aberto
     // funciona melhor que retrato.  >>> TROCAR quando o cartaz ficar pronto.
-    imagemHero: '/imagens/eventos/2026-08-concerto-solidario/foto-04.jpg',
+    imagemHero: '/imagens/eventos/2026-08-concerto-solidario/foto-03.jpg',
 
     descricao:
       'Em 1968 um punhado de gente decidiu que era possível engolir tudo de ' +
@@ -386,9 +386,9 @@ export const eventos: EventoConfig[] = [
       // https://www.youtube.com/watch?v=ABC123xyz  →  id: 'ABC123xyz'
     ],
 
-    // As 5 fotos selecionadas da edição.
+    // As 3 fotos selecionadas da edição.
         galeria: Array.from(
-      { length: 5 },
+      { length: 3 },
       (_, i) =>
         `/imagens/eventos/2026-08-concerto-solidario/foto-${String(i + 1).padStart(2, '0')}.jpg`
     ),

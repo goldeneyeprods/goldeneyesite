@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Marca, OlhoDeHorus } from '@/components/OlhoDeHorus'
-import { formatarBRL } from '@/lib/validacao'
+import { Modal, ModalAviso } from '@/components/Modal'
+import { formatarBRL, cpfValido, soDigitos } from '@/lib/validacao'
 import { produtora } from '@/config/site'
 
 // ============================================================================
@@ -42,6 +43,15 @@ export default function MeusIngressos() {
   const [erro, setErro] = useState('')
   const [pedidos, setPedidos] = useState<Pedido[]>([])
   const [qrAberto, setQrAberto] = useState<Ingresso | null>(null)
+
+  // Modais próprios no lugar de alert/confirm/prompt do navegador
+  const [aviso, setAviso] = useState<{ titulo: string; texto: string; tom?: 'ok' | 'erro' } | null>(null)
+  const [confirmarCancel, setConfirmarCancel] = useState<Pedido | null>(null)
+  const [cancelando, setCancelando] = useState(false)
+  const [transferindo, setTransferindo] = useState<Ingresso | null>(null)
+  const [novoTitular, setNovoTitular] = useState({ nome: '', cpf: '' })
+  const [erroTransf, setErroTransf] = useState('')
+  const [salvandoTransf, setSalvandoTransf] = useState(false)
 
   const carregar = useCallback(async () => {
     try {
@@ -103,33 +113,65 @@ export default function MeusIngressos() {
   }
 
   async function cancelar(pedido: Pedido) {
-    const ok = confirm(
-      `Cancelar a compra de ${formatarBRL(pedido.valorTotal)}?\n\n` +
-        'Seus ingressos serão invalidados imediatamente e o valor volta ' +
-        'pela mesma chave PIX. Esta ação não pode ser desfeita.'
-    )
-    if (!ok) return
-
-    const r = await fetch(`/api/pedidos/${pedido.id}/cancelar`, { method: 'POST' })
-    const d = await r.json()
-    alert(d.mensagem ?? d.erro ?? 'Solicitação processada.')
-    carregar()
+    setCancelando(true)
+    try {
+      const r = await fetch(`/api/pedidos/${pedido.id}/cancelar`, { method: 'POST' })
+      const d = await r.json()
+      setConfirmarCancel(null)
+      setAviso({
+        titulo: r.ok ? 'Cancelamento confirmado' : 'Não foi possível cancelar',
+        texto: d.mensagem ?? d.erro ?? 'Solicitação processada.',
+        tom: r.ok ? 'ok' : 'erro',
+      })
+      carregar()
+    } catch {
+      setAviso({
+        titulo: 'Falha de conexão',
+        texto: 'Não conseguimos falar com o servidor. Tente de novo em instantes.',
+        tom: 'erro',
+      })
+    } finally {
+      setCancelando(false)
+    }
   }
 
-  async function transferir(ing: Ingresso) {
-    const nome = prompt('Nome completo do novo titular:')
-    if (!nome) return
-    const cpf = prompt('CPF do novo titular (só números):')
-    if (!cpf) return
+  async function transferir(e: React.FormEvent) {
+    e.preventDefault()
+    if (!transferindo) return
 
-    const r = await fetch(`/api/ingressos/${ing.id}/transferir`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, cpf }),
-    })
-    const d = await r.json()
-    alert(d.mensagem ?? d.erro ?? 'Processado.')
-    carregar()
+    // Valida antes de mandar — com prompt() do navegador isso era impossível,
+    // e a pessoa só descobria o erro depois de digitar os dois campos.
+    if (novoTitular.nome.trim().split(/\s+/).length < 2) {
+      setErroTransf('Informe nome e sobrenome')
+      return
+    }
+    if (!cpfValido(novoTitular.cpf)) {
+      setErroTransf('CPF inválido')
+      return
+    }
+
+    setSalvandoTransf(true)
+    setErroTransf('')
+    try {
+      const r = await fetch(`/api/ingressos/${transferindo.id}/transferir`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome: novoTitular.nome.trim(), cpf: soDigitos(novoTitular.cpf) }),
+      })
+      const d = await r.json()
+      if (!r.ok) {
+        setErroTransf(d.erro ?? 'Não foi possível transferir')
+        return
+      }
+      setTransferindo(null)
+      setNovoTitular({ nome: '', cpf: '' })
+      setAviso({ titulo: 'Ingresso transferido', texto: d.mensagem, tom: 'ok' })
+      carregar()
+    } catch {
+      setErroTransf('Falha de conexão')
+    } finally {
+      setSalvandoTransf(false)
+    }
   }
 
   // ---- carregando ---------------------------------------------------------
@@ -279,7 +321,7 @@ export default function MeusIngressos() {
                             )}
                             {p.podeTransferir && i.status === 'valido' && (
                               <button
-                                onClick={() => transferir(i)}
+                                onClick={() => { setTransferindo(i); setNovoTitular({ nome: '', cpf: '' }); setErroTransf('') }}
                                 className="botao-fantasma !px-4 !py-2 !text-xs"
                               >
                                 Transferir
@@ -300,7 +342,7 @@ export default function MeusIngressos() {
 
                       {p.podeCancelar ? (
                         <button
-                          onClick={() => cancelar(p)}
+                          onClick={() => setConfirmarCancel(p)}
                           className="text-xs text-erro underline underline-offset-4 hover:opacity-80"
                         >
                           Cancelar e pedir reembolso
@@ -318,6 +360,122 @@ export default function MeusIngressos() {
           </div>
         )}
       </div>
+
+      {/* ================= CONFIRMAR CANCELAMENTO ================= */}
+      <Modal
+        aberto={confirmarCancel !== null}
+        titulo="Cancelar a compra?"
+        onFechar={() => !cancelando && setConfirmarCancel(null)}
+      >
+        {confirmarCancel && (
+          <>
+            <p className="text-sm leading-relaxed text-texto-suave">
+              Você vai receber de volta{' '}
+              <strong className="text-texto">
+                {formatarBRL(confirmarCancel.valorTotal)}
+              </strong>{' '}
+              pela mesma chave PIX usada na compra — normalmente em poucos
+              minutos.
+            </p>
+            <div className="mt-4 rounded-xl border border-erro/30 bg-erro/[0.07] p-4">
+              <p className="text-xs leading-relaxed text-erro">
+                Seus {confirmarCancel.ingressos.length} ingresso
+                {confirmarCancel.ingressos.length === 1 ? '' : 's'} serão
+                invalidados na hora e não servirão mais para entrar.
+                <strong> Esta ação não pode ser desfeita.</strong>
+              </p>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
+              <button
+                onClick={() => cancelar(confirmarCancel)}
+                disabled={cancelando}
+                className="botao-ouro flex-1"
+              >
+                {cancelando ? 'Processando…' : 'Sim, cancelar'}
+              </button>
+              <button
+                onClick={() => setConfirmarCancel(null)}
+                disabled={cancelando}
+                className="botao-fantasma flex-1"
+              >
+                Voltar
+              </button>
+            </div>
+          </>
+        )}
+      </Modal>
+
+      {/* ================= TRANSFERIR TITULARIDADE ================= */}
+      <Modal
+        aberto={transferindo !== null}
+        titulo="Transferir ingresso"
+        onFechar={() => !salvandoTransf && setTransferindo(null)}
+      >
+        <form onSubmit={transferir}>
+          <p className="text-sm leading-relaxed text-texto-suave">
+            O ingresso passa para o nome de outra pessoa. Ela precisa levar
+            documento com foto que confira com estes dados.
+          </p>
+
+          <label htmlFor="t-nome" className="mb-1.5 mt-5 block text-xs text-texto-suave">
+            Nome completo do novo titular
+          </label>
+          <input
+            id="t-nome"
+            className="campo"
+            placeholder="Maria da Silva"
+            value={novoTitular.nome}
+            onChange={(e) => setNovoTitular({ ...novoTitular, nome: e.target.value })}
+          />
+
+          <label htmlFor="t-cpf" className="mb-1.5 mt-4 block text-xs text-texto-suave">
+            CPF
+          </label>
+          <input
+            id="t-cpf"
+            inputMode="numeric"
+            className="campo"
+            placeholder="000.000.000-00"
+            value={novoTitular.cpf}
+            onChange={(e) =>
+              setNovoTitular({
+                ...novoTitular,
+                cpf: soDigitos(e.target.value)
+                  .slice(0, 11)
+                  .replace(/(\d{3})(\d)/, '$1.$2')
+                  .replace(/(\d{3})(\d)/, '$1.$2')
+                  .replace(/(\d{3})(\d{1,2})$/, '$1-$2'),
+              })
+            }
+          />
+
+          {erroTransf && <p className="mt-3 text-sm text-erro">{erroTransf}</p>}
+
+          <div className="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
+            <button type="submit" disabled={salvandoTransf} className="botao-ouro flex-1">
+              {salvandoTransf ? 'Transferindo…' : 'Transferir'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setTransferindo(null)}
+              disabled={salvandoTransf}
+              className="botao-fantasma flex-1"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* ================= AVISO ================= */}
+      <ModalAviso
+        aberto={aviso !== null}
+        titulo={aviso?.titulo ?? ''}
+        mensagem={aviso?.texto ?? ''}
+        tom={aviso?.tom}
+        onFechar={() => setAviso(null)}
+      />
 
       {/* ================= QR EM TELA CHEIA ================= */}
       {qrAberto?.tokenQr && (
