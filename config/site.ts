@@ -176,11 +176,10 @@ export const eventos: EventoConfig[] = [
     // >>> SUBSTITUIR: capacidade do espaço
     capacidade: 120,
 
-    // >>> TROCAR pelo cartaz assim que ele ficar pronto.
-    // Provisório: o plano de cima do show no Sebo, usado só como textura de
-    // fundo (entra a 26% de opacidade). Não mostra rosto de ninguém, então
-    // não dá a entender que é show de banda.
-    imagemHero: '/imagens/eventos/2026-08-concerto-solidario/foto-03.jpg',
+    // Fundo do hero: a foto tratada em duotone que também está no cartaz.
+    imagemHero: '/imagens/cartazes/johann-duotone.png',
+    // O cartaz vira a prévia no WhatsApp e no Instagram.
+    cartaz: '/imagens/cartazes/tropicalia-feed.jpg',
 
     descricao:
       'Em 1968 um punhado de gente decidiu que era possível engolir tudo de ' +
