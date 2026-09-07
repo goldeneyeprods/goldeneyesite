@@ -15,3 +15,6 @@ build/
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# Cartaz impresso: 7 MB, gerado por comando quando precisar
+cartazes/*.png
