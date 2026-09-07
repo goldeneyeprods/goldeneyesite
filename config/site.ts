@@ -150,14 +150,17 @@ export interface EventoConfig {
 // ----------------------------------------------------------------------------
 export const eventos: EventoConfig[] = [
   // ==========================================================================
-  //  TROPICÁLIA SESSIONS — sábado, 12/09, 17h
+  //  TROPICÁLIA & ROCK NACIONAL — sábado, 12/09, 17h
+  //  Johann Sebastian K. sozinho: show autoral/cover + discotecagem própria.
+  //  NÃO é show de banda — o Delírio Parabólico não toca nesta data.
   //  Solidário: entrada por doação ao Lar Betânia, sem venda de ingresso.
-  //  >>> FALTA: a arte, o endereço completo e a capacidade do espaço.
+  //  >>> FALTA: a arte e a capacidade do espaço.
   // ==========================================================================
   {
+    // O slug fica como está: quem já tiver o link não perde a página.
     slug: 'tropicalia-sessions',
-    nome: 'Tropicália Sessions',
-    subtitulo: 'Delírio Parabólico revisita o tropicalismo',
+    nome: 'Tropicália & Rock Nacional',
+    subtitulo: 'Johann Sebastian K. — voz, violão e discotecagem em vinil',
 
     dataInicio: '2026-09-12T17:00:00-03:00',
     aberturaPortoes: '2026-09-12T17:00:00-03:00',
@@ -173,17 +176,19 @@ export const eventos: EventoConfig[] = [
     // >>> SUBSTITUIR: capacidade do espaço
     capacidade: 120,
 
-    // Provisório até sair a arte: o plano de cima do show no Sebo. É a mesma
-    // banda, e no hero a imagem entra a 26% de opacidade, então plano aberto
-    // funciona melhor que retrato.  >>> TROCAR quando o cartaz ficar pronto.
+    // >>> TROCAR pelo cartaz assim que ele ficar pronto.
+    // Provisório: o plano de cima do show no Sebo, usado só como textura de
+    // fundo (entra a 26% de opacidade). Não mostra rosto de ninguém, então
+    // não dá a entender que é show de banda.
     imagemHero: '/imagens/eventos/2026-08-concerto-solidario/foto-03.jpg',
 
     descricao:
       'Em 1968 um punhado de gente decidiu que era possível engolir tudo de ' +
       'uma vez — a guitarra elétrica e o berimbau, o Beatles e o baião — e ' +
-      'devolver aquilo em forma de canção. Tropicália Sessions é o Delírio ' +
-      'Parabólico atravessando esse repertório: Caetano, Gil, Gal, Tom Zé e ' +
-      'Os Mutantes, com o fuzz e a distorção que a banda já traz de casa.',
+      'devolver aquilo em forma de canção. Aqui é Johann Sebastian K. ' +
+      'sozinho, atravessando esse repertório em formato reduzido: Os ' +
+      'Mutantes, Raul Seixas e o que mais a tarde pedir. Depois do show, ele ' +
+      'mesmo assume a discotecagem e a viagem continua no vinil.',
 
     lineup: [
       {
@@ -194,11 +199,19 @@ export const eventos: EventoConfig[] = [
       },
       {
         horario: '17:30',
-        titulo: 'Delírio Parabólico',
+        titulo: 'Johann Sebastian K.',
         descricao:
-          'Tropicália em versão psicodélica: Caetano Veloso, Gilberto Gil, ' +
-          'Gal Costa, Tom Zé e Os Mutantes.',
+          'Voz e violão. Os Mutantes, Raul Seixas e o melhor do rock ' +
+          'nacional dos anos 60 e 70, em formato reduzido.',
         destaque: true,
+      },
+      {
+        horario: '19:00',
+        titulo: 'Discotecagem — Johann Sebastian K.',
+        descricao:
+          'O mesmo ouvido, agora nos discos. Tropicália, psicodelia ' +
+          'brasileira e rock nacional em vinil.',
+        destaque: false,
       },
     ],
 
