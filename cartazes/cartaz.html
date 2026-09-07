@@ -78,26 +78,50 @@
     letter-spacing: 1px;
   }
 
-  /* --- O OLHO no centro do sol -----------------------------------------
-     Sem foto, o miolo precisava de um símbolo. O olho de Hórus já é um
-     olho e já é solar — cai no lugar sem precisar de justificativa. */
+  /* --- MIOLO: círculo partido ao meio -----------------------------------
+     De um lado Os Mutantes, do outro Raul Seixas. Diz o repertório numa
+     olhada, o que nenhuma tipografia consegue fazer tão rápido.
+     As duas fotos entram em duotone, para virarem uma imagem só em vez de
+     dois recortes colados. */
   .miolo {
     position: absolute; top: 250px; left: 50%; transform: translateX(-50%);
-    width: 330px; height: 330px; border-radius: 50%; z-index: 12;
-    display: flex; align-items: center; justify-content: center;
-    background: radial-gradient(circle, #3d1155 0%, var(--escuro) 72%);
+    width: 342px; height: 342px; border-radius: 50%; z-index: 12;
+    overflow: hidden; display: flex;
+    background: var(--escuro);
     box-shadow:
       0 0 0 11px var(--amarelo),
       0 0 0 22px var(--escuro),
       0 0 0 29px var(--creme),
       0 0 100px 24px rgba(42,10,61,.5);
   }
-  .miolo img { width: 212px; }
+  .miolo .metade { position: relative; width: 50%; height: 100%; overflow: hidden; }
+  .miolo .metade img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  /* o corte no meio, em amarelo, para ler como uma peça só e não colagem */
+  .miolo::after {
+    content: ''; position: absolute;
+    left: 50%; top: 0; bottom: 0; width: 7px;
+    transform: translateX(-50%);
+    background: var(--amarelo); z-index: 3;
+  }
+  /* legenda de cada lado */
+  .miolo .quem {
+    position: absolute; left: 0; right: 0; bottom: 12px; z-index: 4;
+    text-align: center;
+    font-size: 15px; font-weight: 900;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--amarelo);
+    text-shadow: 0 2px 5px rgba(42,10,61,.95);
+  }
 
   /* --- PALMEIRAS -------------------------------------------------------- */
+  /* Enraizadas nos cantos de baixo: o tronco nasce fora do quadro e sobe
+     inclinado para dentro. Antes elas flutuavam no meio, o que não existe
+     em cartaz nenhum — palmeira sai do chão. */
   .palmeiras {
-    position: absolute; left: 0; right: 0; top: 176px;
-    height: 500px; z-index: 8; pointer-events: none;
+    position: absolute; inset: 0;
+    z-index: 8; pointer-events: none;
   }
 
   /* --- O QUE É: o maior bloco do cartaz -------------------------------- */
@@ -192,31 +216,52 @@
     </textPath></text>
   </svg>
 
-  <div class="miolo"><img src="olho.png" alt=""></div>
+  <div class="miolo">
+    <div class="metade">
+      <img src="mutantes.png" alt="Os Mutantes">
+      <div class="quem">Os Mutantes</div>
+    </div>
+    <div class="metade">
+      <img src="raul.png" alt="Raul Seixas">
+      <div class="quem">Raul Seixas</div>
+    </div>
+  </div>
 
-  <svg class="palmeiras" viewBox="0 0 1080 500" preserveAspectRatio="xMidYMax meet">
+  <svg class="palmeiras" viewBox="0 0 1080 1350" preserveAspectRatio="none">
     <defs>
       <path id="folha" d="M0 0 C 52 -34, 126 -40, 196 -6
                           C 168 10, 132 30, 96 40
                           C 60 30, 26 14, 0 7 Z"/>
-      <g id="palmeira">
-        <path d="M0 0 C -8 -96, -22 -192, -54 -276 L -22 -286
-                 C 6 -198, 14 -98, 20 0 Z"/>
-        <g transform="translate(-36,-284)">
-          <use href="#folha" transform="rotate(-172)"/>
-          <use href="#folha" transform="rotate(-140)"/>
-          <use href="#folha" transform="rotate(-108)"/>
-          <use href="#folha" transform="rotate(-76)"/>
-          <use href="#folha" transform="rotate(-44)"/>
-          <use href="#folha" transform="rotate(-12)"/>
-          <use href="#folha" transform="rotate(18)"/>
-          <circle cx="0" cy="0" r="16"/>
-        </g>
+      <g id="copa">
+        <use href="#folha" transform="rotate(-176)"/>
+        <use href="#folha" transform="rotate(-146)"/>
+        <use href="#folha" transform="rotate(-116)"/>
+        <use href="#folha" transform="rotate(-86)"/>
+        <use href="#folha" transform="rotate(-56)"/>
+        <use href="#folha" transform="rotate(-26)"/>
+        <use href="#folha" transform="rotate(6)"/>
+        <circle cx="0" cy="0" r="17"/>
       </g>
     </defs>
+
     <g fill="#2a0a3d">
-      <use href="#palmeira" transform="translate(126,500) scale(.94)"/>
-      <use href="#palmeira" transform="translate(954,500) scale(-.94,.94)"/>
+      <!-- esquerda: raiz no canto, tronco subindo para dentro -->
+      <g>
+        <path d="M-46 1370
+                 C 22 1090, 96 790, 148 472
+                 L 190 480
+                 C 132 800, 60 1100, 6 1370 Z"/>
+        <g transform="translate(172,474) scale(1.18)"><use href="#copa"/></g>
+      </g>
+
+      <!-- direita: espelhada -->
+      <g transform="translate(1080,0) scale(-1,1)">
+        <path d="M-46 1370
+                 C 22 1090, 96 790, 148 472
+                 L 190 480
+                 C 132 800, 60 1100, 6 1370 Z"/>
+        <g transform="translate(172,474) scale(1.18)"><use href="#copa"/></g>
+      </g>
     </g>
   </svg>
 
