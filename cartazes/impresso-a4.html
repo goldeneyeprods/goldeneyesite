@@ -4,182 +4,232 @@
 <meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Archivo:wght@600;700;900&display=swap" rel="stylesheet">
 <style>
   /* =====================================================================
-     CARTAZ IMPRESSO — A4 a 300dpi (renderizar com escala 2)
+     CARTAZ IMPRESSO — A4 a 300dpi · Tropicália & Rock Nacional
 
-     A referência é o cartaz de risografia: duas tintas chapadas sobre
-     papel creme, meio-tom visível, leve erro de registro entre as cores.
-     É o avesso do brilho digital — e é o que tira a cara de imagem gerada.
+     Referência: cartaz psicodélico de 1968. As regras do gênero são o
+     oposto do design moderno —
+       · a cor sangra até a borda, não existe respiro branco
+       · cores que vibram juntas (magenta contra laranja contra amarelo)
+       · sol com raios ocupando o fundo inteiro
+       · letra gorda, curva, com contorno
+       · palmeira e folhagem como moldura
+       · quanto mais cheio, mais certo
+
+     HIERARQUIA — o que a pessoa lê, nesta ordem:
+       1. TROPICÁLIA & ROCK NACIONAL  · o que é
+       2. OS MUTANTES & RAUL SEIXAS   · o repertório, que é o que atrai
+       3. Johann Sebastian K.         · quem toca
      ===================================================================== */
 
   :root {
-    --papel:     #f2e8d5;   /* creme, o papel */
-    --tinta-1:   #688a2d;   /* verde-abacate */
-    --tinta-2:   #1a1035;   /* roxo quase preto */
-    --ouro:      #c9973a;
+    --magenta:  #e5195e;
+    --laranja:  #ff6b18;
+    --amarelo:  #ffc42e;
+    --creme:    #ffe9b8;
+    --escuro:   #2a0a3d;   /* roxo berinjela, para as silhuetas */
+    --turquesa: #00c2a8;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
     width: 1240px; height: 1754px;
-    background: var(--papel);
+    position: relative; overflow: hidden;
     font-family: 'Archivo', sans-serif;
-    color: var(--tinta-2);
-    overflow: hidden;
-    position: relative;
+    background: linear-gradient(180deg,
+      #7b1fa2 0%, var(--magenta) 20%, var(--laranja) 52%,
+      var(--amarelo) 76%, #ffd76e 100%);
   }
 
-  /* --- Meio-tom: os pontinhos da impressão barata --------------------- */
-  .meiotom {
-    position: absolute; inset: 0; z-index: 30; pointer-events: none;
-    background-image: radial-gradient(circle, rgba(26,16,53,.30) 0.9px, transparent 1.1px);
-    background-size: 4px 4px;
-    mix-blend-mode: multiply;
-    opacity: .55;
+  /* --- SOL COM RAIOS --------------------------------------------------- */
+  .raios {
+    position: absolute; top: -560px; left: 50%; transform: translateX(-50%);
+    width: 2000px; height: 2000px; z-index: 1;
+    background: repeating-conic-gradient(from 0deg,
+      rgba(255,233,184,.22) 0deg 6deg, transparent 6deg 12deg);
   }
 
-  /* --- Grão do papel --------------------------------------------------- */
-  .grao {
-    position: absolute; inset: 0; z-index: 29; pointer-events: none;
-    opacity: .16; mix-blend-mode: multiply;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
+  /* --- ONDAS ----------------------------------------------------------- */
+  .ondas { position: absolute; inset: 0; z-index: 2; opacity: .28; }
 
-  /* --- Topo: quem apresenta ------------------------------------------- */
+  /* --- TOPO ------------------------------------------------------------ */
   .topo {
-    position: absolute; top: 72px; left: 78px; right: 78px; z-index: 20;
-    display: flex; align-items: center; justify-content: space-between;
+    position: absolute; top: 62px; left: 0; right: 0; z-index: 16;
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
   }
-  .apresenta {
-    font-size: 17px; font-weight: 700;
-    letter-spacing: .34em; text-transform: uppercase;
-    color: var(--tinta-2);
-  }
-  .olho {
-    width: 78px;
-    /* dourado sobre creme não tem contraste: viramos silhueta,
-       que é como logo aparece em impressão de duas tintas mesmo */
-    filter: brightness(0) saturate(100%);
-    opacity: .88;
+  .topo img { width: 54px; filter: brightness(0) invert(1); opacity: .95; }
+  .topo span {
+    font-size: 15px; font-weight: 900;
+    letter-spacing: .38em; text-transform: uppercase;
+    color: var(--creme); text-shadow: 0 2px 6px rgba(42,10,61,.6);
   }
 
-  /* --- A FOTO: bloco recortado, sangrando pela direita ---------------- */
-  .foto {
-    position: absolute;
-    top: 286px; right: -40px;
-    width: 772px; height: 1020px;
-    z-index: 10;
-    transform: rotate(-1.6deg);
-    /* borda dura, como recorte de tesoura */
-    border: 9px solid var(--tinta-2);
-    box-shadow: 16px 16px 0 var(--tinta-1);
-    overflow: hidden;
-    background: var(--tinta-2);
+  /* --- O ARTISTA, em arco: presente, mas não é o protagonista ---------- */
+  .arco { position: absolute; top: 176px; left: 0; width: 1240px; height: 200px; z-index: 14; }
+  .arco text {
+    font-family: 'Bagel Fat One', 'Archivo', cursive;
+    font-size: 58px;
+    fill: var(--creme);
+    stroke: var(--escuro); stroke-width: 7px;
+    paint-order: stroke fill;
+    letter-spacing: 1px;
   }
-  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-  /* --- O NOME ---------------------------------------------------------- */
-  .nome {
-    position: absolute; top: 330px; left: 72px; z-index: 20;
-    font-family: 'Anton', sans-serif;
-    line-height: .88;
-    text-transform: uppercase;
+  /* --- O OLHO no centro do sol -----------------------------------------
+     Sem foto, o miolo precisava de um símbolo. O olho de Hórus já é um
+     olho e já é solar — cai no lugar sem precisar de justificativa. */
+  .miolo {
+    position: absolute; top: 330px; left: 50%; transform: translateX(-50%);
+    width: 400px; height: 400px; border-radius: 50%; z-index: 12;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle, #3d1155 0%, var(--escuro) 72%);
+    box-shadow:
+      0 0 0 11px var(--amarelo),
+      0 0 0 22px var(--escuro),
+      0 0 0 29px var(--creme),
+      0 0 100px 24px rgba(42,10,61,.5);
   }
-  .nome span { display: block; position: relative; }
+  .miolo img { width: 258px; }
 
-  /* erro de registro: a tinta vermelha sai levemente do lugar */
-  .nome span::before {
-    content: attr(data-t);
-    position: absolute; left: -4px; top: 4px;
-    color: var(--tinta-1);
-    z-index: -1;
+  /* --- PALMEIRAS -------------------------------------------------------- */
+  .palmeiras {
+    position: absolute; left: 0; right: 0; top: 240px;
+    height: 600px; z-index: 8; pointer-events: none;
   }
-      .l1 { font-size: 134px; letter-spacing: -.015em; }
-      .l2 { font-size: 134px; letter-spacing: -.025em; }
-      .l3 { font-size: 134px; letter-spacing: -.01em; }
 
-  /* --- Subtítulo -------------------------------------------------------- */
-  .faixa {
-    position: absolute; left: 72px; top: 950px; z-index: 20;
-    width: 470px;
+  /* --- O QUE É: o maior bloco do cartaz -------------------------------- */
+  .titulo {
+    position: absolute; top: 830px; left: 0; right: 0; z-index: 14;
+    text-align: center;
+    font-family: 'Bagel Fat One', 'Archivo', cursive;
+    line-height: .92;
   }
-  .regua { height: 7px; background: var(--tinta-1); margin-bottom: 20px; }
-      .subtitulo {
-    font-family: 'Anton', sans-serif;
-    font-size: 50px; line-height: 1.02;
-    text-transform: uppercase; letter-spacing: .005em;
-    color: var(--tinta-2);
+  .titulo .t1 {
+    display: block; font-size: 140px;
+    color: var(--amarelo);
+    -webkit-text-stroke: 11px var(--escuro);
+    paint-order: stroke fill;
+    text-shadow: 0 9px 0 rgba(42,10,61,.5);
   }
+  .titulo .t2 {
+    display: block; font-size: 82px; margin-top: 12px;
+    color: var(--creme);
+    -webkit-text-stroke: 9px var(--escuro);
+    paint-order: stroke fill;
+  }
+
+  /* --- O REPERTÓRIO: quase tão grande, porque é o que atrai ------------ */
   .repertorio {
-    margin-top: 20px;
-    font-size: 18px; font-weight: 700;
-    letter-spacing: .16em; text-transform: uppercase;
-    color: var(--tinta-1);
-    line-height: 1.7;
+    position: absolute; top: 1096px; left: 0; right: 0; z-index: 14;
+    text-align: center;
+    font-family: 'Bagel Fat One', 'Archivo', cursive;
+    font-size: 68px; line-height: 1.04;
+    color: var(--escuro);
+    -webkit-text-stroke: 8px var(--creme);
+    paint-order: stroke fill;
+  }
+  .vinil {
+    position: absolute; top: 1268px; left: 0; right: 0; z-index: 14;
+    text-align: center;
+    font-size: 25px; font-weight: 900;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--escuro);
+    text-shadow: 0 2px 0 rgba(255,233,184,.55);
   }
 
-  /* --- Bloco de informação, em vermelho -------------------------------- */
+  /* --- RODAPÉ ----------------------------------------------------------- */
   .rodape {
-    position: absolute; left: 0; right: 0; bottom: 0; z-index: 20;
-    background: var(--tinta-1);
-    color: var(--papel);
-    padding: 52px 78px 60px;
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 16;
+    background: var(--escuro); color: var(--creme);
+    padding: 32px 64px 38px; text-align: center;
+    border-top: 10px solid var(--amarelo);
   }
   .data {
-    font-family: 'Anton', sans-serif;
-    font-size: 88px; line-height: .92;
-    text-transform: uppercase; letter-spacing: -.005em;
+    font-family: 'Bagel Fat One', 'Archivo', cursive;
+    font-size: 70px; line-height: 1; color: var(--amarelo);
   }
-  .data em { font-style: normal; color: var(--tinta-2); }
-  .local {
-    margin-top: 16px;
-    font-size: 25px; font-weight: 700; line-height: 1.34;
-    letter-spacing: .012em;
-  }
-  .endereco {
-    margin-top: 4px;
-    font-size: 18px; font-weight: 500; opacity: .92;
-    letter-spacing: .02em;
-  }
+  .local { margin-top: 9px; font-size: 24px; font-weight: 900; }
+  .endereco { margin-top: 2px; font-size: 17px; font-weight: 600; opacity: .8; }
   .solidaria {
-    margin-top: 22px; padding-top: 20px;
-    border-top: 3px solid rgba(242,232,213,.45);
-    font-size: 19px; font-weight: 700;
-    letter-spacing: .07em; text-transform: uppercase;
-    line-height: 1.5;
+    margin-top: 12px; padding-top: 11px;
+    border-top: 2px solid rgba(255,233,184,.3);
+    font-size: 17px; font-weight: 900;
+    letter-spacing: .07em; text-transform: uppercase; line-height: 1.5;
   }
-  .solidaria b { color: var(--tinta-2); }
+  .solidaria b { color: var(--turquesa); }
+
+  /* --- Grão de impressão ------------------------------------------------ */
+  .grao {
+    position: absolute; inset: 0; z-index: 20; pointer-events: none;
+    opacity: .17; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
 </style>
 </head>
 <body>
 
+  <div class="raios"></div>
+
+  <svg class="ondas" viewBox="0 0 1240 1754" preserveAspectRatio="none">
+    <g fill="none" stroke="#2a0a3d" stroke-width="7">
+      <path d="M-40 1340 Q 190 1268, 370 1340 T 800 1340 T 1290 1340"/>
+      <path d="M-40 1386 Q 190 1314, 370 1386 T 800 1386 T 1290 1386"/>
+    </g>
+  </svg>
+
   <div class="topo">
-    <div class="apresenta">Golden Eye Prods. apresenta</div>
-    <img class="olho" src="olho.png" alt="">
+    <img src="olho.png" alt="">
+    <span>Golden Eye Prods. apresenta</span>
   </div>
 
-  <div class="foto"><img src="foto.png" alt=""></div>
+  <svg class="arco" viewBox="0 0 1240 200">
+    <defs><path id="curva" d="M 175 184 Q 620 40, 1065 184" fill="none"/></defs>
+    <text><textPath href="#curva" startOffset="50%" text-anchor="middle">
+      JOHANN SEBASTIAN K.
+    </textPath></text>
+  </svg>
 
-  <div class="nome">
-    <span class="l1" data-t="Johann">Johann</span>
-    <span class="l2" data-t="Sebastian">Sebastian</span>
-    <span class="l3" data-t="K.">K.</span>
+  <div class="miolo"><img src="olho.png" alt=""></div>
+
+  <svg class="palmeiras" viewBox="0 0 1240 600" preserveAspectRatio="xMidYMax meet">
+    <defs>
+      <path id="folha" d="M0 0 C 52 -34, 126 -40, 196 -6
+                          C 168 10, 132 30, 96 40
+                          C 60 30, 26 14, 0 7 Z"/>
+      <g id="palmeira">
+        <path d="M0 0 C -8 -96, -22 -192, -54 -276 L -22 -286
+                 C 6 -198, 14 -98, 20 0 Z"/>
+        <g transform="translate(-36,-284)">
+          <use href="#folha" transform="rotate(-172)"/>
+          <use href="#folha" transform="rotate(-140)"/>
+          <use href="#folha" transform="rotate(-108)"/>
+          <use href="#folha" transform="rotate(-76)"/>
+          <use href="#folha" transform="rotate(-44)"/>
+          <use href="#folha" transform="rotate(-12)"/>
+          <use href="#folha" transform="rotate(18)"/>
+          <circle cx="0" cy="0" r="16"/>
+        </g>
+      </g>
+    </defs>
+    <g fill="#2a0a3d">
+      <use href="#palmeira" transform="translate(150,600) scale(1.06)"/>
+      <use href="#palmeira" transform="translate(1090,600) scale(-1.06,1.06)"/>
+    </g>
+  </svg>
+
+  <div class="titulo">
+    <span class="t1">TROPICÁLIA</span>
+    <span class="t2">&amp; ROCK NACIONAL</span>
   </div>
 
-  <div class="faixa">
-    <div class="regua"></div>
-    <div class="subtitulo">Tropicália<br>&amp; Rock Nacional</div>
-    <div class="repertorio">
-      Os Mutantes · Raul Seixas<br>
-      + discotecagem em vinil
-    </div>
-  </div>
+  <div class="repertorio">OS MUTANTES<br>&amp; RAUL SEIXAS</div>
+  <div class="vinil">+ discotecagem em vinil</div>
 
   <div class="rodape">
-    <div class="data">Sáb <em>12</em> Set · 17h</div>
+    <div class="data">SÁB 12 SET · 17H</div>
     <div class="local">Salvador Vegan Café</div>
     <div class="endereco">Rua Henrique Meyer, 61 — Centro, Joinville/SC</div>
     <div class="solidaria">
@@ -189,6 +239,5 @@
   </div>
 
   <div class="grao"></div>
-  <div class="meiotom"></div>
 </body>
 </html>

@@ -176,9 +176,8 @@ export const eventos: EventoConfig[] = [
     // >>> SUBSTITUIR: capacidade do espaço
     capacidade: 120,
 
-    // Fundo do hero: a foto tratada em duotone que também está no cartaz.
-    imagemHero: '/imagens/cartazes/johann-duotone.png',
-    // O cartaz vira a prévia no WhatsApp e no Instagram.
+    // O cartaz é a capa do evento e a prévia no WhatsApp e no Instagram.
+    imagemHero: '/imagens/cartazes/tropicalia-feed.jpg',
     cartaz: '/imagens/cartazes/tropicalia-feed.jpg',
 
     descricao:
