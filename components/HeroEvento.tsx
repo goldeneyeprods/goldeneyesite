@@ -117,7 +117,9 @@ export function HeroEvento({ evento }: { evento: EventoConfig }) {
                 </a>
               ) : evento.entrada ? (
                 <a href="#ingressos" className="botao-ouro w-full sm:w-auto">
-                  {evento.entrada.titulo}
+                  {/* quando há inscrição, o botão diz a ação; sem ela, diz
+                      apenas como se entra */}
+                  {evento.entrada.link?.rotulo ?? evento.entrada.titulo}
                 </a>
               ) : (
                 <span className="botao-fantasma pointer-events-none w-full sm:w-auto">

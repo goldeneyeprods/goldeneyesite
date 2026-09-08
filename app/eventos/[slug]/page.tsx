@@ -152,7 +152,13 @@ export default async function PaginaEvento({
       <Header
         links={links}
         voltar={futuro ? 'Próximo evento' : 'Arquivo'}
-        cta={mostraIngressos ? { href: '#ingressos', rotulo: 'Ingressos' } : undefined}
+        cta={
+          mostraIngressos
+            ? { href: '#ingressos', rotulo: 'Ingressos' }
+            : futuro && evento.entrada?.link
+              ? { href: '#ingressos', rotulo: evento.entrada.link.rotulo }
+              : undefined
+        }
       />
 
       <main id="conteudo">
