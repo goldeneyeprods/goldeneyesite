@@ -196,6 +196,27 @@ export default async function PaginaEvento({
                     <p className="mt-4 text-sm leading-relaxed text-texto-suave">
                       {evento.entrada.texto}
                     </p>
+
+                    {evento.entrada.link && (
+                      <>
+                        <a
+                          href={evento.entrada.link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="botao-ouro mt-7 w-full"
+                        >
+                          {evento.entrada.link.rotulo}
+                        </a>
+                        {/* A distinção entre inscrever-se e doar precisa estar
+                            explícita: quem se inscreve num site de ingresso
+                            costuma achar que já pagou e chega sem a doação. */}
+                        {evento.entrada.link.nota && (
+                          <p className="mt-4 text-xs leading-relaxed text-texto-fraco">
+                            {evento.entrada.link.nota}
+                          </p>
+                        )}
+                      </>
+                    )}
                   </>
                 ) : (
                   <>
@@ -215,7 +236,11 @@ export default async function PaginaEvento({
                     href={produtora.redes.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="botao-ouro mt-7 inline-flex"
+                    className={
+                      evento.entrada?.link
+                        ? 'botao-fantasma mt-3 inline-flex !py-3 !text-sm'
+                        : 'botao-ouro mt-7 inline-flex'
+                    }
                   >
                     Seguir no Instagram
                   </a>

@@ -24,6 +24,9 @@ A entrada é uma doação ao Lar Betânia. Leve alimento não perecível, uma pe
 ☕ O café serve normalmente, cardápio vegano
 👶 Classificação livre
 
+🎫 Inscrição gratuita no Sympla — link na bio
+(a inscrição não substitui a doação, serve só pra sabermos quanta gente esperar)
+
 Line-up completo, endereço e mapa no link da bio 👁
 
 Arte por Ana Heloiza Alves de Oliveira
@@ -52,8 +55,8 @@ Entrada solidária 🎗
 E um segundo story com o link:
 
 ```
-Tudo sobre o evento 👇
-goldeneyeprods.netlify.app
+Inscrição gratuita 👇
+Link no sticker
 ```
 
 ---
@@ -142,6 +145,10 @@ Entrada solidária: alimento, roupa ou doação em dinheiro ao Lar Betânia. Sem
 
 📍 R. Henrique Meyer, 61 — Centro
 
+Inscrição gratuita (só pra dimensionar o público):
+https://www.sympla.com.br/evento/johann-sebastian-k-tropicalia-rock-nacional/3570721
+
+Tudo sobre o evento:
 https://goldeneyeprods.netlify.app/eventos/tropicalia-sessions
 ```
 

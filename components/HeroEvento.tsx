@@ -143,7 +143,9 @@ export function HeroEvento({ evento }: { evento: EventoConfig }) {
                 className="surgir mt-6 text-xs text-texto-fraco"
                 style={{ animationDelay: '500ms' }}
               >
-                Sem ingresso e sem taxa — é só chegar com a sua doação
+                {evento.entrada.link
+                  ? 'Inscrição gratuita · entrada por doação · espaço limitado'
+                  : 'Sem ingresso e sem taxa — é só chegar com a sua doação'}
               </p>
             )}
           </>

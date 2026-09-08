@@ -124,8 +124,15 @@ export interface EventoConfig {
    * Para eventos sem venda de ingresso — entrada franca, por doação, por
    * convite. Se preenchido, a LP mostra este bloco no lugar do checkout,
    * em vez de um "vendas em breve" que não faria sentido.
+   *
+   * `link` é para quando a inscrição acontece fora do site (Sympla, por
+   * exemplo). Vira o botão principal do bloco.
    */
-  entrada?: { titulo: string; texto: string }
+  entrada?: {
+    titulo: string
+    texto: string
+    link?: { rotulo: string; url: string; nota?: string }
+  }
 
   /** imagem de fundo do hero da LP (opcional) */
   imagemHero?: string
@@ -245,8 +252,15 @@ export const eventos: EventoConfig[] = [
       texto:
         'A entrada é uma doação ao Lar Betânia, de Joinville. Leve alimento ' +
         'não perecível, peça de roupa em bom estado ou uma contribuição em ' +
-        'dinheiro — tudo vai direto para o lar. Não há venda de ingresso: é ' +
-        'só chegar.',
+        'dinheiro — tudo vai direto para o lar.',
+      link: {
+        rotulo: 'Garantir minha vaga',
+        url: 'https://www.sympla.com.br/evento/johann-sebastian-k-tropicalia-rock-nacional/3570721',
+        nota:
+          'A inscrição no Sympla é gratuita e não substitui a doação — ela ' +
+          'serve só para sabermos quanta gente esperar, já que o espaço é ' +
+          'limitado.',
+      },
     },
 
     creditos: [

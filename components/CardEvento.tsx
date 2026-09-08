@@ -80,7 +80,11 @@ export function CardEvento({
 
           <div className="shrink-0">
             <span className="botao-ouro pointer-events-none !px-7">
-              {futuro && evento.vendaAberta ? 'Ver e comprar' : 'Ver o evento'}
+              {futuro && evento.vendaAberta
+                ? 'Ver e comprar'
+                : futuro && evento.entrada?.link
+                  ? 'Ver e garantir vaga'
+                  : 'Ver o evento'}
             </span>
           </div>
         </div>
