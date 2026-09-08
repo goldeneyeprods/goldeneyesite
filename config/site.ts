@@ -186,8 +186,7 @@ export const eventos: EventoConfig[] = [
     imagemHero: '/imagens/cartazes/tropicalia-cartaz.jpg',
     cartaz: '/imagens/cartazes/tropicalia-cartaz.jpg',
     cartazOg: '/imagens/cartazes/tropicalia-og.jpg',
-    // >>> SUBSTITUIR pelo nome de quem assina a arte
-    cartazCredito: 'Arte por >>> NOME DA ARTISTA',
+    cartazCredito: 'Arte por Ana Heloiza Alves de Oliveira',
 
     descricao:
       'Em 1968 um punhado de gente decidiu que era possível engolir tudo de ' +
