@@ -19,3 +19,8 @@ next-env.d.ts
 # Cartaz impresso: 7 MB, gerado por comando quando precisar
 cartazes/*.png
 cartazes/folha-cartazes.jpg
+
+# Fotos de terceiros usadas no cartaz: ficam locais, fora do repositorio
+_originais/capas/
+cartazes/mutantes.png
+cartazes/raul.png

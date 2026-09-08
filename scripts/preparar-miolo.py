@@ -20,10 +20,10 @@ LUZ = (255, 233, 184)      # creme do cartaz
 
 # (nome de saída, nomes aceitos na entrada, recorte, foco)
 PECAS = [
-    ('mutantes', ['mutantes.jpg', 'mutantes.png', 'mutantes.jpeg'],
-     (0.02, 0.02, 0.98, 0.98), 'centro'),
-    ('raul', ['raul.jpg', 'raul.png', 'raul.jpeg'],
-     (0.16, 0.02, 0.90, 0.86), 'centro'),
+    ('mutantes', ['mutantes.jpg', 'mutantes.png', 'mutantes.jpeg', 'mutantes.webp'],
+     (0.05, 0.00, 0.99, 0.96), 'centro'),
+    ('raul', ['raul.jpg', 'raul.png', 'raul.jpeg', 'raul.webp'],
+     (0.10, 0.14, 0.94, 0.86), 'centro'),
 ]
 
 os.makedirs('cartazes', exist_ok=True)

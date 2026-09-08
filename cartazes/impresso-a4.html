@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Archivo:wght@600;700;900&display=swap" rel="stylesheet">
 <style>
   /* =====================================================================
-     CARTAZ IMPRESSO — A4 a 300dpi · Tropicália & Rock Nacional
+     CARTAZ — 1080 x 1350 · Tropicália & Rock Nacional
 
      Referência: cartaz psicodélico de 1968. As regras do gênero são o
      oposto do design moderno —
@@ -78,31 +78,40 @@
     letter-spacing: 1px;
   }
 
-  /* --- O OLHO no centro do sol -----------------------------------------
-     Sem foto, o miolo precisava de um símbolo. O olho de Hórus já é um
-     olho e já é solar — cai no lugar sem precisar de justificativa. */
+  /* --- MIOLO: dois medalhões ------------------------------------------
+     Tentei um círculo partido ao meio, mas cada metade virava uma fatia
+     estreita — foto de grupo não sobrevive a isso. Dois círculos lado a
+     lado, levemente sobrepostos, dão a cada foto um recorte decente e
+     ainda leem como uma peça só. */
   .miolo {
-    position: absolute; top: 330px; left: 50%; transform: translateX(-50%);
-    width: 400px; height: 400px; border-radius: 50%; z-index: 12;
-    display: flex; align-items: center; justify-content: center;
-    background: radial-gradient(circle, #3d1155 0%, var(--escuro) 72%);
-    box-shadow:
-      0 0 0 11px var(--amarelo),
-      0 0 0 22px var(--escuro),
-      0 0 0 29px var(--creme),
-      0 0 100px 24px rgba(42,10,61,.5);
+    position: absolute; top: 336px; left: 50%; transform: translateX(-50%);
+    z-index: 12; display: flex; align-items: center;
   }
-  .miolo img { width: 258px; }
+  .medalhao {
+    position: relative;
+    width: 330px; height: 330px; border-radius: 50%;
+    overflow: hidden; background: var(--escuro);
+    box-shadow:
+      0 0 0 9px var(--amarelo),
+      0 0 0 18px var(--escuro),
+      0 0 60px 14px rgba(42,10,61,.55);
+  }
+  .medalhao img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* sobreposição: o da direita entra por cima e encosta no da esquerda */
+  .medalhao + .medalhao { margin-left: -34px; z-index: 2; }
 
   /* --- PALMEIRAS -------------------------------------------------------- */
+  /* Enraizadas nos cantos de baixo: o tronco nasce fora do quadro e sobe
+     inclinado para dentro. Antes elas flutuavam no meio, o que não existe
+     em cartaz nenhum — palmeira sai do chão. */
   .palmeiras {
-    position: absolute; left: 0; right: 0; top: 240px;
-    height: 600px; z-index: 8; pointer-events: none;
+    position: absolute; inset: 0;
+    z-index: 8; pointer-events: none;
   }
 
   /* --- O QUE É: o maior bloco do cartaz -------------------------------- */
   .titulo {
-    position: absolute; top: 830px; left: 0; right: 0; z-index: 14;
+    position: absolute; top: 838px; left: 0; right: 0; z-index: 14;
     text-align: center;
     font-family: 'Bagel Fat One', 'Archivo', cursive;
     line-height: .92;
@@ -123,7 +132,7 @@
 
   /* --- O REPERTÓRIO: quase tão grande, porque é o que atrai ------------ */
   .repertorio {
-    position: absolute; top: 1096px; left: 0; right: 0; z-index: 14;
+    position: absolute; top: 1104px; left: 0; right: 0; z-index: 14;
     text-align: center;
     font-family: 'Bagel Fat One', 'Archivo', cursive;
     font-size: 68px; line-height: 1.04;
@@ -132,7 +141,7 @@
     paint-order: stroke fill;
   }
   .vinil {
-    position: absolute; top: 1268px; left: 0; right: 0; z-index: 14;
+    position: absolute; top: 1276px; left: 0; right: 0; z-index: 14;
     text-align: center;
     font-size: 25px; font-weight: 900;
     letter-spacing: .18em; text-transform: uppercase;
@@ -175,8 +184,8 @@
 
   <svg class="ondas" viewBox="0 0 1240 1754" preserveAspectRatio="none">
     <g fill="none" stroke="#2a0a3d" stroke-width="7">
-      <path d="M-40 1340 Q 190 1268, 370 1340 T 800 1340 T 1290 1340"/>
-      <path d="M-40 1386 Q 190 1314, 370 1386 T 800 1386 T 1290 1386"/>
+      <path d="M-40 1348 Q 190 1276, 370 1348 T 800 1348 T 1290 1348"/>
+      <path d="M-40 1394 Q 190 1322, 370 1394 T 800 1394 T 1290 1394"/>
     </g>
   </svg>
 
@@ -192,31 +201,48 @@
     </textPath></text>
   </svg>
 
-  <div class="miolo"><img src="olho.png" alt=""></div>
+  <div class="miolo">
+    <div class="medalhao"><img src="mutantes.png" alt="Os Mutantes"></div>
+    <div class="medalhao"><img src="raul.png" alt="Raul Seixas"></div>
+  </div>
+    </div>
+  </div>
 
-  <svg class="palmeiras" viewBox="0 0 1240 600" preserveAspectRatio="xMidYMax meet">
+  <svg class="palmeiras" viewBox="0 0 1240 1754" preserveAspectRatio="none">
     <defs>
       <path id="folha" d="M0 0 C 52 -34, 126 -40, 196 -6
                           C 168 10, 132 30, 96 40
                           C 60 30, 26 14, 0 7 Z"/>
-      <g id="palmeira">
-        <path d="M0 0 C -8 -96, -22 -192, -54 -276 L -22 -286
-                 C 6 -198, 14 -98, 20 0 Z"/>
-        <g transform="translate(-36,-284)">
-          <use href="#folha" transform="rotate(-172)"/>
-          <use href="#folha" transform="rotate(-140)"/>
-          <use href="#folha" transform="rotate(-108)"/>
-          <use href="#folha" transform="rotate(-76)"/>
-          <use href="#folha" transform="rotate(-44)"/>
-          <use href="#folha" transform="rotate(-12)"/>
-          <use href="#folha" transform="rotate(18)"/>
-          <circle cx="0" cy="0" r="16"/>
-        </g>
+      <g id="copa">
+        <use href="#folha" transform="rotate(-176)"/>
+        <use href="#folha" transform="rotate(-146)"/>
+        <use href="#folha" transform="rotate(-116)"/>
+        <use href="#folha" transform="rotate(-86)"/>
+        <use href="#folha" transform="rotate(-56)"/>
+        <use href="#folha" transform="rotate(-26)"/>
+        <use href="#folha" transform="rotate(6)"/>
+        <circle cx="0" cy="0" r="17"/>
       </g>
     </defs>
+
     <g fill="#2a0a3d">
-      <use href="#palmeira" transform="translate(150,600) scale(1.06)"/>
-      <use href="#palmeira" transform="translate(1090,600) scale(-1.06,1.06)"/>
+      <!-- esquerda: raiz no canto, tronco subindo para dentro -->
+      <g>
+        <path d="M-52 1780
+                 C 26 1420, 110 1010, 168 596
+                 L 214 606
+                 C 150 1020, 70 1430, 8 1780 Z"/>
+        <g transform="translate(196,598) scale(1.32)"><use href="#copa"/></g>
+      </g>
+
+      <!-- direita: espelhada -->
+      <g transform="translate(1240,0) scale(-1,1)">
+        <path d="M-52 1780
+                 C 26 1420, 110 1010, 168 596
+                 L 214 606
+                 C 150 1020, 70 1430, 8 1780 Z"/>
+        <g transform="translate(196,598) scale(1.32)"><use href="#copa"/></g>
+      </g>
     </g>
   </svg>
 

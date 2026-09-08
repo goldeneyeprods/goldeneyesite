@@ -78,42 +78,27 @@
     letter-spacing: 1px;
   }
 
-  /* --- MIOLO: círculo partido ao meio -----------------------------------
-     De um lado Os Mutantes, do outro Raul Seixas. Diz o repertório numa
-     olhada, o que nenhuma tipografia consegue fazer tão rápido.
-     As duas fotos entram em duotone, para virarem uma imagem só em vez de
-     dois recortes colados. */
+  /* --- MIOLO: dois medalhões ------------------------------------------
+     Tentei um círculo partido ao meio, mas cada metade virava uma fatia
+     estreita — foto de grupo não sobrevive a isso. Dois círculos lado a
+     lado, levemente sobrepostos, dão a cada foto um recorte decente e
+     ainda leem como uma peça só. */
   .miolo {
-    position: absolute; top: 250px; left: 50%; transform: translateX(-50%);
-    width: 342px; height: 342px; border-radius: 50%; z-index: 12;
-    overflow: hidden; display: flex;
-    background: var(--escuro);
+    position: absolute; top: 258px; left: 50%; transform: translateX(-50%);
+    z-index: 12; display: flex; align-items: center;
+  }
+  .medalhao {
+    position: relative;
+    width: 284px; height: 284px; border-radius: 50%;
+    overflow: hidden; background: var(--escuro);
     box-shadow:
-      0 0 0 11px var(--amarelo),
-      0 0 0 22px var(--escuro),
-      0 0 0 29px var(--creme),
-      0 0 100px 24px rgba(42,10,61,.5);
+      0 0 0 9px var(--amarelo),
+      0 0 0 18px var(--escuro),
+      0 0 60px 14px rgba(42,10,61,.55);
   }
-  .miolo .metade { position: relative; width: 50%; height: 100%; overflow: hidden; }
-  .miolo .metade img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-  }
-  /* o corte no meio, em amarelo, para ler como uma peça só e não colagem */
-  .miolo::after {
-    content: ''; position: absolute;
-    left: 50%; top: 0; bottom: 0; width: 7px;
-    transform: translateX(-50%);
-    background: var(--amarelo); z-index: 3;
-  }
-  /* legenda de cada lado */
-  .miolo .quem {
-    position: absolute; left: 0; right: 0; bottom: 12px; z-index: 4;
-    text-align: center;
-    font-size: 15px; font-weight: 900;
-    letter-spacing: .12em; text-transform: uppercase;
-    color: var(--amarelo);
-    text-shadow: 0 2px 5px rgba(42,10,61,.95);
-  }
+  .medalhao img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* sobreposição: o da direita entra por cima e encosta no da esquerda */
+  .medalhao + .medalhao { margin-left: -34px; z-index: 2; }
 
   /* --- PALMEIRAS -------------------------------------------------------- */
   /* Enraizadas nos cantos de baixo: o tronco nasce fora do quadro e sobe
@@ -217,13 +202,9 @@
   </svg>
 
   <div class="miolo">
-    <div class="metade">
-      <img src="mutantes.png" alt="Os Mutantes">
-      <div class="quem">Os Mutantes</div>
-    </div>
-    <div class="metade">
-      <img src="raul.png" alt="Raul Seixas">
-      <div class="quem">Raul Seixas</div>
+    <div class="medalhao"><img src="mutantes.png" alt="Os Mutantes"></div>
+    <div class="medalhao"><img src="raul.png" alt="Raul Seixas"></div>
+  </div>
     </div>
   </div>
 
