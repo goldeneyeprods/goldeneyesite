@@ -20,7 +20,7 @@ Depois do show a viagem continua no vinil, com discotecagem tropicalista até o 
 A entrada é uma doação ao Lar Betânia. Leve alimento não perecível, uma peça de roupa em bom estado ou uma contribuição em dinheiro. Não tem ingresso e não tem taxa — é só chegar.
 
 📍 Rua Henrique Meyer, 61 — Centro, Joinville
-🕔 Das 17h às 21h
+🕔 Casa abre 16h30 · show às 17h · até 21h
 ☕ O café serve normalmente, cardápio vegano
 👶 Classificação livre
 
@@ -85,8 +85,8 @@ tarde.
 
 PROGRAMAÇÃO
 
-17h00 — Abertura da casa e recepção das doações
-17h30 — Johann Sebastian K. · voz e violão
+16h30 — Abertura da casa, aquecimento e recepção das doações
+17h00 — Johann Sebastian K. · voz e violão
 19h00 — Discotecagem em vinil
 21h00 — Encerramento
 
@@ -114,7 +114,7 @@ INFORMAÇÕES
 
 • Classificação: livre. Crianças são bem-vindas, acompanhadas dos responsáveis
 • O café funciona normalmente durante todo o evento, com cardápio vegano
-• O evento vai das 17h às 21h
+• A casa abre às 16h30 e o show começa às 17h. Encerramento às 21h
 • Evento realizado pela Golden Eye Prods.
 • Arte do cartaz: Ana Heloiza Alves de Oliveira
 

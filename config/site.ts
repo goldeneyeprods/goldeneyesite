@@ -184,7 +184,7 @@ export const eventos: EventoConfig[] = [
     subtitulo: 'Johann Sebastian K. — voz, violão e discotecagem em vinil',
 
     dataInicio: '2026-09-12T17:00:00-03:00',
-    aberturaPortoes: '2026-09-12T17:00:00-03:00',
+    aberturaPortoes: '2026-09-12T16:30:00-03:00',
     dataFim: '2026-09-12T21:00:00-03:00',
 
     local: 'Salvador Vegan Café',
@@ -216,13 +216,14 @@ export const eventos: EventoConfig[] = [
 
     lineup: [
       {
-        horario: '17:00',
-        titulo: 'Abertura',
-        descricao: 'Recepção das doações e o café aberto.',
+        horario: '16:30',
+        titulo: 'Abertura da casa',
+        descricao:
+          'Aquecimento, recepção das doações e o café já servindo.',
         destaque: false,
       },
       {
-        horario: '17:30',
+        horario: '17:00',
         titulo: 'Johann Sebastian K.',
         descricao:
           'Voz e violão. Os Mutantes, Raul Seixas e o melhor do rock ' +
