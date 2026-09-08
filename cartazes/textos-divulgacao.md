@@ -112,7 +112,7 @@ CEP 89201-000
 
 INFORMAÇÕES
 
-• Classificação: livre. Crianças são bem-vindas, acompanhadas dos responsáveis
+• Classificação livre
 • O café funciona normalmente durante todo o evento, com cardápio vegano
 • A casa abre às 16h30 e o show começa às 17h. Encerramento às 21h
 • Evento realizado pela Golden Eye Prods.

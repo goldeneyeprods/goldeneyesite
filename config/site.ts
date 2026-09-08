@@ -248,7 +248,6 @@ export const eventos: EventoConfig[] = [
 
     permitido: [
       'Alimento não perecível, roupa ou doação em dinheiro',
-      'Crianças acompanhadas — o evento é livre',
       'O café funciona normalmente, com o cardápio vegano',
     ],
 
