@@ -27,14 +27,15 @@ LADO = 760                 # tamanho final de cada medalhão
 
 # (saída, nomes aceitos, recorte prévio, modo, zoom)
 PECAS = [
-    # Foto de grupo: precisa caber inteira, senão perde os das pontas.
-    # O zoom de 1.18 tira parte das faixas de sobra sem cortar ninguém.
-    ('mutantes', ['mutantes.png', 'mutantes.jpg', 'mutantes.jpeg', 'mutantes.webp'],
-     (0.03, 0.00, 1.00, 0.97), 'caber', 1.18),
+    # A foto nova é um retrato dos três, com os rostos juntos — cabe no
+    # círculo sem sobra. Recorte quadrado a partir do alto, onde estão as
+    # caras, em vez do centro geométrico.
+    ('mutantes', ['mutantes.jpg', 'mutantes.png', 'mutantes.jpeg', 'mutantes.webp'],
+     (0.00, 0.00, 1.00, 0.82), 'cortar', 1.0),
 
-    # Retrato: recorte quadrado funciona e aproxima o rosto.
+    # Raul mais perto: recorte mais fechado no rosto.
     ('raul', ['raul.jpg', 'raul.png', 'raul.jpeg', 'raul.webp'],
-     (0.10, 0.14, 0.94, 0.86), 'cortar', 1.0),
+     (0.20, 0.24, 0.86, 0.80), 'cortar', 1.0),
 ]
 
 os.makedirs('cartazes', exist_ok=True)
