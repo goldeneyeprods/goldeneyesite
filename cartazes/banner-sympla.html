@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Archivo:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+  /* =====================================================================
+     BANNER SYMPLA — 1600 x 838 (1,91:1)
+
+     O cartaz é 2:3, alto. Num banner deitado, recortar significaria jogar
+     fora ou o topo ou o rodapé. Em vez disso o cartaz inteiro fica de um
+     lado, como peça, e a informação vai para o outro — que é como banner
+     de evento funciona: a arte identifica, o texto informa.
+
+     O fundo é o próprio cartaz ampliado e desfocado, para a paleta
+     continuar até a borda em vez de virar barra chapada.
+     ===================================================================== */
+
+  :root {
+    --amarelo:  #ffc42e;
+    --creme:    #ffe9b8;
+    --escuro:   #2a0a3d;
+    --turquesa: #00c2a8;
+    --laranja:  #ff6b18;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1600px; height: 838px;
+    position: relative; overflow: hidden;
+    font-family: 'Archivo', sans-serif;
+    background: var(--escuro);
+  }
+
+  /* --- fundo: o próprio cartaz, ampliado e desfocado ------------------- */
+  .fundo {
+    position: absolute; inset: -60px;
+    background: url('cartaz-arte.jpg') center/cover no-repeat;
+    filter: blur(44px) brightness(.62) saturate(1.35);
+    z-index: 0;
+  }
+  .veu {
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(100deg,
+      rgba(42,10,61,.28) 0%, rgba(42,10,61,.62) 40%, rgba(42,10,61,.80) 100%);
+  }
+
+  /* --- o cartaz inteiro, à esquerda ------------------------------------ */
+  .arte {
+    position: absolute; left: 74px; top: 50%;
+    transform: translateY(-50%) rotate(-1.4deg);
+    height: 706px; z-index: 5;
+    border: 6px solid var(--amarelo);
+    border-radius: 6px;
+    box-shadow: 0 26px 70px -18px rgba(0,0,0,.8);
+    overflow: hidden;
+  }
+  .arte img { height: 100%; width: auto; display: block; }
+
+  /* --- informação, à direita ------------------------------------------- */
+  .texto {
+    position: absolute; left: 620px; right: 68px; top: 50%;
+    transform: translateY(-50%); z-index: 6;
+  }
+
+  .topo {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 22px;
+  }
+  .topo img { width: 44px; filter: brightness(0) invert(1); opacity: .9; }
+  .topo span {
+    font-size: 14px; font-weight: 900;
+    letter-spacing: .32em; text-transform: uppercase;
+    color: var(--creme); opacity: .85;
+  }
+
+  .artista {
+    font-family: 'Bagel Fat One', cursive;
+    font-size: 42px; line-height: 1;
+    color: var(--creme);
+    -webkit-text-stroke: 6px var(--escuro);
+    paint-order: stroke fill;
+    margin-bottom: 14px;
+  }
+
+  .titulo {
+    font-family: 'Bagel Fat One', cursive;
+    line-height: .94;
+  }
+  .titulo .t1 {
+    display: block; font-size: 90px;
+    color: var(--amarelo);
+    -webkit-text-stroke: 9px var(--escuro);
+    paint-order: stroke fill;
+  }
+  .titulo .t2 {
+    display: block; font-size: 52px; margin-top: 6px;
+    color: var(--creme);
+    -webkit-text-stroke: 7px var(--escuro);
+    paint-order: stroke fill;
+  }
+
+  .repertorio {
+    margin-top: 20px;
+    font-size: 27px; font-weight: 900;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--amarelo);
+    line-height: 1.45;
+  }
+
+  .quando {
+    margin-top: 30px; padding-top: 26px;
+    border-top: 4px solid rgba(255,196,46,.45);
+    font-family: 'Bagel Fat One', cursive;
+    font-size: 46px; color: var(--creme);
+  }
+  .onde {
+    margin-top: 10px;
+    font-size: 24px; font-weight: 900; color: var(--creme);
+  }
+  .endereco {
+    margin-top: 3px;
+    font-size: 18px; font-weight: 600; color: var(--creme); opacity: .78;
+  }
+  .solidaria {
+    margin-top: 20px;
+    font-size: 18px; font-weight: 900;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--creme); line-height: 1.5;
+  }
+  .solidaria b { color: var(--turquesa); }
+
+  /* --- grão ------------------------------------------------------------- */
+  .grao {
+    position: absolute; inset: 0; z-index: 20; pointer-events: none;
+    opacity: .13; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+</style>
+</head>
+<body>
+  <div class="fundo"></div>
+  <div class="veu"></div>
+
+  <div class="arte"><img src="cartaz-arte.jpg" alt=""></div>
+
+  <div class="texto">
+    <div class="topo">
+      <img src="olho.png" alt="">
+      <span>Golden Eye Prods. apresenta</span>
+    </div>
+
+    <div class="artista">Johann Sebastian K.</div>
+
+    <div class="titulo">
+      <span class="t1">TROPICÁLIA</span>
+      <span class="t2">&amp; ROCK NACIONAL</span>
+    </div>
+
+    <div class="repertorio">
+      Os Mutantes &amp; Raul Seixas<br>
+      + discotecagem em vinil
+    </div>
+
+    <div class="quando">SÁB 12 SET · 17H</div>
+    <div class="onde">Salvador Vegan Café</div>
+    <div class="endereco">Rua Henrique Meyer, 61 — Centro, Joinville/SC</div>
+
+    <div class="solidaria">
+      Entrada solidária · <b>doação ao Lar Betânia</b>
+    </div>
+  </div>
+
+  <div class="grao"></div>
+</body>
+</html>
