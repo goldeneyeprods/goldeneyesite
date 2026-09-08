@@ -26,9 +26,9 @@ export const produtora = {
   tagline: 'Rock psicodélico, ritual e reverberação',
 
   manifesto:
-    'Ocupar espaços improváveis de Joinville e transformar a noite em ' +
-    'ritual. É isso que a Golden Eye faz desde a primeira edição, tocada ' +
-    'entre as estantes de um sebo em troca de doações.',
+    'Sebo, café, o que aparecer. A gente pega um espaço que não é palco e ' +
+    'faz virar palco por uma noite — em Joinville, com fuzz, projeção e ' +
+    'entrada por doação.',
 
   descricao:
     'A Golden Eye Prods. nasceu da vontade de transformar a noite em ritual. ' +
@@ -73,8 +73,8 @@ export const produtora = {
   // Os pilares mostrados na home
   pilares: [
     { titulo: 'Rock', texto: 'Psicodélico, garage, krautrock e o que vier junto.' },
-    { titulo: 'Ritual', texto: 'Luz, projeção e som tratados como uma coisa só.' },
-    { titulo: 'Causa', texto: 'Toda edição devolve alguma coisa para a cidade.' },
+    { titulo: 'Fora do eixo', texto: 'Espaço que não é casa de show é onde a gente prefere tocar.' },
+    { titulo: 'Sem catraca', texto: 'Até hoje, toda edição foi de graça e em troca de doação.' },
   ],
 }
 

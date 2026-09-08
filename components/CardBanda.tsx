@@ -49,7 +49,7 @@ export function CardBanda({ banda }: { banda: BandaConfig }) {
         </div>
 
         <p className="mt-5 text-xs font-medium text-ouro">
-          Ver release e fotos →
+          Ver a banda →
         </p>
       </div>
     </Link>

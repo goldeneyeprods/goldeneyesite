@@ -13,9 +13,9 @@ import { bandas, bandaPorSlug, produtora } from '@/config/site'
 // ============================================================================
 //  /bandas/<slug> — o release de cada banda
 //
-//  É o material que um dono de bar abre antes de decidir contratar. Precisa
-//  responder rápido: que som é, o que sobe no palco, como é ao vivo, e como
-//  pedir orçamento.
+//  É o material que um dono de bar abre antes de decidir chamar a banda.
+//  Precisa responder rápido: que som é, o que sobe no palco, como é ao vivo
+//  e como falar com a gente.
 // ============================================================================
 
 export function generateStaticParams() {
@@ -70,7 +70,7 @@ export default async function PaginaBanda({
   }
 
   const whatsapp = `https://wa.me/${produtora.whatsapp}?text=${encodeURIComponent(
-    `Olá! Queria um orçamento para show do ${banda.nome}.`
+    `Oi! Queria falar sobre um show do ${banda.nome}.`
   )}`
 
   return (
@@ -87,8 +87,8 @@ export default async function PaginaBanda({
           { href: '#fotos', rotulo: 'Fotos' },
           { href: '#contratar', rotulo: 'Contratar' },
         ]}
-        voltar="Casting"
-        cta={{ href: '#contratar', rotulo: 'Orçamento' }}
+        voltar="Bandas"
+        cta={{ href: '#contratar', rotulo: 'Contratar' }}
       />
 
       <main id="conteudo">
@@ -112,7 +112,7 @@ export default async function PaginaBanda({
             >
               GOLDEN EYE PRODS.
               <span className="text-ouro/40">/</span>
-              <span className="text-ouro">CASTING</span>
+              <span className="text-ouro">BANDAS</span>
             </Link>
 
             {banda.logo ? (
@@ -158,7 +158,7 @@ export default async function PaginaBanda({
               style={{ animationDelay: '300ms' }}
             >
               <a href="#contratar" className="botao-ouro w-full sm:w-auto">
-                Pedir orçamento
+                Chamar pra tocar
               </a>
               <a href="#release" className="botao-fantasma w-full sm:w-auto">
                 Ler o release
@@ -249,7 +249,7 @@ export default async function PaginaBanda({
         <Galeria
           id="fotos"
           fotos={fotos}
-          rotulo="Material de imprensa"
+          rotulo="Como é ao vivo"
           titulo="Fotos"
           subtitulo="Clique para ampliar. Precisa das originais em alta? É só pedir."
           limite={8}
@@ -260,14 +260,14 @@ export default async function PaginaBanda({
         {/* ================= CONTRATAR ================= */}
         <section id="contratar" className="px-5 py-24 sm:py-32">
           <div className="cartao cartao-ouro mx-auto max-w-2xl p-8 text-center sm:p-10">
-            <p className="rotulo">Contratação</p>
+            <p className="rotulo">Quer levar pra sua casa?</p>
             <h2 className="mt-4 font-display text-3xl font-bold text-texto">
               Leve {banda.nome} para a sua casa
             </h2>
             <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-texto-suave">
-              A Golden Eye cuida do cachê, do rider técnico, do contrato e da
-              divulgação. Mande a data e o espaço que respondemos com uma
-              proposta fechada.
+              A gente resolve o resto: cachê, rider, contrato e divulgação.
+              Manda a data e o espaço que a gente volta com uma proposta
+              fechada.
             </p>
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -281,7 +281,7 @@ export default async function PaginaBanda({
               </a>
               <a
                 href={`mailto:${produtora.email}?subject=${encodeURIComponent(
-                  `Orçamento — ${banda.nome}`
+                  `Show — ${banda.nome}`
                 )}`}
                 className="botao-fantasma w-full sm:w-auto"
               >

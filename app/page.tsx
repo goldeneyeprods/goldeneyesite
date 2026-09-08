@@ -148,8 +148,8 @@ export default function Home() {
                     Bandas
                   </h2>
                   <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-texto-suave">
-                    Tem uma casa, um festival ou uma data para preencher?
-                    Estas são as bandas do nosso casting.
+                    Tem um bar, uma casa ou uma data em aberto? Estas são as
+                    bandas que tocam com a gente.
                   </p>
                 </div>
 
@@ -179,12 +179,12 @@ export default function Home() {
             <section id="arquivo" className="relative px-5 py-24 sm:py-32">
               <div className="mx-auto max-w-5xl">
                 <div className="text-center">
-                  <p className="rotulo">De onde viemos</p>
+                  <p className="rotulo">O que já rolou</p>
                   <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
                     Edições anteriores
                   </h2>
                   <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-texto-suave">
-                    Cada noite deixa um rastro. Clique para ver como foi.
+                    Cada noite deixa um rastro. Clica pra ver como foi.
                   </p>
                 </div>
 
@@ -227,7 +227,7 @@ export default function Home() {
           fotos={fotos}
           rotulo="A cena, em imagem"
           titulo="Registros"
-          subtitulo="Fotos de todas as edições. Clique para ampliar."
+          subtitulo="Fotos de todas as edições. Clica pra ampliar."
           limite={12}
         />
 
