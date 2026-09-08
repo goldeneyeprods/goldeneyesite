@@ -1,15 +1,21 @@
 # ============================================================================
 #  python scripts/preparar-miolo.py
 #
-#  Prepara as duas fotos do miolo do cartaz — Os Mutantes de um lado, Raul
-#  Seixas do outro — em duotone, na mesma paleta do cartaz.
+#  Prepara as duas fotos dos medalhões do cartaz — Os Mutantes de um lado,
+#  Raul Seixas do outro — em duotone, na mesma paleta do cartaz.
 #
 #  O duotone não é enfeite: sem ele são duas fotos de época diferentes,
 #  coladas lado a lado. Com ele, viram uma imagem só.
 #
+#  DOIS MODOS DE ENQUADRAR:
+#    'cortar' — recorta um quadrado do meio. Bom para retrato.
+#    'caber'  — encaixa a foto inteira e completa as sobras com a cor de
+#               fundo. É o que salva foto de grupo: numa foto 3:2, o
+#               recorte quadrado joga fora quem está nas pontas.
+#
 #  COLOQUE OS ORIGINAIS EM:
-#     _originais/capas/mutantes.jpg   (ou .png)
-#     _originais/capas/raul.jpg       (ou .png)
+#     _originais/capas/mutantes.png   (ou .jpg / .webp)
+#     _originais/capas/raul.jpg       (ou .png / .webp)
 # ============================================================================
 
 from PIL import Image, ImageOps, ImageEnhance
@@ -17,19 +23,24 @@ import os, sys
 
 SOMBRA = (42, 10, 61)      # roxo berinjela do cartaz
 LUZ = (255, 233, 184)      # creme do cartaz
+LADO = 760                 # tamanho final de cada medalhão
 
-# (nome de saída, nomes aceitos na entrada, recorte, foco)
+# (saída, nomes aceitos, recorte prévio, modo, zoom)
 PECAS = [
-    ('mutantes', ['mutantes.jpg', 'mutantes.png', 'mutantes.jpeg', 'mutantes.webp'],
-     (0.05, 0.00, 0.99, 0.96), 'centro'),
+    # Foto de grupo: precisa caber inteira, senão perde os das pontas.
+    # O zoom de 1.18 tira parte das faixas de sobra sem cortar ninguém.
+    ('mutantes', ['mutantes.png', 'mutantes.jpg', 'mutantes.jpeg', 'mutantes.webp'],
+     (0.03, 0.00, 1.00, 0.97), 'caber', 1.18),
+
+    # Retrato: recorte quadrado funciona e aproxima o rosto.
     ('raul', ['raul.jpg', 'raul.png', 'raul.jpeg', 'raul.webp'],
-     (0.10, 0.14, 0.94, 0.86), 'centro'),
+     (0.10, 0.14, 0.94, 0.86), 'cortar', 1.0),
 ]
 
 os.makedirs('cartazes', exist_ok=True)
 faltando = []
 
-for saida, nomes, (e, t, d, b), _ in PECAS:
+for saida, nomes, (e, t, d, b), modo, zoom in PECAS:
     origem = next(
         (os.path.join('_originais/capas', n)
          for n in nomes if os.path.exists(os.path.join('_originais/capas', n))),
@@ -43,12 +54,20 @@ for saida, nomes, (e, t, d, b), _ in PECAS:
     L, A = im.size
     im = im.crop((int(L * e), int(A * t), int(L * d), int(A * b)))
 
-    # quadrado centrado: as duas metades do círculo precisam da mesma proporção
-    L, A = im.size
-    lado = min(L, A)
-    im = im.crop(((L - lado) // 2, (A - lado) // 2,
-                  (L + lado) // 2, (A + lado) // 2))
-    im = im.resize((700, 700), Image.LANCZOS)
+    if modo == 'cortar':
+        L, A = im.size
+        lado = min(L, A)
+        im = im.crop(((L - lado) // 2, (A - lado) // 2,
+                      (L + lado) // 2, (A + lado) // 2))
+        im = im.resize((LADO, LADO), Image.LANCZOS)
+    else:
+        # cabe inteira: redimensiona pela maior dimensão e centraliza
+        alvo = int(LADO * zoom)
+        cabe = im.copy()
+        cabe.thumbnail((alvo, alvo), Image.LANCZOS)
+        tela = Image.new('RGB', (LADO, LADO), (30, 30, 30))
+        tela.paste(cabe, ((LADO - cabe.width) // 2, (LADO - cabe.height) // 2))
+        im = tela
 
     g = ImageOps.grayscale(im)
     g = ImageEnhance.Contrast(g).enhance(1.5)
@@ -57,7 +76,7 @@ for saida, nomes, (e, t, d, b), _ in PECAS:
 
     destino = f'cartazes/{saida}.png'
     duo.save(destino, optimize=True)
-    print(f'{destino}  {os.path.getsize(destino)//1024} KB')
+    print(f'{destino}  {duo.size[0]}x{duo.size[1]}  {os.path.getsize(destino)//1024} KB  ({modo})')
 
 if faltando:
     print('\nFaltam os originais:')
