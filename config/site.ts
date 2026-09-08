@@ -62,6 +62,14 @@ export const produtora = {
     tiktok: '',
   },
 
+  // Quem desenvolveu o site — assinatura discreta no rodapé
+  desenvolvidoPor: {
+    nome: 'Zopu',
+    logo: '/imagens/marca/zopu.png',
+    // >>> CONFIRMAR: a URL do site da Zopu
+    url: 'https://zopu.com.br',
+  },
+
   // Os pilares mostrados na home
   pilares: [
     { titulo: 'Rock', texto: 'Psicodélico, garage, krautrock e o que vier junto.' },
