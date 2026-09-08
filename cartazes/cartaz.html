@@ -89,7 +89,7 @@
   }
   .medalhao {
     position: relative;
-    width: 288px; height: 288px; border-radius: 50%;
+    width: 320px; height: 320px; border-radius: 50%;
     overflow: hidden; background: var(--escuro);
     box-shadow:
       0 0 0 9px var(--amarelo),
@@ -97,9 +97,10 @@
       0 0 60px 14px rgba(42,10,61,.55);
   }
   .medalhao img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  /* Os Mutantes são três: o medalhão deles precisa de mais espaço que o
-     retrato do Raul, senão os das pontas ficam espremidos. */
-  .medalhao.grupo { width: 350px; height: 350px; z-index: 3; }
+  /* Os dois do mesmo tamanho: com a foto nova, mais fechada nos rostos,
+     o medalhão maior deixou de ser necessário — e tamanhos diferentes
+     desequilibravam o par. */
+  .medalhao.grupo { z-index: 3; }
   /* sobreposição: o da direita entra por cima e encosta no da esquerda */
   .medalhao + .medalhao { margin-left: -30px; z-index: 2; }
 

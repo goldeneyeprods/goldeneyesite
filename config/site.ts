@@ -127,8 +127,12 @@ export interface EventoConfig {
 
   /** imagem de fundo do hero da LP (opcional) */
   imagemHero?: string
-  /** cartaz do evento (opcional) — usado no card e no compartilhamento */
+  /** cartaz do evento (opcional) — exibido na página e usado no card */
   cartaz?: string
+  /** recorte 1200x630 do cartaz, para a prévia do link */
+  cartazOg?: string
+  /** quem assina a arte */
+  cartazCredito?: string
   /** fotos do evento, depois que ele acontece */
   galeria?: string[]
 
@@ -176,9 +180,14 @@ export const eventos: EventoConfig[] = [
     // >>> SUBSTITUIR: capacidade do espaço
     capacidade: 120,
 
-    // O cartaz é a capa do evento e a prévia no WhatsApp e no Instagram.
-    imagemHero: '/imagens/cartazes/tropicalia-feed.jpg',
-    cartaz: '/imagens/cartazes/tropicalia-feed.jpg',
+    // O cartaz é a capa do evento, a arte exibida na página e a prévia do
+    // link. A versão og é um recorte 1200x630 do miolo, porque o cartaz é
+    // 2:3 e o WhatsApp corta as pontas de imagem alta.
+    imagemHero: '/imagens/cartazes/tropicalia-cartaz.jpg',
+    cartaz: '/imagens/cartazes/tropicalia-cartaz.jpg',
+    cartazOg: '/imagens/cartazes/tropicalia-og.jpg',
+    // >>> SUBSTITUIR pelo nome de quem assina a arte
+    cartazCredito: 'Arte por >>> NOME DA ARTISTA',
 
     descricao:
       'Em 1968 um punhado de gente decidiu que era possível engolir tudo de ' +

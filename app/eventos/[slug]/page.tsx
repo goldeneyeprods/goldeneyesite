@@ -7,6 +7,7 @@ import { DetalhesEvento } from '@/components/DetalhesEvento'
 import { Ingressos } from '@/components/Ingressos'
 import { Galeria } from '@/components/Galeria'
 import { Videos } from '@/components/Videos'
+import { CartazEvento } from '@/components/CartazEvento'
 import { FAQ } from '@/components/FAQ'
 import { Footer } from '@/components/Footer'
 import { CardEvento } from '@/components/CardEvento'
@@ -40,7 +41,7 @@ export async function generateMetadata({
   const evento = eventoPorSlug(slug)
   if (!evento) return { title: 'Evento não encontrado' }
 
-  const imagem = evento.cartaz ?? evento.imagemHero ?? '/imagens/og.png'
+  const imagem = evento.cartazOg ?? evento.cartaz ?? evento.imagemHero ?? '/imagens/og.png'
 
   return {
     title: evento.nome,
@@ -87,6 +88,7 @@ export default async function PaginaEvento({
   const videos = evento.videos ?? []
 
   const links = [
+    ...(evento.cartaz ? [{ href: '#cartaz', rotulo: 'Cartaz' }] : []),
     { href: '#lineup', rotulo: 'Line-up' },
     ...(mostraIngressos ? [{ href: '#ingressos', rotulo: 'Ingressos' }] : []),
     ...(videos.length > 0 ? [{ href: '#videos', rotulo: 'Vídeos' }] : []),
@@ -154,6 +156,17 @@ export default async function PaginaEvento({
 
       <main id="conteudo">
         <HeroEvento evento={evento} />
+
+        {evento.cartaz && (
+          <>
+            <div className="divisor mx-auto max-w-5xl" />
+            <CartazEvento
+              src={evento.cartaz}
+              evento={evento.nome}
+              creditos={evento.cartazCredito}
+            />
+          </>
+        )}
 
         <div className="divisor mx-auto max-w-5xl" />
 
