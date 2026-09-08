@@ -102,6 +102,7 @@ export default async function PaginaEvento({
     name: evento.nome,
     description: evento.descricao,
     startDate: evento.dataInicio,
+    ...(evento.dataFim ? { endDate: evento.dataFim } : {}),
     doorTime: evento.aberturaPortoes,
     eventStatus: 'https://schema.org/EventScheduled',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',

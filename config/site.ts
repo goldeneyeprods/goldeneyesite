@@ -100,6 +100,8 @@ export interface EventoConfig {
   /** ISO com fuso de São Paulo (-03:00) */
   dataInicio: string
   aberturaPortoes: string
+  /** quando termina (opcional) — vira "17h às 21h" na página e no Google */
+  dataFim?: string
 
   local: string
   endereco: string
@@ -168,6 +170,7 @@ export const eventos: EventoConfig[] = [
 
     dataInicio: '2026-09-12T17:00:00-03:00',
     aberturaPortoes: '2026-09-12T17:00:00-03:00',
+    dataFim: '2026-09-12T21:00:00-03:00',
 
     local: 'Salvador Vegan Café',
     endereco: 'Rua Henrique Meyer, 61 — Centro, Joinville/SC · CEP 89201-000',
@@ -219,11 +222,18 @@ export const eventos: EventoConfig[] = [
           'brasileira e rock nacional em vinil.',
         destaque: false,
       },
+      {
+        horario: '21:00',
+        titulo: 'Encerramento',
+        descricao: 'O café serve normalmente durante toda a tarde.',
+        destaque: false,
+      },
     ],
 
     permitido: [
       'Alimento não perecível, roupa ou doação em dinheiro',
       'Crianças acompanhadas — o evento é livre',
+      'O café funciona normalmente, com o cardápio vegano',
     ],
 
     proibido: [],

@@ -92,7 +92,11 @@ export function HeroEvento({ evento }: { evento: EventoConfig }) {
             {dataLonga(evento.dataInicio)}
           </span>
           <span className="text-ouro/40">◆</span>
-          <span className="text-texto">{hora(evento.dataInicio)}</span>
+          <span className="text-texto">
+            {evento.dataFim
+              ? `${hora(evento.dataInicio)} às ${hora(evento.dataFim)}`
+              : hora(evento.dataInicio)}
+          </span>
           <span className="text-ouro/40">◆</span>
           <span className="text-texto">{evento.local}</span>
         </div>

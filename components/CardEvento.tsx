@@ -70,7 +70,10 @@ export function CardEvento({
             )}
 
             <p className="mt-3 text-xs capitalize text-texto-fraco">
-              {dataLonga(evento.dataInicio)} · {hora(evento.dataInicio)} ·{' '}
+              {dataLonga(evento.dataInicio)} ·{' '}
+              {evento.dataFim
+                ? `${hora(evento.dataInicio)} às ${hora(evento.dataFim)}`
+                : hora(evento.dataInicio)}{' '}·{' '}
               {evento.local}
             </p>
           </div>

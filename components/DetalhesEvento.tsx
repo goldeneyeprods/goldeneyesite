@@ -109,6 +109,14 @@ export function DetalhesEvento({ evento }: { evento: EventoConfig }) {
                   {hora(evento.aberturaPortoes)}
                 </dd>
               </div>
+              {evento.dataFim && (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-texto-fraco">Encerramento</dt>
+                  <dd className="text-right font-medium text-texto">
+                    {hora(evento.dataFim)}
+                  </dd>
+                </div>
+              )}
               <div className="flex justify-between gap-4">
                 <dt className="text-texto-fraco">Classificação</dt>
                 <dd className="text-right font-medium text-texto">

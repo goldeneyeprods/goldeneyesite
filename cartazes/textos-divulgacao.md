@@ -11,7 +11,7 @@ Sábado, 12 de setembro de 2026 · 17h · Salvador Vegan Café · Joinville/SC
 
 ```
 🌀 TROPICÁLIA & ROCK NACIONAL
-Sábado, 12/09 · 17h · Salvador Vegan Café
+Sábado, 12/09 · das 17h às 21h · Salvador Vegan Café
 
 Uma tarde atravessando o que o Brasil fez de mais lisérgico: Os Mutantes, Raul Seixas e o rock nacional dos anos 60 e 70 — voz e violão, por Johann Sebastian K.
 
@@ -20,7 +20,8 @@ Depois do show a viagem continua no vinil, com discotecagem tropicalista até o 
 A entrada é uma doação ao Lar Betânia. Leve alimento não perecível, uma peça de roupa em bom estado ou uma contribuição em dinheiro. Não tem ingresso e não tem taxa — é só chegar.
 
 📍 Rua Henrique Meyer, 61 — Centro, Joinville
-🕔 A partir das 17h
+🕔 Das 17h às 21h
+☕ O café serve normalmente, cardápio vegano
 👶 Classificação livre
 
 Line-up completo, endereço e mapa no link da bio 👁
@@ -43,7 +44,7 @@ Arte por Ana Heloiza Alves de Oliveira
 Texto curto, para colar por cima do cartaz:
 
 ```
-SÁB 12/09 · 17H
+SÁB 12/09 · 17H ÀS 21H
 Salvador Vegan Café
 Entrada solidária 🎗
 ```
@@ -84,11 +85,15 @@ PROGRAMAÇÃO
 17h00 — Abertura da casa e recepção das doações
 17h30 — Johann Sebastian K. · voz e violão
 19h00 — Discotecagem em vinil
+21h00 — Encerramento
 
 COMO FUNCIONA A ENTRADA
 
-A entrada é gratuita e solidária. Não há venda de ingresso e não há taxa.
-Pedimos apenas uma doação ao Lar Betânia, de Joinville:
+A entrada é gratuita e solidária. Não há cobrança de ingresso nem taxa de
+serviço — a inscrição aqui no Sympla serve apenas para dimensionarmos o
+público, já que o espaço é limitado.
+
+Pedimos uma doação ao Lar Betânia, de Joinville, na entrada:
 
 • alimento não perecível
 • peça de roupa em bom estado
@@ -105,7 +110,8 @@ CEP 89201-000
 INFORMAÇÕES
 
 • Classificação: livre. Crianças são bem-vindas, acompanhadas dos responsáveis
-• O café estará aberto, com cardápio vegano
+• O café funciona normalmente durante todo o evento, com cardápio vegano
+• O evento vai das 17h às 21h
 • Evento realizado pela Golden Eye Prods.
 • Arte do cartaz: Ana Heloiza Alves de Oliveira
 
@@ -128,7 +134,7 @@ Para mandar em grupo, onde texto longo não é lido:
 
 ```
 🌀 *TROPICÁLIA & ROCK NACIONAL*
-Sáb 12/09 · 17h · Salvador Vegan Café
+Sáb 12/09 · 17h às 21h · Salvador Vegan Café
 
 Johann Sebastian K. tocando Os Mutantes e Raul Seixas, voz e violão. Depois, discotecagem em vinil.
 
@@ -151,7 +157,7 @@ JOHANN SEBASTIAN K.
 TROPICÁLIA & ROCK NACIONAL
 Os Mutantes & Raul Seixas · + discotecagem em vinil
 
-SÁBADO 12 DE SETEMBRO · 17H
+SÁBADO 12 DE SETEMBRO · DAS 17H ÀS 21H
 SALVADOR VEGAN CAFÉ
 Rua Henrique Meyer, 61 — Centro, Joinville/SC
 
@@ -165,6 +171,6 @@ Classificação livre
 ## O que confirmar antes de publicar
 
 - [x] ~~O nome de quem assina a arte~~ — Ana Heloiza Alves de Oliveira
-- [ ] Se o Sympla é só para confirmação de presença (o evento é gratuito)
-- [ ] Se o café serve normalmente durante o show
-- [ ] Se há horário de encerramento definido
+- [x] ~~Sympla~~ — gratuito, só para dimensionar o público
+- [x] ~~O café serve normalmente~~ — sim, cardápio vegano durante todo o evento
+- [x] ~~Horário de encerramento~~ — 21h
