@@ -48,9 +48,16 @@ export async function POST(req: Request) {
   }
 
   const [operador] = await sql<
-    { id: number; nome: string; pin_hash: string; gate: string; evento_id: number }[]
+    {
+      id: number
+      nome: string
+      pin_hash: string
+      gate: string
+      evento_id: number
+      meia_solidaria: boolean
+    }[]
   >`
-    select o.id, o.nome, o.pin_hash, o.gate, o.evento_id
+    select o.id, o.nome, o.pin_hash, o.gate, o.evento_id, e.meia_solidaria
       from operadores o
       join eventos e on e.id = o.evento_id
      where o.id = ${parsed.data.operadorId}
@@ -73,6 +80,12 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     token,
-    operador: { id: operador.id, nome: operador.nome, gate: operador.gate },
+    operador: {
+      id: operador.id,
+      nome: operador.nome,
+      gate: operador.gate,
+      // Na meia solidária a portaria não pede comprovante de meia.
+      meiaSolidaria: operador.meia_solidaria,
+    },
   })
 }

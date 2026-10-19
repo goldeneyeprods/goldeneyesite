@@ -66,7 +66,8 @@ export default async function PaginaBanda({
     description: banda.conceito,
     image: banda.fotos[0],
     url: `${process.env.NEXT_PUBLIC_SITE_URL}/bandas/${banda.slug}`,
-    foundingLocation: { '@type': 'City', name: produtora.cidade },
+    foundingLocation: { '@type': 'City', name: banda.cidade },
+    sameAs: Object.values(banda.redes ?? {}).filter(Boolean),
   }
 
   const whatsapp = `https://wa.me/${produtora.whatsapp}?text=${encodeURIComponent(
@@ -151,6 +152,19 @@ export default async function PaginaBanda({
               <span>{banda.genero}</span>
               <span className="text-ouro/40">◆</span>
               <span>{banda.cidade}</span>
+              {banda.redes?.instagram && (
+                <>
+                  <span className="text-ouro/40">◆</span>
+                  <a
+                    href={banda.redes.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ouro underline-offset-4 hover:underline"
+                  >
+                    @{banda.redes.instagram.replace(/\/+$/, '').split('/').pop()}
+                  </a>
+                </>
+              )}
             </div>
 
             <div

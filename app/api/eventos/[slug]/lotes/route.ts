@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server'
 import { sql } from '@/lib/db'
+import { lerEstoque } from '@/lib/lotes'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 // ============================================================================
 //  GET /api/eventos/<slug>/lotes
-//  Lotes à venda de um evento. Público — devolve só o necessário.
+//  O lote que está vendendo agora. Público — devolve só o necessário.
+//  Os lotes seguintes não aparecem: o preço deles só vale quando a vez chegar.
 // ============================================================================
 
 export async function GET(
@@ -15,39 +17,27 @@ export async function GET(
 ) {
   const { slug } = await params
 
-  const lotes = await sql<
-    {
-      id: number
-      nome: string
-      tipo: 'inteira' | 'meia'
-      preco_centavos: number
-      disponivel: number
-      valido_ate: Date | null
-    }[]
-  >`
-    select l.id, l.nome, l.tipo, l.preco_centavos, l.valido_ate,
-           (l.quantidade_total - l.quantidade_vendida - l.quantidade_reservada) as disponivel
-      from lotes l
-      join eventos e on e.id = l.evento_id
-     where e.slug = ${slug}
-       and e.ativo = true
-       and l.ativo = true
-     order by l.ordem
+  const [evento] = await sql<{ id: number }[]>`
+    select id from eventos where slug = ${slug} and ativo = true limit 1
   `
+  const estoque = evento ? await lerEstoque(sql, evento.id) : null
+  const vigentes = estoque?.vigentes ?? []
 
   return NextResponse.json(
     {
-      lotes: lotes.map((l) => ({
+      // Nada à venda num evento com lotes cadastrados = esgotou.
+      esgotado: !!evento && vigentes.length === 0,
+      lotes: vigentes.map((l) => ({
         id: l.id,
         nome: l.nome,
         tipo: l.tipo,
-        precoCentavos: l.preco_centavos,
-        disponivel: Math.max(l.disponivel, 0),
+        precoCentavos: l.precoCentavos,
+        disponivel: l.disponivel,
         // "Últimas unidades" só aparece quando é verdade — urgência falsa
         // queima a confiança de quem volta em todo evento.
-        poucos: l.disponivel > 0 && l.disponivel <= 15,
+        poucos: l.disponivel > 0 && l.disponivel <= 10,
         esgotado: l.disponivel <= 0,
-        validoAte: l.valido_ate,
+        validoAte: l.validoAte,
       })),
     },
     { headers: { 'Cache-Control': 'no-store' } }

@@ -24,6 +24,8 @@ interface Operador {
   gate: string
   /** só aparece na lista de login, para escolher o evento certo */
   evento?: string
+  /** meia aberta a todos: não há comprovante a pedir */
+  meiaSolidaria?: boolean
 }
 
 const CHAVE_TOKEN = 'ge_portaria_token'
@@ -427,7 +429,7 @@ export default function Portaria() {
               <p className="mt-1 text-sm text-white/60">{resultado.cpf}</p>
             )}
 
-            {resultado.tipo === 'meia' && (
+            {resultado.tipo === 'meia' && !operador.meiaSolidaria && (
               <div className="mt-8 rounded-xl border-2 border-alerta bg-alerta/20 px-6 py-4">
                 <p className="font-display text-lg font-bold text-alerta">
                   ⚠ MEIA-ENTRADA

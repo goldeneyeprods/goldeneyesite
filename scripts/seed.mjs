@@ -41,24 +41,44 @@ const sql = postgres(process.env.DATABASE_URL, { prepare: false })
 
 // ---- Trava da Lei 12.933/13, evento por evento ------------------------------
 // Falha ANTES de escrever qualquer coisa: melhor não cadastrar nada do que
-// deixar metade dos eventos fora da lei.
+// deixar metade dos eventos fora da lei. A conta é por fase, porque a meia e
+// a inteira de uma fase dividem a mesma quantidade: o que vale é quanto da
+// fase pode ser vendido como meia.
 for (const ev of eventos) {
   if (ev.lotes.length === 0) continue
 
-  const total = ev.lotes.reduce((s, l) => s + l.quantidade, 0)
-  const meia = ev.lotes
-    .filter((l) => l.tipo === 'meia')
-    .reduce((s, l) => s + l.quantidade, 0)
+  const fases = new Map()
+  for (const l of ev.lotes) {
+    const f = fases.get(l.fase) ?? { total: 0, meia: 0 }
+    f.total = Math.max(f.total, l.quantidade)
+    if (l.tipo === 'meia') f.meia += l.quantidade
+    fases.set(l.fase, f)
+  }
+  const total = [...fases.values()].reduce((s, f) => s + f.total, 0)
+  const meia = [...fases.values()].reduce((s, f) => s + Math.min(f.meia, f.total), 0)
   const pct = (meia / total) * 100
 
   if (pct < 40) {
     console.error(
-      `\n⚠  "${ev.nome}" tem só ${pct.toFixed(1)}% de meia-entrada ` +
-        `(${meia} de ${total}).\n` +
-        `   A Lei 12.933/2013 exige no mínimo 40%.\n` +
-        `   Ajuste as quantidades em config/site.ts e rode de novo.\n`
+      `
+⚠  "${ev.nome}" tem só ${pct.toFixed(1)}% de meia-entrada ` +
+        `(${meia} de ${total}).
+` +
+        `   A Lei 12.933/2013 exige no mínimo 40%.
+` +
+        `   Ajuste as quantidades em config/site.ts e rode de novo.
+`
     )
     process.exit(1)
+  }
+  for (const l of ev.lotes.filter((l) => l.tipo === 'inteira')) {
+    const meiaDaFase = ev.lotes.find((m) => m.tipo === 'meia' && m.fase === l.fase)
+    if (meiaDaFase && meiaDaFase.precoCentavos * 2 !== l.precoCentavos) {
+      console.error(`
+⚠  "${l.nome}": a meia tem que ser metade da inteira.
+`)
+      process.exit(1)
+    }
   }
   console.log(`✓ ${ev.nome}: ${pct.toFixed(1)}% de meia-entrada — dentro da lei`)
 }
@@ -71,12 +91,13 @@ for (const ev of eventos) {
     insert into eventos (
       slug, nome, subtitulo, descricao, data_inicio, abertura_portoes,
       local_nome, endereco, mapa_url, classificacao_etaria, capacidade,
-      imagem_hero, ativo
+      imagem_hero, ingressos_a_venda, meia_solidaria, ativo
     ) values (
       ${ev.slug}, ${ev.nome}, ${ev.subtitulo}, ${ev.descricao},
       ${ev.dataInicio}, ${ev.aberturaPortoes}, ${ev.local},
       ${ev.endereco}, ${ev.mapaLink}, ${ev.classificacaoEtaria},
-      ${ev.capacidade}, ${ev.imagemHero ?? ev.cartaz ?? null}, true
+      ${ev.capacidade}, ${ev.imagemHero ?? ev.cartaz ?? null},
+      ${ev.ingressosAVenda ?? null}, ${ev.meiaSolidaria ?? false}, true
     )
     on conflict (slug) do update set
       nome              = excluded.nome,
@@ -89,7 +110,9 @@ for (const ev of eventos) {
       mapa_url          = excluded.mapa_url,
       classificacao_etaria = excluded.classificacao_etaria,
       capacidade        = excluded.capacidade,
-      imagem_hero       = excluded.imagem_hero
+      imagem_hero       = excluded.imagem_hero,
+      ingressos_a_venda = excluded.ingressos_a_venda,
+      meia_solidaria    = excluded.meia_solidaria
     returning id, nome
   `
   idsPorSlug.set(ev.slug, linha.id)
@@ -114,15 +137,19 @@ for (const ev of eventos) {
         update lotes
            set preco_centavos   = ${lote.precoCentavos},
                quantidade_total = ${lote.quantidade},
-               ordem            = ${lote.ordem}
+               ordem            = ${lote.ordem},
+               fase             = ${lote.fase},
+               valido_ate       = ${lote.validoAte ?? null}
          where id = ${existente.id}
       `
       console.log(`  ↻ ${lote.nome}`)
     } else {
       await sql`
-        insert into lotes (evento_id, nome, tipo, preco_centavos, quantidade_total, ordem, ativo)
+        insert into lotes (evento_id, nome, tipo, preco_centavos, quantidade_total,
+                           ordem, fase, valido_ate, ativo)
         values (${linha.id}, ${lote.nome}, ${lote.tipo}, ${lote.precoCentavos},
-                ${lote.quantidade}, ${lote.ordem}, true)
+                ${lote.quantidade}, ${lote.ordem}, ${lote.fase},
+                ${lote.validoAte ?? null}, true)
       `
       console.log(`  + ${lote.nome}`)
     }

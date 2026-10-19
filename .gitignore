@@ -29,3 +29,10 @@ cartazes/raul.png
 _originais/cartaz-final/
 cartazes/_meus-descartados/
 cartazes/cartaz-arte.jpg
+
+# Downloads do Drive das bandas: as versões do site saem em public/imagens/bandas
+arquivosbandas/*/drive-download-*
+arquivosbandas/**/*.zip
+
+# Trava de arquivo aberto no LibreOffice
+.~lock.*

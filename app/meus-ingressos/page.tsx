@@ -21,6 +21,8 @@ interface Ingresso {
   tokenQr: string | null
   status: string
   usadoEm: string | null
+  /** vem do evento, para o QR em tela cheia saber se pede comprovante */
+  meiaSolidaria?: boolean
 }
 
 interface Pedido {
@@ -28,7 +30,13 @@ interface Pedido {
   status: string
   valorTotal: number
   pagoEm: string | null
-  evento: { nome: string; local: string; data: string; aberturaPortoes: string }
+  evento: {
+    nome: string
+    local: string
+    data: string
+    aberturaPortoes: string
+    meiaSolidaria: boolean
+  }
   podeCancelar: boolean
   podeTransferir: boolean
   motivoBloqueio: string
@@ -302,8 +310,16 @@ export default function MeusIngressos() {
                             </p>
                             <p className="mt-0.5 text-xs text-texto-fraco">
                               {i.titularCpf} ·{' '}
-                              <span className={i.tipo === 'meia' ? 'text-alerta' : ''}>
-                                {i.tipo === 'meia' ? 'Meia-entrada' : 'Inteira'}
+                              <span
+                                className={
+                                  i.tipo === 'meia' && !p.evento.meiaSolidaria ? 'text-alerta' : ''
+                                }
+                              >
+                                {i.tipo === 'meia'
+                                  ? p.evento.meiaSolidaria
+                                    ? 'Meia solidária'
+                                    : 'Meia-entrada'
+                                  : 'Inteira'}
                               </span>
                               {i.status === 'usado' && ' · Já utilizado'}
                               {i.status === 'cancelado' && ' · Cancelado'}
@@ -313,7 +329,7 @@ export default function MeusIngressos() {
                           <div className="flex shrink-0 gap-2">
                             {i.tokenQr && (
                               <button
-                                onClick={() => setQrAberto(i)}
+                                onClick={() => setQrAberto({ ...i, meiaSolidaria: p.evento.meiaSolidaria })}
                                 className="botao-fantasma !px-4 !py-2 !text-xs"
                               >
                                 Ver QR
@@ -500,9 +516,13 @@ export default function MeusIngressos() {
               {qrAberto.titularNome}
             </p>
             <p className="mt-1 text-xs text-texto-suave">
-              {qrAberto.tipo === 'meia' ? 'Meia-entrada' : 'Inteira'}
+              {qrAberto.tipo === 'meia'
+                ? qrAberto.meiaSolidaria
+                  ? 'Meia solidária'
+                  : 'Meia-entrada'
+                : 'Inteira'}
             </p>
-            {qrAberto.tipo === 'meia' && (
+            {qrAberto.tipo === 'meia' && !qrAberto.meiaSolidaria && (
               <p className="mx-auto mt-4 max-w-[280px] text-[11px] leading-relaxed text-alerta">
                 Leve o comprovante de meia-entrada, ou a diferença será cobrada
                 na portaria.

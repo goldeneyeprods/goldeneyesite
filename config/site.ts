@@ -96,6 +96,32 @@ export interface LoteConfig {
   precoCentavos: number
   quantidade: number
   ordem: number
+  /**
+   * Lotes com a mesma fase dividem a `quantidade` (a meia e a inteira do
+   * mesmo lote, por exemplo) e ficam à venda juntos. Só a menor fase ainda
+   * aberta aparece no site: a fase fecha quando passa do `validoAte` ou
+   * quando esgota, e a próxima abre na hora.
+   */
+  fase: number
+  /** ISO com fuso de São Paulo; sem data, vale até a abertura dos portões */
+  validoAte?: string
+}
+
+/**
+ * Atalho para o lote com meia e inteira dividindo a mesma quantidade.
+ * O preço informado é o da meia; a inteira é o dobro, como manda a lei.
+ */
+function lote(
+  fase: number,
+  nome: string,
+  meiaCentavos: number,
+  quantidade: number,
+  validoAte?: string
+): LoteConfig[] {
+  return [
+    { nome: `${nome} — Meia solidária`, tipo: 'meia', precoCentavos: meiaCentavos, quantidade, ordem: fase * 10, fase, validoAte },
+    { nome: `${nome} — Inteira`, tipo: 'inteira', precoCentavos: meiaCentavos * 2, quantidade, ordem: fase * 10 + 1, fase, validoAte },
+  ]
 }
 
 export interface EventoConfig {
@@ -127,6 +153,13 @@ export interface EventoConfig {
   /** false = a página existe, mas não vende ingresso pelo site */
   vendaAberta: boolean
   lotes: LoteConfig[]
+  /** teto de ingressos somando todos os lotes; sem ele, vale a soma dos lotes */
+  ingressosAVenda?: number
+  /**
+   * Meia solidária: qualquer pessoa pode comprar a meia, sem comprovante.
+   * Some o aviso de comprovante do site, do e-mail e da portaria.
+   */
+  meiaSolidaria?: boolean
 
   /**
    * Para eventos sem venda de ingresso — entrada franca, por doação, por
@@ -281,90 +314,106 @@ export const eventos: EventoConfig[] = [
   },
 
   // ==========================================================================
-  //  TO THE OTHER SIDE — 20/11
+  //  CORUJÃO ÁCIDO — sexta, 20/11, 19h
+  //  Nada Basta + Delírio Parabólico, no Hangar7.
+  //  Ingresso em meia solidária: qualquer pessoa compra a meia, e R$ 2 de
+  //  cada ingresso vão para o Lar Betânia. A inteira fica à venda para quem quiser.
+  //  >>> FALTA: o cartaz.
   // ==========================================================================
   {
-    slug: 'totheotherside',
-    nome: 'TO THE OTHER SIDE',
-    subtitulo: 'Uma noite de tributo, fuzz e viagem',
+    // Slug novo junto com o nome; os antigos (/eventos/totheotherside e
+    // /eventos/corujao-psicodelico) redirecionam para cá no next.config.mjs.
+    slug: 'corujao-acido',
+    nome: 'Corujão Ácido',
+    subtitulo: 'Nada Basta e Delírio Parabólico noite adentro',
 
     dataInicio: '2026-11-20T19:00:00-03:00',
     aberturaPortoes: '2026-11-20T19:00:00-03:00',
 
     local: 'Hangar7',
-    // >>> SUBSTITUIR: endereço completo do Hangar7
-    endereco: 'Joinville/SC', // >>> SUBSTITUIR pelo endereço completo do Hangar7
-    // >>> SUBSTITUIR: cole o link "Incorporar um mapa" do Google Maps
-    mapaEmbed: '',
-    mapaLink: 'https://maps.google.com/?q=Hangar7+Joinville',
+    endereco: 'Rua João Ebert, 174 — Comasa, Joinville/SC',
+    mapaEmbed:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4001.3273362442383!2d-48.8087199!3d-26.2798882!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94deb10050097acb%3A0xb84defe0e2348ac5!2sHangar%207%20Music%20Bar!5e1!3m2!1spt-BR!2sbr!4v1792429982472!5m2!1spt-BR!2sbr',
+    mapaLink: 'https://maps.google.com/?q=Hangar+7+Music+Bar,+Rua+João+Ebert,+174+-+Comasa,+Joinville+-+SC',
 
     classificacaoEtaria: '18 anos',
-    // >>> SUBSTITUIR: capacidade real da casa
-    capacidade: 400,
+    capacidade: 110,
 
     descricao:
-      'Break on through. TO THE OTHER SIDE é uma travessia em três atos: o ' +
-      'tributo que invoca os Doors, o fuzz original que empurra o chão pra ' +
-      'longe, e a discotecagem que segura a viagem até o sol raiar. Luz, ' +
-      'projeção e reverb — do outro lado.',
+      'Duas bandas e uma noite inteira de psicodelia no Hangar7. A Nada Basta desce de ' +
+      'Blumenau com brasilidade e rock setentista puxado para ' +
+      'o lado lisérgico; o Delírio Parabólico abre a porta dos Mutantes, do ' +
+      'Pink Floyd e do Raul. Depois, discotecagem até a coruja cansar.',
 
-    imagemHero: '/imagens/hero-beco.jpg',
+    imagemHero: '/imagens/bandas/nadabasta/nadabastastudio-09967.jpg',
 
     lineup: [
       {
         horario: '19:00',
-        titulo: 'Abertura dos portões',
-        descricao: 'Discotecagem de recepção, projeções e mercado de arte.',
+        titulo: 'Abertura da casa',
+        descricao: 'Discotecagem de recepção enquanto o Hangar7 enche.',
         destaque: false,
       },
       {
         horario: '21:00',
         titulo: 'Delírio Parabólico',
         descricao:
-          'Rock psicodélico autoral. Fuzz, delay infinito e uma parede de som ' +
-          'que vira paisagem.',
+          'Rock psicodélico autoral e as homenagens de sempre: Os Mutantes, ' +
+          'Pink Floyd, Raul Seixas.',
         destaque: true,
       },
       {
         horario: '22:30',
-        titulo: 'Reverb Band',
+        titulo: 'Nada Basta',
         descricao:
-          'Tributo a The Doors. O repertório inteiro do Rei Lagarto, do órgão ' +
-          'Vox Continental ao último grito.',
+          'Brasilidades e rock dos anos 70, num set montado para o lado ' +
+          'psicodélico da banda.',
         destaque: true,
       },
       {
         horario: '00:00',
         titulo: 'Discotecagem',
         descricao:
-          'Psicodelia dos anos 60 e 70, krautrock, garage e o que mais couber ' +
-          'na madrugada.',
+          'Psicodelia brasileira e gringa dos anos 60 e 70 pela madrugada.',
         destaque: false,
       },
     ],
 
     permitido: [
       'Documento com foto (obrigatório)',
-      'Comprovante de meia-entrada, se for o caso',
       'Protetor auricular',
     ],
     proibido: [
       'Bebidas e alimentos de fora',
       'Garrafas, latas e objetos de vidro',
       'Qualquer tipo de arma ou objeto cortante',
-      'Guarda-chuvas de ponta metálica',
+    ],
+
+    creditos: [
+      { rotulo: 'Meia solidária', valor: 'R$ 2 de cada ingresso vão para o Lar Betânia' },
+      { rotulo: 'Doações revertidas ao', valor: 'Lar Betânia — Joinville' },
+      { rotulo: 'Espaço', valor: 'Hangar7' },
     ],
 
     vendaAberta: true,
 
-    // >>> SUBSTITUIR: preços e quantidades reais.
-    // A Lei 12.933/13 exige no mínimo 40% do total em meia-entrada — o
-    // `npm run db:seed` recusa rodar se ficar abaixo disso.
+    // Meia solidária: a meia é aberta a qualquer pessoa, sem comprovante, e
+    // vira o preço de referência do lote. A portaria não cobra documento de
+    // meia neste evento.
+    meiaSolidaria: true,
+
+    // Ingressos à venda no total, somando todos os lotes. O último lote fica
+    // com o que sobrar dos anteriores; o que não for vendido online até a
+    // abertura é vendido na porta, pelo preço do último lote.
+    ingressosAVenda: 100,
+
+    // Cada lote tem uma meia e uma inteira que dividem a mesma quantidade.
+    // O lote vira quando a data passa OU quando esgota — o que vier primeiro.
     lotes: [
-      { nome: '1º Lote — Inteira', tipo: 'inteira', precoCentavos: 6000, quantidade: 120, ordem: 1 },
-      { nome: '1º Lote — Meia-entrada', tipo: 'meia', precoCentavos: 3000, quantidade: 80, ordem: 2 },
-      { nome: '2º Lote — Inteira', tipo: 'inteira', precoCentavos: 8000, quantidade: 120, ordem: 3 },
-      { nome: '2º Lote — Meia-entrada', tipo: 'meia', precoCentavos: 4000, quantidade: 80, ordem: 4 },
+      ...lote(1, '1º lote', 2000, 20, '2026-11-10T23:59:59-03:00'),
+      ...lote(2, '2º lote', 2500, 25, '2026-11-15T23:59:59-03:00'),
+      ...lote(3, '3º lote', 3000, 30, '2026-11-19T23:59:59-03:00'),
+      ...lote(4, '4º lote', 3500, 100),
     ],
   },
 
@@ -532,47 +581,58 @@ export interface BandaConfig {
 
 export const bandas: BandaConfig[] = [
   // ==========================================================================
-  //  REVERB BAND
-  //  >>> REVISAR: escrevi o release a partir do que dava para ver nas fotos
-  //  e do fato de ser tributo aos Doors. Corrija o que estiver errado — não
-  //  quero texto inventado no ar sobre gente de verdade.
+  //  NADA BASTA
+  //  Texto a partir do release oficial que a banda mandou.
   // ==========================================================================
   {
-    slug: 'reverb-band',
-    nome: 'Reverb Band',
-    resumo: 'O repertório do Rei Lagarto, do órgão ao último grito',
-    genero: 'Tributo a The Doors',
-    cidade: 'Joinville/SC',
+    slug: 'nada-basta',
+    nome: 'Nada Basta',
+    resumo: 'Uma viagem aos anos 70, entre psicodelia e brasilidades',
+    genero: 'Rock psicodélico e brasilidades',
+    cidade: 'Blumenau/SC',
 
     conceito:
-      'A Reverb Band existe para devolver ao palco o repertório que The ' +
-      'Doors gravou entre 1967 e 1971 — não como imitação, mas como leitura ' +
-      'de banda, com o peso e a liberdade de quem toca junto há tempo.',
+      'A Nada Basta é uma banda de Blumenau que transforma o palco em uma ' +
+      'viagem aos anos 70. Formada por músicos jovens apaixonados pela ' +
+      'estética clássica do rock, nasceu da vontade de resgatar a energia, a ' +
+      'sonoridade e a atmosfera da era mais marcante do gênero.',
 
     sonoridade:
-      'O desenho é o dos Doors: órgão à frente, guitarra de blues elétrico e ' +
-      'uma cozinha que segura a viagem sem pressa. Do organ groove de "Light ' +
-      'My Fire" ao arrasto sombrio de "Riders on the Storm".',
+      'Rock psicodélico, brasilidades e clássicos do rock nacional e ' +
+      'internacional num repertório pulsante. Inspirada por Led Zeppelin, ' +
+      'Rita Lee, Deep Purple e Casa das Máquinas, a banda mistura riffs ' +
+      'marcantes, jams hipnotizantes, grooves brasileiros e atmosferas ' +
+      'psicodélicas.',
 
     aoVivo:
-      'Show de banda inteira, construído para casa cheia. O repertório passa ' +
-      'pelos hits que todo mundo canta e pelos blocos longos que só fazem ' +
-      'sentido ao vivo — quando a música abre e ninguém sabe quando fecha.',
+      'Visual de época, instrumentos vintage e uma identidade estética forte. ' +
+      'Os shows são intensos e imersivos, unem presença de palco e ' +
+      'autenticidade, e conectam gerações misturando nostalgia, psicodelia e ' +
+      'personalidade própria.',
 
-    formacao: ['Vocal', 'Teclados / órgão', 'Guitarra', 'Baixo', 'Bateria'],
-    referencias: ['The Doors', 'Blues elétrico', 'Psicodelia dos anos 60'],
+    discografia:
+      'Além das releituras com identidade própria, a Nada Basta começa agora ' +
+      'a fase autoral, expandindo a própria identidade sonora e artística.',
 
-    logo: '/imagens/bandas/reverbband/logo.png',
+    formacao: [
+      'Vocal',
+      'Baixo e backing vocal',
+      'Guitarra e backing vocal',
+      'Bateria e backing vocal',
+    ],
+    referencias: ['Led Zeppelin', 'Rita Lee', 'Deep Purple', 'Casa das Máquinas'],
+
+    logo: '/imagens/bandas/nadabasta/logo.png',
     fotos: [
-      '/imagens/bandas/reverbband/img-2616.jpg',
-      '/imagens/bandas/reverbband/img-8028.jpg',
-      '/imagens/bandas/reverbband/img-7931.jpg',
-      '/imagens/bandas/reverbband/img-7959.jpg',
-      '/imagens/bandas/reverbband/img-2599.jpg',
+      '/imagens/bandas/nadabasta/nadabastastudio-09967.jpg',
+      '/imagens/bandas/nadabasta/dsc00362.jpg',
+      '/imagens/bandas/nadabasta/nadabastastudio-00354.jpg',
+      '/imagens/bandas/nadabasta/dsc09978.jpg',
+      '/imagens/bandas/nadabasta/nadabastastudio-09977.jpg',
+      '/imagens/bandas/nadabasta/dsc09970.jpg',
     ],
 
-    // >>> SUBSTITUIR: as redes da Reverb Band
-    redes: {},
+    redes: { instagram: 'https://www.instagram.com/nadabastaaa/' },
   },
 
   // ==========================================================================
@@ -687,7 +747,17 @@ export const faq = [
       'Conforme a Lei 12.933/2013: estudantes, pessoas com deficiência e um ' +
       'acompanhante, pessoas com 60 anos ou mais, e jovens de 15 a 29 anos de ' +
       'baixa renda inscritos no CadÚnico. A comprovação é obrigatória na entrada ' +
-      '— sem documento válido, será cobrada a diferença para a inteira.',
+      '— sem documento válido, será cobrada a diferença para a inteira. Nos ' +
+      'eventos com meia solidária, como o Corujão Ácido, a meia é aberta ' +
+      'a todo mundo e não pede comprovante.',
+  },
+  {
+    p: 'Como funcionam os lotes?',
+    r:
+      'Cada lote tem uma quantidade e uma data. Ele vira quando esgota ou quando ' +
+      'a data passa, o que vier primeiro, e o preço sobe no lote seguinte. O ' +
+      'site mostra sempre o lote que está valendo. Se sobrar ingresso no último ' +
+      'lote, ele é vendido também na porta, pelo mesmo preço.',
   },
   {
     p: 'Posso transferir meu ingresso para outra pessoa?',

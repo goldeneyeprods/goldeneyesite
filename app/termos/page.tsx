@@ -88,6 +88,14 @@ export default function Termos() {
               diferença entre o valor pago e o da inteira, sob pena de não
               liberação da entrada.
             </p>
+            <p>
+              <strong className="text-texto">Meia solidária.</strong> Em
+              eventos anunciados com meia solidária, a meia-entrada é aberta a
+              qualquer pessoa, sem necessidade de comprovação, e parte do valor
+              de cada ingresso é destinada a doação, como informado na página
+              do evento. Quem tem direito à meia por lei paga o mesmo valor, e a
+              inteira continua à venda para quem preferir.
+            </p>
           </Secao>
 
           <Secao titulo="4. Pagamento">

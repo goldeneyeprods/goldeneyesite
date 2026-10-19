@@ -2,7 +2,7 @@
 
 Site oficial, venda de ingressos por PIX e app de portaria — tudo num projeto só.
 
-**Evento configurado:** TO THE OTHER SIDE · Reverb Band (Tributo The Doors) + Delírio Parabólico + Discotecagem · Hangar7 · 20/11 às 19h
+**Evento à venda:** Corujão Ácido · Nada Basta + Delírio Parabólico + Discotecagem · Hangar7 (Rua João Ebert, 174 — Comasa) · 20/11/2026 às 19h
 
 ---
 
@@ -25,7 +25,7 @@ Tudo que é seu está em **`config/site.ts`**, marcado com `>>> SUBSTITUIR`:
 - CNPJ, razão social, e-mail, WhatsApp, redes sociais
 - Endereço do Hangar7 e link do mapa
 - **Preços dos ingressos** (em centavos: `6000` = R$ 60,00)
-- Quantidade de cada lote
+- Quantidade e data de virada de cada lote (veja *Lotes* abaixo)
 - Fotos dos eventos anteriores
 
 Nada de design ou de código precisa ser tocado para o site ficar seu.
@@ -53,6 +53,19 @@ npm run db:seed     # cadastra o evento, os lotes e os operadores da portaria
 ```
 
 O `db:seed` **recusa rodar** se a meia-entrada ficar abaixo de 40% do total — é a exigência da Lei 12.933/2013.
+
+### Lotes
+
+Os lotes se organizam em **fases**. A meia e a inteira de uma fase dividem a
+mesma quantidade, e só a fase vigente aparece no site. Ela vira quando esgota
+**ou** quando passa da data, o que vier primeiro. O teto `ingressosAVenda` do
+evento faz o último lote ficar com o que sobrou dos anteriores.
+
+O atalho `lote(fase, nome, precoMeia, quantidade, validoAte)` do
+`config/site.ts` cria a meia e a inteira (o dobro) de uma vez.
+
+Com `meiaSolidaria: true`, a meia fica aberta a qualquer pessoa: o site, o
+e-mail, o PDF e a portaria deixam de pedir comprovante.
 
 ### 2. Mercado Pago
 

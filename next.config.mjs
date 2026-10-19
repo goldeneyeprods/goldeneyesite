@@ -2,6 +2,22 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  // Eventos que mudaram de nome: o link antigo já divulgado continua chegando.
+  async redirects() {
+    return [
+      {
+        source: '/eventos/totheotherside',
+        destination: '/eventos/corujao-acido',
+        permanent: true,
+      },
+      {
+        source: '/eventos/corujao-psicodelico',
+        destination: '/eventos/corujao-acido',
+        permanent: true,
+      },
+    ]
+  },
+
   async headers() {
     return [
       {

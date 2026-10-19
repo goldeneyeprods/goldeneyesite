@@ -18,6 +18,7 @@ interface Lote {
   disponivel: number
   poucos: boolean
   esgotado: boolean
+  validoAte: string | null
 }
 
 interface DadosPix {
@@ -46,7 +47,9 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
   const urlLotes = `/api/eventos/${evento.slug}/lotes`
 
   const [lotes, setLotes] = useState<Lote[]>([])
+  const [esgotadoEvento, setEsgotadoEvento] = useState(false)
   const [carregandoLotes, setCarregandoLotes] = useState(true)
+  const solidaria = !!evento.meiaSolidaria
   const [qtds, setQtds] = useState<Record<number, number>>({})
 
   const [form, setForm] = useState({
@@ -63,12 +66,27 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
   const [pix, setPix] = useState<DadosPix | null>(null)
 
   // ---- carrega os lotes ---------------------------------------------------
-  useEffect(() => {
-    fetch(urlLotes)
+  function carregarLotes() {
+    return fetch(urlLotes)
       .then((r) => r.json())
-      .then((d) => setLotes(d.lotes ?? []))
+      .then((d) => {
+        const novos: Lote[] = d.lotes ?? []
+        setLotes(novos)
+        setEsgotadoEvento(!!d.esgotado)
+        // O lote pode ter virado: quantidade escolhida de lote que saiu some.
+        setQtds((atual) =>
+          Object.fromEntries(
+            Object.entries(atual).filter(([id]) => novos.some((l) => l.id === Number(id)))
+          )
+        )
+      })
+  }
+
+  useEffect(() => {
+    carregarLotes()
       .catch(() => setLotes([]))
       .finally(() => setCarregandoLotes(false))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlLotes])
 
   const total = useMemo(
@@ -81,9 +99,17 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
     [qtds]
   )
   const temMeia = useMemo(
-    () => lotes.some((l) => l.tipo === 'meia' && (qtds[l.id] ?? 0) > 0),
-    [lotes, qtds]
+    () => !solidaria && lotes.some((l) => l.tipo === 'meia' && (qtds[l.id] ?? 0) > 0),
+    [lotes, qtds, solidaria]
   )
+  // Até quando o lote atual vale, para a pessoa saber que o preço sobe.
+  const viraEm = lotes[0]?.validoAte
+    ? new Intl.DateTimeFormat('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        timeZone: 'America/Sao_Paulo',
+      }).format(new Date(lotes[0].validoAte))
+    : null
 
   function mudarQtd(loteId: number, delta: number, max: number) {
     setQtds((atual) => {
@@ -153,8 +179,8 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
       const dados = await resp.json()
       if (!resp.ok) {
         setErroServidor(dados.erro ?? 'Não foi possível concluir a compra.')
-        // O estoque pode ter mudado enquanto a pessoa preenchia o formulário.
-        fetch(urlLotes).then((r) => r.json()).then((d) => setLotes(d.lotes ?? []))
+        // O estoque (ou o lote) pode ter mudado enquanto a pessoa preenchia.
+        carregarLotes().catch(() => {})
         return
       }
 
@@ -167,7 +193,8 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
   }
 
   const esgotadoTudo =
-    !carregandoLotes && lotes.length > 0 && lotes.every((l) => l.esgotado)
+    !carregandoLotes &&
+    (esgotadoEvento || (lotes.length > 0 && lotes.every((l) => l.esgotado)))
 
   return (
     <section id="ingressos" className="relative overflow-hidden px-5 py-24 sm:py-32">
@@ -197,7 +224,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
               <div key={i} className="cartao h-24 animate-pulse opacity-40" />
             ))}
           </div>
-        ) : lotes.length === 0 ? (
+        ) : lotes.length === 0 && !esgotadoTudo ? (
           <div className="cartao p-8 text-center">
             <p className="text-texto-suave">
               As vendas ainda não foram abertas. Siga a gente nas redes para
@@ -208,12 +235,17 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
           <div className="cartao cartao-ouro p-8 text-center">
             <p className="font-display text-2xl font-bold texto-ouro">ESGOTADO</p>
             <p className="mt-3 text-sm text-texto-suave">
-              Todos os lotes foram vendidos. Se alguém cancelar, o ingresso volta
+              Os ingressos online acabaram. Se alguém cancelar, o ingresso volta
               para cá automaticamente — vale ficar de olho.
             </p>
           </div>
         ) : (
           <div className="space-y-3">
+            {viraEm && (
+              <p className="text-center text-xs text-texto-fraco">
+                Este lote vale até {viraEm} ou enquanto durar. Depois o preço sobe.
+              </p>
+            )}
             {lotes.map((lote) => {
               const qtd = qtds[lote.id] ?? 0
               const bloqueado =
@@ -248,7 +280,14 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
                     </p>
                     {lote.tipo === 'meia' && (
                       <p className="mt-1 text-[11px] leading-snug text-texto-fraco">
-                        Lei 12.933/13 — comprovação obrigatória na portaria
+                        {solidaria
+                          ? 'Aberta a todo mundo, sem comprovante'
+                          : 'Lei 12.933/13 — comprovação obrigatória na portaria'}
+                      </p>
+                    )}
+                    {lote.tipo === 'inteira' && solidaria && (
+                      <p className="mt-1 text-[11px] leading-snug text-texto-fraco">
+                        Para quem quiser dar uma força a mais
                       </p>
                     )}
                   </div>
@@ -284,6 +323,11 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
               )
             })}
 
+            {solidaria && (
+              <p className="text-center text-xs text-texto-fraco">
+                R$ 2 de cada ingresso vão para o Lar Betânia, de Joinville.
+              </p>
+            )}
             {totalIngressos >= MAX_INGRESSOS_POR_CPF && (
               <p className="text-center text-xs text-texto-fraco">
                 Limite de {MAX_INGRESSOS_POR_CPF} ingressos por CPF.
@@ -315,7 +359,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
                   id="nome"
                   className="campo"
                   autoComplete="name"
-                  placeholder="Jim Morrison"
+                  placeholder="Nome e sobrenome"
                   value={form.nome}
                   aria-invalid={!!erros.nome}
                   onChange={(e) => setForm({ ...form, nome: e.target.value })}
@@ -466,7 +510,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
           onFechar={() => {
             setPix(null)
             setQtds({})
-            fetch(urlLotes).then((r) => r.json()).then((d) => setLotes(d.lotes ?? []))
+            carregarLotes().catch(() => {})
           }}
         />
       )}

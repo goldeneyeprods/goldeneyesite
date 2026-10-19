@@ -21,7 +21,7 @@ const sans = Inter({
 const url = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 
 // O título padrão é o da PRODUTORA. Cada evento sobrescreve com o próprio
-// nome pelo template — ex.: "TO THE OTHER SIDE — Golden Eye Prods."
+// nome pelo template — ex.: "Corujão Ácido — Golden Eye Prods."
 export const metadata: Metadata = {
   metadataBase: new URL(url),
   title: {

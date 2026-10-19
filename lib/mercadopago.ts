@@ -125,12 +125,9 @@ export function validarAssinaturaWebhook(params: {
   }
   if (!ts || !v1) return false
 
-  // Rejeita replay de mais de 5 minutos.
-  const idadeMs = Math.abs(Date.now() - Number(ts))
-  if (!Number.isFinite(idadeMs) || idadeMs > 5 * 60 * 1000) {
-    console.warn('[webhook] assinatura fora da janela de tempo')
-    return false
-  }
+  // Não há janela de tempo de propósito: o MP reenvia avisos por horas quando
+  // o site falha, e um aviso repetido não faz mal — o webhook só usa o id para
+  // consultar a API, nunca confia no conteúdo.
 
   // O MP normaliza o id para minúsculas quando ele é alfanumérico.
   const id = params.dataId.toLowerCase()

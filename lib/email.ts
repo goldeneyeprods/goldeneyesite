@@ -39,8 +39,15 @@ export async function gerarQrPng(token: string): Promise<Buffer> {
 // ----------------------------------------------------------------------------
 export async function gerarPdfIngressos(
   ingressos: IngressoParaEmail[],
-  evento: { nome: string; local: string; endereco: string; data: string }
+  evento: {
+    nome: string
+    local: string
+    endereco: string
+    data: string
+    meiaSolidaria?: boolean
+  }
 ): Promise<Buffer> {
+  const rotuloMeia = evento.meiaSolidaria ? 'MEIA SOLIDARIA' : 'MEIA-ENTRADA'
   const pdf = await PDFDocument.create()
   const fonte = await pdf.embedFont(StandardFonts.Helvetica)
   const fonteBold = await pdf.embedFont(StandardFonts.HelveticaBold)
@@ -71,7 +78,7 @@ export async function gerarPdfIngressos(
       ['DATA', evento.data],
       ['LOCAL', `${evento.local} — ${evento.endereco}`],
       ['TITULAR', ing.titularNome],
-      ['TIPO', ing.tipo === 'meia' ? 'MEIA-ENTRADA' : 'INTEIRA'],
+      ['TIPO', ing.tipo === 'meia' ? rotuloMeia : 'INTEIRA'],
     ]
     let y = height - 152
     for (const [rotulo, valor] of linhas) {
@@ -82,7 +89,7 @@ export async function gerarPdfIngressos(
       y -= 42
     }
 
-    if (ing.tipo === 'meia') {
+    if (ing.tipo === 'meia' && !evento.meiaSolidaria) {
       pagina.drawText('Comprovante de meia-entrada obrigatorio na portaria.', {
         x: 40, y: 46, size: 8, font: fonte, color: rgb(0.95, 0.8, 0.3),
       })
@@ -117,11 +124,14 @@ function htmlConfirmacao(dados: {
   dataFormatada: string
   local: string
   endereco: string
+  meiaSolidaria?: boolean
   ingressos: IngressoParaEmail[]
   valorTotal: number
   linkMeusIngressos: string
 }): string {
-  const temMeia = dados.ingressos.some((i) => i.tipo === 'meia')
+  // Na meia solidária não existe comprovante a cobrar.
+  const temMeia = !dados.meiaSolidaria && dados.ingressos.some((i) => i.tipo === 'meia')
+  const rotuloMeia = dados.meiaSolidaria ? 'MEIA SOLIDÁRIA' : 'MEIA-ENTRADA'
 
   const itens = dados.ingressos
     .map(
@@ -131,7 +141,7 @@ function htmlConfirmacao(dados: {
           ${i.titularNome}
         </td>
         <td style="padding:10px 0;border-bottom:1px solid #2a1f38;color:#d4a64a;font-size:12px;text-align:right;letter-spacing:.08em">
-          ${i.tipo === 'meia' ? 'MEIA-ENTRADA' : 'INTEIRA'}
+          ${i.tipo === 'meia' ? rotuloMeia : 'INTEIRA'}
         </td>
       </tr>`
     )
@@ -223,6 +233,7 @@ export async function enviarEmailConfirmacao(dados: {
   dataFormatada: string
   local: string
   endereco: string
+  meiaSolidaria?: boolean
   ingressos: IngressoParaEmail[]
   valorTotal: number
   linkMeusIngressos: string
@@ -232,6 +243,7 @@ export async function enviarEmailConfirmacao(dados: {
     local: dados.local,
     endereco: dados.endereco,
     data: dados.dataFormatada,
+    meiaSolidaria: dados.meiaSolidaria,
   })
 
   await resend().emails.send({

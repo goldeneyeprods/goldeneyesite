@@ -28,6 +28,11 @@ create table if not exists eventos (
 
 create index if not exists idx_eventos_ativo on eventos (ativo, data_inicio);
 
+-- Teto de ingressos somando todos os lotes (null = soma dos lotes) e meia
+-- solidária (meia aberta a todos, sem comprovante na portaria).
+alter table eventos add column if not exists ingressos_a_venda integer;
+alter table eventos add column if not exists meia_solidaria boolean not null default false;
+
 -- ----------------------------------------------------------------------------
 -- LOTES  (preços SEMPRE em centavos, inteiro — nunca float)
 -- ----------------------------------------------------------------------------
@@ -47,6 +52,10 @@ create table if not exists lotes (
   constraint lote_sem_overbooking
     check (quantidade_vendida + quantidade_reservada <= quantidade_total)
 );
+
+-- Lotes da mesma fase (a meia e a inteira do 1º lote, por exemplo) dividem a
+-- quantidade_total e ficam à venda juntos. Só a menor fase aberta vende.
+alter table lotes add column if not exists fase integer not null default 1;
 
 create index if not exists idx_lotes_evento on lotes (evento_id, ativo, ordem);
 

@@ -3,6 +3,7 @@ import { sql } from '@/lib/db'
 import { schemaCheckout, formatarBRL } from '@/lib/validacao'
 import { permitir, ipDaRequisicao } from '@/lib/ratelimit'
 import { criarPagamentoPix } from '@/lib/mercadopago'
+import { lerEstoque } from '@/lib/lotes'
 import { MAX_INGRESSOS_POR_CPF, MINUTOS_EXPIRACAO_PIX } from '@/config/site'
 
 export const runtime = 'nodejs'
@@ -107,29 +108,24 @@ export async function POST(req: Request) {
         tipo: 'inteira' | 'meia'
       }[] = []
 
-      for (const item of dados.itens) {
-        // FOR UPDATE trava a linha do lote até o fim da transação: dois
-        // compradores disputando o último ingresso entram em fila, não empatam.
-        const [lote] = await tx<
-          {
-            id: number
-            tipo: 'inteira' | 'meia'
-            preco_centavos: number
-            disponivel: number
-            ativo: boolean
-            valido_ate: Date | null
-          }[]
-        >`
-          select id, tipo, preco_centavos, ativo, valido_ate,
-                 (quantidade_total - quantidade_vendida - quantidade_reservada) as disponivel
-          from lotes
-          where id = ${item.loteId} and evento_id = ${evento.id}
-          for update
-        `
+      // Trava os lotes do evento e descobre qual fase está vendendo. Só ela
+      // aceita compra: um lote que virou enquanto a pessoa preenchia o
+      // formulário é recusado com aviso, sem cobrar o preço velho.
+      const estoque = await lerEstoque(tx, evento.id, { travar: true })
 
-        if (!lote || !lote.ativo) throw new Error('LOTE:Lote indisponível.')
-        if (lote.valido_ate && new Date(lote.valido_ate) < new Date()) {
-          throw new Error('LOTE:Este lote já foi encerrado.')
+      if (estoque.vigentes.length === 0) {
+        throw new Error('ESTOQUE:Os ingressos online esgotaram.')
+      }
+      if (totalIngressos > estoque.restanteFase) {
+        throw new Error(
+          `ESTOQUE:Restam apenas ${estoque.restanteFase} ingresso(s) neste lote.`
+        )
+      }
+
+      for (const item of dados.itens) {
+        const lote = estoque.vigentes.find((l) => l.id === item.loteId)
+        if (!lote) {
+          throw new Error('LOTE:Este lote não está mais à venda. A página foi atualizada com o lote atual.')
         }
         if (lote.disponivel < item.quantidade) {
           throw new Error(
@@ -140,11 +136,11 @@ export async function POST(req: Request) {
         }
 
         // O preço vem SEMPRE do banco. Nada que o cliente mande é considerado.
-        valorTotal += lote.preco_centavos * item.quantidade
+        valorTotal += lote.precoCentavos * item.quantidade
         itensValidados.push({
           loteId: lote.id,
           quantidade: item.quantidade,
-          precoUnitario: lote.preco_centavos,
+          precoUnitario: lote.precoCentavos,
           tipo: lote.tipo,
         })
 

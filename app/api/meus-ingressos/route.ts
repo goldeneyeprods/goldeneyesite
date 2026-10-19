@@ -31,12 +31,13 @@ export async function GET() {
       evento_local: string
       evento_data: Date
       abertura_portoes: Date
+      meia_solidaria: boolean
     }[]
   >`
     select p.id, p.status, p.valor_total_centavos, p.pago_em,
            p.comprador_nome, p.comprador_cpf,
            e.nome as evento_nome, e.local_nome as evento_local,
-           e.data_inicio as evento_data, e.abertura_portoes
+           e.data_inicio as evento_data, e.abertura_portoes, e.meia_solidaria
       from pedidos p
       join eventos e on e.id = p.evento_id
      where lower(p.comprador_email) = ${email}
@@ -103,6 +104,7 @@ export async function GET() {
         local: p.evento_local,
         data: p.evento_data,
         aberturaPortoes: p.abertura_portoes,
+        meiaSolidaria: p.meia_solidaria,
       },
       podeCancelar,
       motivoBloqueio: motivo,

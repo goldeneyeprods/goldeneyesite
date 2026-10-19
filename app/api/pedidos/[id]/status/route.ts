@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { sql } from '@/lib/db'
+import { permitir } from '@/lib/ratelimit'
+import { sincronizarPagamento } from '@/lib/pedidos'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -8,6 +10,10 @@ export const dynamic = 'force-dynamic'
 //  GET /api/pedidos/:id/status
 //  A tela de pagamento consulta isto a cada poucos segundos até virar 'pago'.
 //  Devolve o mínimo possível: nada de dado pessoal numa rota adivinhável.
+//
+//  Se o pedido ainda está pendente, de tempos em tempos pergunta direto ao
+//  Mercado Pago. Assim um webhook atrasado (ou perdido) não deixa o comprador
+//  olhando para a tela depois de ter pago.
 // ============================================================================
 
 export async function GET(
@@ -20,15 +26,40 @@ export async function GET(
     return NextResponse.json({ erro: 'id inválido' }, { status: 400 })
   }
 
-  const [pedido] = await sql<
-    { status: string; pix_expira_em: Date | null; qtd: number }[]
+  const consultar = () => sql<
+    {
+      status: string
+      pix_expira_em: Date | null
+      mp_payment_id: string | null
+      criado_em: Date
+      qtd: number
+    }[]
   >`
     select p.status,
            p.pix_expira_em,
+           p.mp_payment_id,
+           p.criado_em,
            (select count(*)::int from ingressos i where i.pedido_id = p.id) as qtd
       from pedidos p
      where p.id = ${id}
   `
+
+  let [pedido] = await consultar()
+
+  if (
+    pedido?.status === 'pendente' &&
+    pedido.mp_payment_id &&
+    Date.now() - new Date(pedido.criado_em).getTime() > 15_000 &&
+    (await permitir(`status-mp:${id}`, 1, 15))
+  ) {
+    try {
+      await sincronizarPagamento(pedido.mp_payment_id)
+      ;[pedido] = await consultar()
+    } catch (erro) {
+      // Sem drama: o webhook e o cron ainda vão conferir.
+      console.error('[status] falha ao consultar o Mercado Pago', erro)
+    }
+  }
 
   if (!pedido) {
     return NextResponse.json({ erro: 'Pedido não encontrado' }, { status: 404 })
