@@ -53,6 +53,11 @@ export default function Home() {
     logo: `${process.env.NEXT_PUBLIC_SITE_URL}/imagens/logo.png`,
     sameAs: Object.values(produtora.redes).filter(Boolean),
     email: produtora.email,
+    founder: {
+      '@type': 'Person',
+      name: produtora.direcao.nome,
+      jobTitle: produtora.direcao.cargo,
+    },
     address: {
       '@type': 'PostalAddress',
       addressLocality: produtora.cidade,

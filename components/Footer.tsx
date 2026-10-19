@@ -134,6 +134,9 @@ export function Footer() {
           <p>
             © {ano} {produtora.razaoSocial} — CNPJ {produtora.cnpj}
           </p>
+          <p>
+            Direção artística: {produtora.direcao.nome}
+          </p>
           <p>Documento com foto obrigatório na entrada dos eventos</p>
         </div>
 

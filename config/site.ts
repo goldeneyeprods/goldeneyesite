@@ -39,6 +39,13 @@ export const produtora = {
     'Betânia. A ideia segue a mesma: ocupar espaços improváveis e devolver ' +
     'alguma coisa para a cidade.',
 
+  // Quem assina a direção artística — aparece no "Quem faz", no rodapé e
+  // nos dados estruturados (o Google liga a pessoa à produtora).
+  direcao: {
+    nome: 'Johann Sebastian K.',
+    cargo: 'Fundador e diretor artístico',
+  },
+
   // >>> CONFIRMAR: a razão social exata que consta no cartão CNPJ
   razaoSocial: 'GOLDEN EYE PRODUÇÕES LTDA',
   cnpj: '40.561.137/0001-30',

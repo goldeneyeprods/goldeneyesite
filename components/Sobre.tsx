@@ -26,6 +26,14 @@ export function Sobre() {
           {produtora.descricao}
         </p>
 
+        <p className="mt-8 text-sm text-texto-suave">
+          <span className="font-display font-bold text-texto">
+            {produtora.direcao.nome}
+          </span>
+          <span className="mx-2 text-ouro/40">◆</span>
+          {produtora.direcao.cargo}
+        </p>
+
         <div className="mt-12 grid gap-4 sm:grid-cols-3">
           {[
             { n: 'Rock', d: 'psicodélico, garage e o que vier junto' },
