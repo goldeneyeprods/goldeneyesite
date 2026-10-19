@@ -325,7 +325,7 @@ export const eventos: EventoConfig[] = [
     // /eventos/corujao-psicodelico) redirecionam para cá no next.config.mjs.
     slug: 'corujao-acido',
     nome: 'Corujão Ácido',
-    subtitulo: 'Nada Basta e Delírio Parabólico noite adentro',
+    subtitulo: 'Uma noite, dois lados do ácido: o espacial e o tropical',
 
     dataInicio: '2026-11-20T19:00:00-03:00',
     aberturaPortoes: '2026-11-20T19:00:00-03:00',
@@ -340,10 +340,11 @@ export const eventos: EventoConfig[] = [
     capacidade: 110,
 
     descricao:
-      'Duas bandas e uma noite inteira de psicodelia no Hangar7. A Nada Basta desce de ' +
-      'Blumenau com brasilidade e rock setentista puxado para ' +
-      'o lado lisérgico; o Delírio Parabólico abre a porta dos Mutantes, do ' +
-      'Pink Floyd e do Raul. Depois, discotecagem até a coruja cansar.',
+      'A coruja enxerga no escuro, e a noite tem dois lados. No Lado A, o ' +
+      'Delírio Parabólico leva o Hangar7 para o espaço com Pink Floyd: ' +
+      'atmosfera, delay e viagem longa. No Lado B, a Nada Basta desce de ' +
+      'Blumenau com a psicodelia brasileira de Rita Lee e Casa das ' +
+      'Máquinas, groove e calor. Depois, discotecagem até a coruja cansar.',
 
     imagemHero: '/imagens/bandas/nadabasta/nadabastastudio-09967.jpg',
 
@@ -356,18 +357,18 @@ export const eventos: EventoConfig[] = [
       },
       {
         horario: '21:00',
-        titulo: 'Delírio Parabólico',
+        titulo: 'Lado A — Delírio Parabólico',
         descricao:
-          'Rock psicodélico autoral e as homenagens de sempre: Os Mutantes, ' +
-          'Pink Floyd, Raul Seixas.',
+          'O lado espacial. Um set de Pink Floyd, das paisagens longas ao ' +
+          'lado escuro da lua.',
         destaque: true,
       },
       {
         horario: '22:30',
-        titulo: 'Nada Basta',
+        titulo: 'Lado B — Nada Basta',
         descricao:
-          'Brasilidades e rock dos anos 70, num set montado para o lado ' +
-          'psicodélico da banda.',
+          'O lado tropical. Psicodelia brasileira, rock setentista e groove, ' +
+          'de Rita Lee a Casa das Máquinas.',
         destaque: true,
       },
       {
