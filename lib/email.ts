@@ -248,6 +248,9 @@ export async function enviarEmailConfirmacao(dados: {
 
   await resend().emails.send({
     from: REMETENTE(),
+    // O e-mail sai do domínio verificado; a resposta do comprador vai para
+    // a caixa que a produção lê.
+    replyTo: produtora.emailIngressos,
     to: dados.para,
     subject: `🎟 Seu ingresso — ${dados.eventoNome}`,
     html: htmlConfirmacao(dados),
@@ -263,6 +266,9 @@ export async function enviarEmailConfirmacao(dados: {
 export async function enviarMagicLink(para: string, link: string): Promise<void> {
   await resend().emails.send({
     from: REMETENTE(),
+    // O e-mail sai do domínio verificado; a resposta do comprador vai para
+    // a caixa que a produção lê.
+    replyTo: produtora.emailIngressos,
     to: para,
     subject: 'Acesso aos seus ingressos — Golden Eye Prods.',
     html: `<!doctype html><html lang="pt-BR"><body style="margin:0;background:#0b0710;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;padding:40px 16px">
@@ -292,6 +298,9 @@ export async function enviarEmailReembolso(dados: {
 }): Promise<void> {
   await resend().emails.send({
     from: REMETENTE(),
+    // O e-mail sai do domínio verificado; a resposta do comprador vai para
+    // a caixa que a produção lê.
+    replyTo: produtora.emailIngressos,
     to: dados.para,
     subject: `Reembolso confirmado — ${dados.eventoNome}`,
     html: `<!doctype html><html lang="pt-BR"><body style="margin:0;background:#0b0710;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;padding:40px 16px">
