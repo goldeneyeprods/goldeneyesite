@@ -80,7 +80,10 @@ for (const ev of eventos) {
       process.exit(1)
     }
   }
-  console.log(`✓ ${ev.nome}: ${pct.toFixed(1)}% de meia-entrada — dentro da lei`)
+  console.log(
+    `✓ ${ev.nome}: meia-entrada em todos os lotes, limitada na venda a 40% de ` +
+      `cada lote (lib/lotes.ts) — dentro da lei`
+  )
 }
 
 // ---- Eventos e lotes --------------------------------------------------------
@@ -153,6 +156,23 @@ for (const ev of eventos) {
       `
       console.log(`  + ${lote.nome}`)
     }
+  }
+}
+
+// ---- Lotes que saíram do config ---------------------------------------------
+// Lote renomeado ou removido no config/site.ts sai de venda (ativo = false).
+// Não apagamos: pode ter venda ligada a ele, e o histórico precisa ficar.
+for (const ev of eventos) {
+  const eventoId = idsPorSlug.get(ev.slug)
+  const nomes = ev.lotes.map((l) => l.nome)
+  const desativados = await sql`
+    update lotes set ativo = false
+     where evento_id = ${eventoId} and ativo = true
+       and not (nome = any(${sql.array(nomes)}::text[]))
+    returning nome, quantidade_vendida
+  `
+  for (const d of desativados) {
+    console.log(`  − ${d.nome} saiu de venda (${d.quantidade_vendida} vendido(s) mantido(s))`)
   }
 }
 

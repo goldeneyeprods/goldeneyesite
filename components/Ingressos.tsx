@@ -18,6 +18,7 @@ interface Lote {
   disponivel: number
   poucos: boolean
   esgotado: boolean
+  cotaMeiaPreenchida?: boolean
   validoAte: string | null
 }
 
@@ -266,7 +267,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
                       </h3>
                       {lote.esgotado && (
                         <span className="rounded-full bg-erro/15 px-2 py-0.5 text-[9px] font-semibold tracking-widest text-erro">
-                          ESGOTADO
+                          {lote.cotaMeiaPreenchida ? 'COTA DE MEIA PREENCHIDA' : 'ESGOTADO'}
                         </span>
                       )}
                       {lote.poucos && !lote.esgotado && (

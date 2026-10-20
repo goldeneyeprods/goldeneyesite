@@ -107,19 +107,20 @@ export interface LoteConfig {
 }
 
 /**
- * Atalho para o lote com meia e inteira dividindo a mesma quantidade.
- * O preço informado é o da meia; a inteira é o dobro, como manda a lei.
+ * Atalho para o lote com inteira e meia dividindo a mesma quantidade.
+ * O preço informado é o da inteira; a meia é a metade, como manda a lei.
+ * Na venda, a meia de cada lote para em 40% da quantidade do lote (lib/lotes.ts).
  */
 function lote(
   fase: number,
   nome: string,
-  meiaCentavos: number,
+  inteiraCentavos: number,
   quantidade: number,
   validoAte?: string
 ): LoteConfig[] {
   return [
-    { nome: `${nome} — Meia solidária`, tipo: 'meia', precoCentavos: meiaCentavos, quantidade, ordem: fase * 10, fase, validoAte },
-    { nome: `${nome} — Inteira`, tipo: 'inteira', precoCentavos: meiaCentavos * 2, quantidade, ordem: fase * 10 + 1, fase, validoAte },
+    { nome: `${nome} — Inteira`, tipo: 'inteira', precoCentavos: inteiraCentavos, quantidade, ordem: fase * 10, fase, validoAte },
+    { nome: `${nome} — Meia-entrada`, tipo: 'meia', precoCentavos: Math.round(inteiraCentavos / 2), quantidade, ordem: fase * 10 + 1, fase, validoAte },
   ]
 }
 
@@ -315,8 +316,8 @@ export const eventos: EventoConfig[] = [
   // ==========================================================================
   //  CORUJÃO ÁCIDO — sexta, 20/11, 19h
   //  Nada Basta + Delírio Parabólico, no Hangar7.
-  //  Ingresso em meia solidária: qualquer pessoa compra a meia, e R$ 2 de
-  //  cada ingresso vão para o Lar Betânia. A inteira fica à venda para quem quiser.
+  //  Inteira de R$ 20 a R$ 35 conforme o lote; meia-entrada pela metade,
+  //  com comprovante, até 40% de cada lote. A inteira fica à venda para quem quiser.
   //  >>> FALTA: o cartaz.
   // ==========================================================================
   {
@@ -389,26 +390,18 @@ export const eventos: EventoConfig[] = [
       'Qualquer tipo de arma ou objeto cortante',
     ],
 
-    creditos: [
-      { rotulo: 'Meia solidária', valor: 'R$ 2 de cada ingresso vão para o Lar Betânia' },
-      { rotulo: 'Doações revertidas ao', valor: 'Lar Betânia — Joinville' },
-      { rotulo: 'Espaço', valor: 'Hangar7' },
-    ],
+    creditos: [{ rotulo: 'Espaço', valor: 'Hangar7' }],
 
     vendaAberta: true,
-
-    // Meia solidária: a meia é aberta a qualquer pessoa, sem comprovante, e
-    // vira o preço de referência do lote. A portaria não cobra documento de
-    // meia neste evento.
-    meiaSolidaria: true,
 
     // Ingressos à venda no total, somando todos os lotes. O último lote fica
     // com o que sobrar dos anteriores; o que não for vendido online até a
     // abertura é vendido na porta, pelo preço do último lote.
     ingressosAVenda: 100,
 
-    // Cada lote tem uma meia e uma inteira que dividem a mesma quantidade.
-    // O lote vira quando a data passa OU quando esgota — o que vier primeiro.
+    // Cada lote tem uma inteira e uma meia que dividem a mesma quantidade;
+    // a meia de cada lote para em 40% dele (8 de 20, 10 de 25, 12 de 30). O lote vira quando a data passa OU quando
+    // esgota — o que vier primeiro.
     lotes: [
       ...lote(1, '1º lote', 2000, 20, '2026-11-10T23:59:59-03:00'),
       ...lote(2, '2º lote', 2500, 25, '2026-11-15T23:59:59-03:00'),
@@ -763,9 +756,9 @@ export const faq = [
       'Conforme a Lei 12.933/2013: estudantes, pessoas com deficiência e um ' +
       'acompanhante, pessoas com 60 anos ou mais, e jovens de 15 a 29 anos de ' +
       'baixa renda inscritos no CadÚnico. A comprovação é obrigatória na entrada ' +
-      '— sem documento válido, será cobrada a diferença para a inteira. Nos ' +
-      'eventos com meia solidária, como o Corujão Ácido, a meia é aberta ' +
-      'a todo mundo e não pede comprovante.',
+      '— sem documento válido, será cobrada a diferença para a inteira. A ' +
+      'meia-entrada corresponde a 40% de cada lote; quando essa cota enche, ' +
+      'o lote segue só com a inteira.',
   },
   {
     p: 'Como funcionam os lotes?',

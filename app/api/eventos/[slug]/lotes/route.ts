@@ -37,6 +37,7 @@ export async function GET(
         // queima a confiança de quem volta em todo evento.
         poucos: l.disponivel > 0 && l.disponivel <= 10,
         esgotado: l.disponivel <= 0,
+        cotaMeiaPreenchida: l.cotaMeiaPreenchida,
         validoAte: l.validoAte,
       })),
     },

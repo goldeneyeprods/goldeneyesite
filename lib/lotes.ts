@@ -10,7 +10,14 @@ import type { Sql, TransactionSql } from 'postgres'
 //  Por cima de tudo há o teto do evento (`ingressos_a_venda`). O último lote
 //  costuma ter quantidade igual ao teto, e é o teto que faz dele "o que
 //  sobrou" dos lotes anteriores.
+//
+//  Meia-entrada: em cada lote, a meia vende até 40% da quantidade do lote
+//  (Lei 12.933/13), arredondado para cima para nunca ficar abaixo da lei.
+//  Passou disso, a meia daquele lote bloqueia e só a inteira continua.
 // ============================================================================
+
+/** Cota de meia-entrada em cada lote — o mínimo da Lei 12.933/2013. */
+export const PERCENTUAL_MEIA = 0.4
 
 type Consulta = Sql | TransactionSql
 
@@ -21,8 +28,10 @@ export interface LoteVigente {
   precoCentavos: number
   fase: number
   validoAte: Date | null
-  /** já descontados a fase e o teto do evento */
+  /** já descontados a fase, o teto do evento e a cota de meia */
   disponivel: number
+  /** meia sem estoque porque a cota de 40% do lote foi preenchida */
+  cotaMeiaPreenchida: boolean
 }
 
 export interface Estoque {
@@ -110,17 +119,33 @@ export async function lerEstoque(
       if (!noPrazo || sobra <= 0) continue
 
       restanteFase = Math.min(sobra, restanteEvento)
+
+      // A cota é do lote. O tamanho real do lote é o que já saiu mais o que
+      // ainda cabe — no último, isso é o que sobrou dos anteriores, não o
+      // teto inteiro.
+      const tamanhoFase = ocupadoFase(ls) + restanteFase
+      const cotaMeia = Math.ceil(tamanhoFase * PERCENTUAL_MEIA)
+      const meiaOcupada = ls
+        .filter((l) => l.tipo === 'meia')
+        .reduce((s, l) => s + l.ocupado, 0)
+      const meiaLivre = Math.max(cotaMeia - meiaOcupada, 0)
+
       vigentes = ls
         .sort((a, b) => a.ordem - b.ordem)
-        .map((l) => ({
-          id: l.id,
-          nome: l.nome,
-          tipo: l.tipo,
-          precoCentavos: l.preco_centavos,
-          fase: l.fase,
-          validoAte: l.valido_ate,
-          disponivel: Math.min(livrePorLote.get(l.id)!, restanteFase),
-        }))
+        .map((l) => {
+          const base = Math.min(livrePorLote.get(l.id)!, restanteFase)
+          const disponivel = l.tipo === 'meia' ? Math.min(base, meiaLivre) : base
+          return {
+            id: l.id,
+            nome: l.nome,
+            tipo: l.tipo,
+            precoCentavos: l.preco_centavos,
+            fase: l.fase,
+            validoAte: l.valido_ate,
+            disponivel,
+            cotaMeiaPreenchida: l.tipo === 'meia' && base > 0 && meiaLivre <= 0,
+          }
+        })
       break
     }
   }
