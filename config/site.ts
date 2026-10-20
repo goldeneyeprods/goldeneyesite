@@ -69,14 +69,6 @@ export const produtora = {
     tiktok: '',
   },
 
-  // Quem desenvolveu o site — assinatura discreta no rodapé
-  desenvolvidoPor: {
-    nome: 'Zopu',
-    logo: '/imagens/marca/zopu.png',
-    // >>> CONFIRMAR: a URL do site da Zopu
-    url: 'https://zopu.com.br',
-  },
-
   // Os pilares mostrados na home
   pilares: [
     { titulo: 'Rock', texto: 'Psicodélico, garage, krautrock e o que vier junto.' },
@@ -350,7 +342,7 @@ export const eventos: EventoConfig[] = [
       'A coruja enxerga no escuro, e a noite tem dois lados. No Lado A, o ' +
       'Delírio Parabólico leva o Hangar7 para o espaço com Pink Floyd: ' +
       'atmosfera, delay e viagem longa. No Lado B, a Nada Basta desce de ' +
-      'Blumenau com a psicodelia brasileira de Rita Lee e Casa das ' +
+      'Blumenau com a psicodelia brasileira de Mutantes, Rita Lee e Casa das ' +
       'Máquinas, groove e calor. Depois, discotecagem até a coruja cansar.',
 
     imagemHero: '/imagens/bandas/nadabasta/nadabastastudio-09967.jpg',
@@ -375,7 +367,7 @@ export const eventos: EventoConfig[] = [
         titulo: 'Lado B — Nada Basta',
         descricao:
           'O lado tropical. Psicodelia brasileira, rock setentista e groove, ' +
-          'de Rita Lee a Casa das Máquinas.',
+          'de Mutantes a Casa das Máquinas.',
         destaque: true,
       },
       {
@@ -590,13 +582,14 @@ export interface BandaConfig {
 export const bandas: BandaConfig[] = [
   // ==========================================================================
   //  NADA BASTA
-  //  Texto a partir do release oficial que a banda mandou.
+  //  Texto a partir do release e do mídia kit oficiais da banda
+  //  (arquivosbandas/nadabasta/midia-kit-nada-basta.pdf).
   // ==========================================================================
   {
     slug: 'nada-basta',
     nome: 'Nada Basta',
     resumo: 'Uma viagem aos anos 70, entre psicodelia e brasilidades',
-    genero: 'Rock psicodélico e brasilidades',
+    genero: 'Rock setentista, brasilidades e psicodelia',
     cidade: 'Blumenau/SC',
 
     conceito:
@@ -607,8 +600,9 @@ export const bandas: BandaConfig[] = [
 
     sonoridade:
       'Rock psicodélico, brasilidades e clássicos do rock nacional e ' +
-      'internacional num repertório pulsante. Inspirada por Led Zeppelin, ' +
-      'Rita Lee, Deep Purple e Casa das Máquinas, a banda mistura riffs ' +
+      'internacional num repertório intenso, nostálgico e atual. Inspirada ' +
+      'por Led Zeppelin, Rita Lee, Deep Purple, Casa das Máquinas, Cream e ' +
+      'Os Mutantes, a banda mistura riffs ' +
       'marcantes, jams hipnotizantes, grooves brasileiros e atmosferas ' +
       'psicodélicas.',
 
@@ -616,19 +610,30 @@ export const bandas: BandaConfig[] = [
       'Visual de época, instrumentos vintage e uma identidade estética forte. ' +
       'Os shows são intensos e imersivos, unem presença de palco e ' +
       'autenticidade, e conectam gerações misturando nostalgia, psicodelia e ' +
-      'personalidade própria.',
+      'personalidade própria. Já passaram pelo Schornstein Festival, Ahoy!, ' +
+      'Don Under Club, Balbúrdia, Feira da Estação, Jardim Elétrico e Wood ' +
+      'Smoked.',
 
     discografia:
-      'Além das releituras com identidade própria, a Nada Basta começa agora ' +
-      'a fase autoral, expandindo a própria identidade sonora e artística.',
+      'Em 16 de outubro de 2026 a banda lançou o primeiro EP autoral, "Antes ' +
+      'de Você Pensar, Eu Já Sabia", em todas as plataformas. O repertório ' +
+      'passeia entre clássicos, releituras com identidade própria e ' +
+      'composições autorais em desenvolvimento.',
 
     formacao: [
-      'Vocal',
-      'Baixo e backing vocal',
-      'Guitarra e backing vocal',
-      'Bateria e backing vocal',
+      'Cissa — vocal',
+      'John — baixo e backing vocal',
+      'Fafá — guitarra e backing vocal',
+      'Gabe — bateria e backing vocal',
     ],
-    referencias: ['Led Zeppelin', 'Rita Lee', 'Deep Purple', 'Casa das Máquinas'],
+    referencias: [
+      'Led Zeppelin',
+      'Rita Lee',
+      'Deep Purple',
+      'Casa das Máquinas',
+      'Cream',
+      'Os Mutantes',
+    ],
 
     logo: '/imagens/bandas/nadabasta/logo.png',
     fotos: [

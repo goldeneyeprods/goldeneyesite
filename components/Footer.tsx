@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { Marca } from './OlhoDeHorus'
 import { produtora, proximosEventos, eventosPassados } from '@/config/site'
 
@@ -140,32 +139,6 @@ export function Footer() {
           <p>Documento com foto obrigatório na entrada dos eventos</p>
         </div>
 
-        {/* Assinatura de quem desenvolveu: discreta, no fim de tudo, sem
-            competir com os dados da produtora. */}
-        {produtora.desenvolvidoPor && (
-          <div className="mt-8 flex items-center justify-center gap-2.5 border-t border-borda/50 pt-7">
-            <span className="text-[10px] uppercase tracking-[0.24em] text-texto-fraco">
-              Desenvolvido por
-            </span>
-            <a
-              href={produtora.desenvolvidoPor.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={produtora.desenvolvidoPor.nome}
-              className="opacity-60 transition-opacity hover:opacity-100"
-            >
-              <Image
-                src={produtora.desenvolvidoPor.logo}
-                alt={produtora.desenvolvidoPor.nome}
-                width={520}
-                height={141}
-                sizes="86px"
-                className="w-[86px]"
-                style={{ height: 'auto' }}
-              />
-            </a>
-          </div>
-        )}
       </div>
     </footer>
   )
