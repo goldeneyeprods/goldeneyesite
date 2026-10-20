@@ -122,6 +122,17 @@ if (usuario.status !== 200) {
   process.exit(1)
 }
 
+// O prefixo não basta: o painel entrega credenciais de usuário de teste
+// também começando com APP_USR-. Quem diz é o apelido da conta.
+if (String(usuario.corpo.nickname ?? '').startsWith('TESTUSER')) {
+  aviso(
+    'Esta é uma conta de USUÁRIO DE TESTE do Mercado Pago',
+    'Conta de teste não gera PIX. Para testar a venda de verdade, use as ' +
+      'credenciais de produção da sua conta e faça uma compra de valor baixo, ' +
+      'cancelada depois em Meus Ingressos.'
+  )
+}
+
 ok(
   `Conta autenticada: ${usuario.corpo.nickname ?? usuario.corpo.id}`,
   `${usuario.corpo.email ?? ''} · país ${usuario.corpo.site_id ?? '?'}`

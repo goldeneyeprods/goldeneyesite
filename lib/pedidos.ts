@@ -75,7 +75,7 @@ export async function aprovarPedido(pedidoId: string, mpPaymentId: string) {
     const itens = await tx<
       { lote_id: number; quantidade: number; tipo: 'inteira' | 'meia' }[]
     >`
-      select pi.lote_id, pi.quantidade, l.tipo
+      select pi.lote_id::int as lote_id, pi.quantidade, l.tipo
         from pedido_itens pi
         join lotes l on l.id = pi.lote_id
        where pi.pedido_id = ${pedidoId}

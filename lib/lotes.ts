@@ -62,10 +62,12 @@ export async function lerEstoque(
     select ingressos_a_venda from eventos where id = ${eventoId}
   `
 
+  // `id::int`: o Postgres devolve bigint como texto, e o checkout compara com
+  // o número que veio do formulário.
   // Ordenar por id antes de travar evita deadlock entre duas compras.
   const linhas = travar
     ? await q<Linha[]>`
-        select id, nome, tipo, preco_centavos, fase, ordem, valido_ate, quantidade_total,
+        select id::int as id, nome, tipo, preco_centavos, fase, ordem, valido_ate, quantidade_total,
                (quantidade_vendida + quantidade_reservada) as ocupado
           from lotes
          where evento_id = ${eventoId} and ativo = true
@@ -73,7 +75,7 @@ export async function lerEstoque(
            for update
       `
     : await q<Linha[]>`
-        select id, nome, tipo, preco_centavos, fase, ordem, valido_ate, quantidade_total,
+        select id::int as id, nome, tipo, preco_centavos, fase, ordem, valido_ate, quantidade_total,
                (quantidade_vendida + quantidade_reservada) as ocupado
           from lotes
          where evento_id = ${eventoId} and ativo = true
