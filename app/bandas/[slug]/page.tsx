@@ -165,6 +165,19 @@ export default async function PaginaBanda({
                   </a>
                 </>
               )}
+              {banda.redes?.spotify && (
+                <>
+                  <span className="text-ouro/40">◆</span>
+                  <a
+                    href={banda.redes.spotify}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ouro underline-offset-4 hover:underline"
+                  >
+                    Ouvir no Spotify
+                  </a>
+                </>
+              )}
             </div>
 
             <div

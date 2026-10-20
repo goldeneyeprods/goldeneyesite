@@ -645,7 +645,10 @@ export const bandas: BandaConfig[] = [
       '/imagens/bandas/nadabasta/dsc09970.jpg',
     ],
 
-    redes: { instagram: 'https://www.instagram.com/nadabastaaa/' },
+    redes: {
+      instagram: 'https://www.instagram.com/nadabastaaa/',
+      spotify: 'https://open.spotify.com/artist/1gDSTPHsN2EjnEdBf92ody',
+    },
   },
 
   // ==========================================================================
