@@ -127,7 +127,22 @@ créditos do mês, o serviço para em vez de gerar fatura.
 7. **Volte no Mercado Pago** e cadastre a URL do webhook com o domínio real.
 
 O `netlify.toml` e a função em `netlify/functions/expirar-pix.mts` já cuidam
-da rotina que devolve ao estoque os PIX não pagos, a cada 5 minutos.
+da rotina que devolve ao estoque os PIX não pagos, a cada 10 minutos.
+
+### Publicar só quando quiser: o ramo `producao`
+
+Na Netlify, em **Build settings → Branches**, o ramo de produção é
+`producao`, não `main`. Cada publicação gasta créditos do plano gratuito
+(e, quando eles acabam, o site sai do ar até o mês seguinte). Assim, o
+trabalho do dia a dia vai para a `main` sem publicar nada, e o site só
+atualiza quando a `main` é levada para a `producao`:
+
+```bash
+git push origin main:producao
+```
+
+Junte várias mudanças numa publicação só, e confira o consumo de créditos
+no painel da Netlify, principalmente na reta final da venda.
 
 ### Dá para publicar antes de ter banco e pagamento
 

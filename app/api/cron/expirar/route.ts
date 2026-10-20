@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 // ============================================================================
 //  GET /api/cron/expirar
 //
-//  Roda a cada 5 minutos (netlify/functions/expirar-pix.mts). Devolve ao estoque os ingressos de
+//  Roda a cada 10 minutos (netlify/functions/expirar-pix.mts). Devolve ao estoque os ingressos de
 //  PIX que ninguém pagou. Sem isso, um evento "esgota" cheio de reservas
 //  fantasma e você perde venda de verdade.
 // ============================================================================

@@ -65,7 +65,11 @@ Rodar o seed de novo atualiza preço/quantidade/data sem tocar no vendido.
   `scripts/processar-bandas.mjs` faz isso para arquivos soltos na pasta da banda.
 - Mudou o slug de um evento já divulgado? Redirecione o antigo em `next.config.mjs`.
 
-## Git
+## Git e publicação
+
+A Netlify publica só o ramo `producao`; a `main` é o trabalho do dia a dia.
+Publicar = `git push origin main:producao`, e só quando o usuário pedir: cada
+publicação gasta créditos do plano gratuito, e sem créditos o site sai do ar.
 
 Mensagens de commit em português, uma linha, verbo no presente da 3ª pessoa
 ("Troca a Reverb Band pela Nada Basta"). `.env.local` nunca vai pro git.

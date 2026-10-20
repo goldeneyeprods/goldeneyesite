@@ -3,7 +3,10 @@ import type { Config } from '@netlify/functions'
 // ============================================================================
 //  ROTINA AGENDADA — devolve ao estoque os PIX que ninguém pagou.
 //
-//  Roda a cada 5 minutos e chama a rota interna /api/cron/expirar.
+//  Roda a cada 10 minutos e chama a rota interna /api/cron/expirar. O PIX
+//  vale 30 minutos e o pagamento já é confirmado pelo webhook e pela tela do
+//  PIX; esta rotina só devolve ao estoque o que ninguém pagou, então 10
+//  minutos bastam e gastam metade dos créditos da Netlify.
 //
 //  Sem isto, o evento "esgota" cheio de reserva fantasma: gente que gerou o
 //  PIX, não pagou, e deixou o ingresso travado. Você perderia venda de
@@ -34,5 +37,5 @@ export default async function expirarPix() {
 }
 
 export const config: Config = {
-  schedule: '*/5 * * * *',
+  schedule: '*/10 * * * *',
 }
