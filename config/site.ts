@@ -376,7 +376,7 @@ export const eventos: EventoConfig[] = [
     descricao:
       'Uma noite inteira de psicodelia no Hangar7. O Delírio Parabólico abre ' +
       'com um set de Pink Floyd: atmosfera, delay e viagem longa. Depois, a ' +
-      'Nada Basta desce de Blumenau com a psicodelia brasileira de Mutantes, ' +
+      'Nada Basta sobe de Blumenau com a psicodelia brasileira de Mutantes, ' +
       'Rita Lee e Casa das Máquinas, groove e calor. E a discotecagem segue ' +
       'até a coruja cansar.',
 
