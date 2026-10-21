@@ -1,5 +1,5 @@
 import { Ornamento } from './OlhoDeHorus'
-import type { EventoConfig } from '@/config/site'
+import { ehFuturo, type EventoConfig } from '@/config/site'
 import { hora } from '@/lib/formato'
 
 // ============================================================================
@@ -14,9 +14,11 @@ export function DetalhesEvento({ evento }: { evento: EventoConfig }) {
     <section id="lineup" className="relative px-5 py-24 sm:py-32">
       <div className="mx-auto max-w-5xl">
         <div className="text-center">
-          <p className="rotulo">O que aconteceu ali</p>
+          <p className="rotulo">
+            {ehFuturo(evento) ? 'O que vai rolar' : 'O que aconteceu ali'}
+          </p>
           <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
-            A travessia
+            A noite
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-texto-suave">
             {evento.descricao}

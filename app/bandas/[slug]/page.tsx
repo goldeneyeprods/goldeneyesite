@@ -102,9 +102,9 @@ export default async function PaginaBanda({
             fill
             sizes="100vw"
             priority
-            className="object-cover opacity-30"
+            className="object-cover opacity-60 grayscale contrast-[1.15]"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-noite via-noite/75 to-noite/90" />
+          <div className="absolute inset-0 bg-gradient-to-t from-noite via-noite/55 to-noite/70" />
 
           <div className="relative z-10 mx-auto w-full max-w-4xl">
             <Link

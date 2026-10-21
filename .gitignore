@@ -36,3 +36,6 @@ arquivosbandas/**/*.zip
 
 # Trava de arquivo aberto no LibreOffice
 .~lock.*
+
+# Originais das fotos de evento (WhatsApp): as versões do site saem em public/imagens/eventos
+arquivosbandas/delirioparabolico/tropicaliasessions novas/

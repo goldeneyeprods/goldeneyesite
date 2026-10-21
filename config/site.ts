@@ -26,9 +26,9 @@ export const produtora = {
   tagline: 'Rock psicodélico, ritual e reverberação',
 
   manifesto:
-    'Sebo, café, o que aparecer. A gente pega um espaço que não é palco e ' +
-    'faz virar palco por uma noite — em Joinville, com fuzz, projeção e ' +
-    'entrada por doação.',
+    'Sebo, café, bar, o que aparecer. A gente pega um espaço que não é ' +
+    'palco e faz virar palco por uma noite — em Joinville, com fuzz, luz e ' +
+    'projeção.',
 
   descricao:
     'A Golden Eye Prods. nasceu da vontade de transformar a noite em ritual. ' +
@@ -313,6 +313,14 @@ export const eventos: EventoConfig[] = [
       { rotulo: 'Entrada', valor: 'Alimento, roupa ou doação em dinheiro' },
     ],
 
+    // 12 fotos escolhidas pelo conceito: o café virando palco, o vinil, os
+    // detalhes místicos e a causa. Originais em
+    // arquivosbandas/delirioparabolico/tropicaliasessions novas/.
+    galeria: Array.from(
+      { length: 12 },
+      (_, i) => `/imagens/eventos/2026-09-tropicalia/foto-${String(i + 1).padStart(2, '0')}.jpg`
+    ),
+
     lotes: [],
   },
 
@@ -349,7 +357,9 @@ export const eventos: EventoConfig[] = [
       'Blumenau com a psicodelia brasileira de Mutantes, Rita Lee e Casa das ' +
       'Máquinas, groove e calor. Depois, discotecagem até a coruja cansar.',
 
-    imagemHero: '/imagens/bandas/nadabasta/nadabastastudio-09967.jpg',
+    // Foto de palco como capa: o Delírio tocando (a Nada Basta ainda não
+    // mandou foto ao vivo em alta resolução).
+    imagemHero: '/imagens/bandas/delirioparabolico/banda-02-tocando.jpg',
 
     lineup: [
       {
@@ -632,13 +642,22 @@ export const bandas: BandaConfig[] = [
     ],
 
     logo: '/imagens/bandas/nadabasta/logo.png',
+    // A primeira é a capa: foto ao vivo. As ao-vivo-* e integrante-* foram
+    // recortadas do mídia kit e são pequenas (até ~700px) — trocar pelos
+    // originais quando a banda mandar.
     fotos: [
+      '/imagens/bandas/nadabasta/ao-vivo-2.jpg',
       '/imagens/bandas/nadabasta/nadabastastudio-09967.jpg',
+      '/imagens/bandas/nadabasta/ao-vivo-1.jpg',
+      '/imagens/bandas/nadabasta/integrante-2.jpg',
       '/imagens/bandas/nadabasta/dsc00362.jpg',
+      '/imagens/bandas/nadabasta/ao-vivo-3.jpg',
+      '/imagens/bandas/nadabasta/integrante-1.jpg',
+      '/imagens/bandas/nadabasta/bateria.jpg',
       '/imagens/bandas/nadabasta/nadabastastudio-00354.jpg',
+      '/imagens/bandas/nadabasta/integrante-4.jpg',
+      '/imagens/bandas/nadabasta/integrante-3.jpg',
       '/imagens/bandas/nadabasta/dsc09978.jpg',
-      '/imagens/bandas/nadabasta/nadabastastudio-09977.jpg',
-      '/imagens/bandas/nadabasta/dsc09970.jpg',
     ],
 
     redes: {
@@ -706,8 +725,8 @@ export const bandas: BandaConfig[] = [
     ],
 
     fotos: [
-      '/imagens/bandas/delirioparabolico/banda-01-completa.jpg',
       '/imagens/bandas/delirioparabolico/banda-02-tocando.jpg',
+      '/imagens/bandas/delirioparabolico/banda-01-completa.jpg',
       '/imagens/bandas/delirioparabolico/banda-03-plano-de-cima.jpg',
       '/imagens/bandas/delirioparabolico/integrante-01.jpg',
       '/imagens/bandas/delirioparabolico/integrante-02-sax.jpg',

@@ -195,7 +195,11 @@ export default function Home() {
 
                 <Ornamento className="my-12" />
 
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                <div
+                  className={`mx-auto grid gap-5 sm:grid-cols-2 ${
+                    passados.length >= 3 ? 'lg:grid-cols-3' : 'max-w-3xl'
+                  }`}
+                >
                   {passados.map((e) => (
                     <CardEvento key={e.slug} evento={e} />
                   ))}

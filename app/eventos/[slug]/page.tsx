@@ -41,7 +41,7 @@ export async function generateMetadata({
   const evento = eventoPorSlug(slug)
   if (!evento) return { title: 'Evento não encontrado' }
 
-  const imagem = evento.cartazOg ?? evento.cartaz ?? evento.imagemHero ?? '/imagens/og.png'
+  const imagem = evento.cartazOg ?? evento.cartaz ?? evento.imagemHero ?? '/imagens/og.jpg'
 
   return {
     title: evento.nome,
