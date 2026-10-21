@@ -22,6 +22,20 @@ export interface FotoGaleria {
   slug?: string
 }
 
+// A grade nunca deixa foto sobrando na última linha. Para cada quantidade,
+// escolhe colunas que dividem o total em todas as larguras de tela (celular,
+// tablet, computador) e mostra o maior número de fotos que fecha as linhas.
+// As que ficam de fora continuam no modo ampliado, pelas setas.
+function grade(n: number): { mostrar: number; colunas: string } {
+  if (n >= 12) return { mostrar: n - (n % 12), colunas: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4' }
+  if (n >= 8) return { mostrar: 8, colunas: 'grid-cols-2 lg:grid-cols-4' }
+  if (n >= 6) return { mostrar: 6, colunas: 'grid-cols-2 sm:grid-cols-3' }
+  if (n >= 4) return { mostrar: 4, colunas: 'grid-cols-2 lg:grid-cols-4' }
+  if (n === 3) return { mostrar: 3, colunas: 'grid-cols-1 sm:grid-cols-3' }
+  if (n === 2) return { mostrar: 2, colunas: 'grid-cols-2' }
+  return { mostrar: n, colunas: 'mx-auto max-w-xl grid-cols-1' }
+}
+
 export function Galeria({
   fotos,
   titulo = 'Registros',
@@ -41,17 +55,13 @@ export function Galeria({
   const [aberta, setAberta] = useState<number | null>(null)
   const [expandido, setExpandido] = useState(limite === 0)
 
-  const visiveis = expandido ? fotos : fotos.slice(0, limite)
-
-  // A grade se adapta à quantidade. Com poucas fotos, 4 colunas deixariam
-  // uma sobrando sozinha na linha de baixo — e ainda por cima pequenas.
-  // Menos colunas = fotos maiores e nenhuma órfã.
-  const colunas =
-    visiveis.length <= 3
-      ? 'grid-cols-1 sm:grid-cols-3'
-      : visiveis.length <= 6
-        ? 'grid-cols-2 sm:grid-cols-3'
-        : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'
+  const base = expandido ? fotos.length : Math.min(limite, fotos.length)
+  const { mostrar, colunas } = grade(base)
+  const visiveis = fotos.slice(0, mostrar)
+  // Expandir só faz sentido se a grade cresce; senão, o botão abre a primeira
+  // foto que ficou de fora direto no modo ampliado.
+  const cresceAoExpandir = !expandido && grade(fotos.length).mostrar > mostrar
+  const foraDaGrade = fotos.length - mostrar
 
   const navegar = useCallback(
     (passo: number) => {
@@ -169,9 +179,12 @@ export function Galeria({
           ))}
         </div>
 
-        {!expandido && fotos.length > limite && (
+        {foraDaGrade > 0 && (
           <div className="mt-8 text-center">
-            <button onClick={() => setExpandido(true)} className="botao-fantasma !py-3 !text-sm">
+            <button
+              onClick={() => (cresceAoExpandir ? setExpandido(true) : setAberta(mostrar))}
+              className="botao-fantasma !py-3 !text-sm"
+            >
               Ver todas as {fotos.length} fotos
             </button>
           </div>

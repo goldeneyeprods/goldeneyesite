@@ -257,7 +257,9 @@ export const eventos: EventoConfig[] = [
     // O cartaz é a capa do evento, a arte exibida na página e a prévia do
     // link. A versão og é um recorte 1200x630 do miolo, porque o cartaz é
     // 2:3 e o WhatsApp corta as pontas de imagem alta.
-    imagemHero: '/imagens/cartazes/tropicalia-cartaz.jpg',
+    // Capa: voz e violão com o sax, tocando, na frente do mural do café.
+    // O cartaz continua sendo a arte da página e a prévia do link.
+    imagemHero: '/imagens/eventos/2026-09-tropicalia/capa-voz-e-sax.jpg',
     cartaz: '/imagens/cartazes/tropicalia-cartaz.jpg',
     cartazOg: '/imagens/cartazes/tropicalia-og.jpg',
     cartazCredito: 'Arte por Ana Heloiza Alves de Oliveira',
