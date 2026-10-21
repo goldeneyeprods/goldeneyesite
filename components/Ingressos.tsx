@@ -291,6 +291,11 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
                         Para quem quiser dar uma força a mais
                       </p>
                     )}
+                    {lote.nome.includes('solidária') && !solidaria && (
+                      <p className="mt-1 text-[11px] leading-snug text-texto-fraco">
+                        Inteira + R$ 10 que vão direto para o Lar Betânia
+                      </p>
+                    )}
                   </div>
 
                   {/* Seletor de quantidade */}

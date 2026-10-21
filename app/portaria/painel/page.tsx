@@ -16,6 +16,8 @@ interface Painel {
   meias: number
   taxaComparecimento: number
   receitaCentavos: number
+  doacaoCentavos: number
+  ingressosSolidarios: number
   porMinuto: { minuto: string; n: number }[]
   ultimos: { nome: string; tipo: string; quando: string; operador: string | null }[]
 }
@@ -122,6 +124,21 @@ export default function PainelPortaria() {
           pequeno
         />
       </div>
+
+      {/* --- Doação: o que precisa ser repassado ao Lar Betânia --- */}
+      {dados.ingressosSolidarios > 0 && (
+        <div className="cartao mt-3 flex items-center justify-between gap-4 p-5">
+          <div>
+            <p className="rotulo">A repassar ao Lar Betânia</p>
+            <p className="mt-1 text-xs text-texto-fraco">
+              {dados.ingressosSolidarios} entrada(s) solidária(s), fora as canceladas
+            </p>
+          </div>
+          <p className="font-display text-2xl font-bold texto-ouro">
+            {formatarBRL(dados.doacaoCentavos)}
+          </p>
+        </div>
+      )}
 
       {/* --- Fluxo da última hora --- */}
       <div className="cartao mt-5 p-5">

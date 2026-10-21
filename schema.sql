@@ -56,6 +56,8 @@ create table if not exists lotes (
 -- Lotes da mesma fase (a meia e a inteira do 1º lote, por exemplo) dividem a
 -- quantidade_total e ficam à venda juntos. Só a menor fase aberta vende.
 alter table lotes add column if not exists fase integer not null default 1;
+-- Parte de cada ingresso que vai para doação (entrada solidária).
+alter table lotes add column if not exists doacao_centavos integer not null default 0;
 
 create index if not exists idx_lotes_evento on lotes (evento_id, ativo, ordem);
 

@@ -73,7 +73,9 @@ for (const ev of eventos) {
   }
   for (const l of ev.lotes.filter((l) => l.tipo === 'inteira')) {
     const meiaDaFase = ev.lotes.find((m) => m.tipo === 'meia' && m.fase === l.fase)
-    if (meiaDaFase && meiaDaFase.precoCentavos * 2 !== l.precoCentavos) {
+    // A entrada solidária é inteira + doação: a regra vale sem a doação.
+    const semDoacao = l.precoCentavos - (l.doacaoCentavos ?? 0)
+    if (meiaDaFase && Math.abs(meiaDaFase.precoCentavos * 2 - semDoacao) > 1) {
       console.error(`
 ⚠  "${l.nome}": a meia tem que ser metade da inteira.
 `)
@@ -142,17 +144,18 @@ for (const ev of eventos) {
                quantidade_total = ${lote.quantidade},
                ordem            = ${lote.ordem},
                fase             = ${lote.fase},
-               valido_ate       = ${lote.validoAte ?? null}
+               valido_ate       = ${lote.validoAte ?? null},
+               doacao_centavos  = ${lote.doacaoCentavos ?? 0}
          where id = ${existente.id}
       `
       console.log(`  ↻ ${lote.nome}`)
     } else {
       await sql`
         insert into lotes (evento_id, nome, tipo, preco_centavos, quantidade_total,
-                           ordem, fase, valido_ate, ativo)
+                           ordem, fase, valido_ate, doacao_centavos, ativo)
         values (${linha.id}, ${lote.nome}, ${lote.tipo}, ${lote.precoCentavos},
                 ${lote.quantidade}, ${lote.ordem}, ${lote.fase},
-                ${lote.validoAte ?? null}, true)
+                ${lote.validoAte ?? null}, ${lote.doacaoCentavos ?? 0}, true)
       `
       console.log(`  + ${lote.nome}`)
     }

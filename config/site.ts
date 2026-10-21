@@ -107,12 +107,22 @@ export interface LoteConfig {
   fase: number
   /** ISO com fuso de São Paulo; sem data, vale até a abertura dos portões */
   validoAte?: string
+  /**
+   * Quanto de cada ingresso deste lote vai para doação (centavos). A entrada
+   * solidária usa isso; o painel da portaria soma o total a repassar.
+   */
+  doacaoCentavos?: number
 }
 
+/** Quanto a entrada solidária soma à inteira — e repassa ao Lar Betânia. */
+export const DOACAO_SOLIDARIA_CENTAVOS = 1000
+
 /**
- * Atalho para o lote com inteira e meia dividindo a mesma quantidade.
- * O preço informado é o da inteira; a meia é a metade, como manda a lei.
- * Na venda, a meia de cada lote para em 40% da quantidade do lote (lib/lotes.ts).
+ * Atalho para o lote com meia, inteira e entrada solidária dividindo a mesma
+ * quantidade. O preço informado é o da inteira; a meia é a metade, como manda
+ * a lei, e a solidária é a inteira mais DOACAO_SOLIDARIA_CENTAVOS, que vão
+ * para o Lar Betânia. Na venda, a meia de cada lote para em 40% da
+ * quantidade do lote (lib/lotes.ts).
  */
 function lote(
   fase: number,
@@ -122,8 +132,18 @@ function lote(
   validoAte?: string
 ): LoteConfig[] {
   return [
-    { nome: `${nome} — Inteira`, tipo: 'inteira', precoCentavos: inteiraCentavos, quantidade, ordem: fase * 10, fase, validoAte },
-    { nome: `${nome} — Meia-entrada`, tipo: 'meia', precoCentavos: Math.round(inteiraCentavos / 2), quantidade, ordem: fase * 10 + 1, fase, validoAte },
+    { nome: `${nome} — Meia-entrada`, tipo: 'meia', precoCentavos: Math.round(inteiraCentavos / 2), quantidade, ordem: fase * 10, fase, validoAte },
+    { nome: `${nome} — Inteira`, tipo: 'inteira', precoCentavos: inteiraCentavos, quantidade, ordem: fase * 10 + 1, fase, validoAte },
+    {
+      nome: `${nome} — Entrada solidária`,
+      tipo: 'inteira',
+      precoCentavos: inteiraCentavos + DOACAO_SOLIDARIA_CENTAVOS,
+      quantidade,
+      ordem: fase * 10 + 2,
+      fase,
+      validoAte,
+      doacaoCentavos: DOACAO_SOLIDARIA_CENTAVOS,
+    },
   ]
 }
 
@@ -328,7 +348,8 @@ export const eventos: EventoConfig[] = [
   //  CORUJÃO ÁCIDO — sexta, 20/11, 19h
   //  Nada Basta + Delírio Parabólico, no Hangar7.
   //  Inteira de R$ 20 a R$ 35 conforme o lote; meia-entrada pela metade,
-  //  com comprovante, até 40% de cada lote. A inteira fica à venda para quem quiser.
+  //  com comprovante, até 40% de cada lote; entrada solidária = inteira +
+  //  R$ 10 para o Lar Betânia (o painel da portaria soma o total a repassar). A inteira fica à venda para quem quiser.
   //  >>> FALTA: o cartaz.
   // ==========================================================================
   {
@@ -348,7 +369,7 @@ export const eventos: EventoConfig[] = [
     mapaLink: 'https://maps.google.com/?q=Hangar+7+Music+Bar,+Rua+João+Ebert,+174+-+Comasa,+Joinville+-+SC',
 
     classificacaoEtaria: '18 anos',
-    capacidade: 110,
+    capacidade: 200,
 
     descricao:
       'A coruja enxerga no escuro, e a noite tem dois lados. No Lado A, o ' +
@@ -403,23 +424,28 @@ export const eventos: EventoConfig[] = [
       'Qualquer tipo de arma ou objeto cortante',
     ],
 
-    creditos: [{ rotulo: 'Espaço', valor: 'Hangar7' }],
+    creditos: [
+      { rotulo: 'Entrada solidária', valor: 'R$ 10 de cada uma vão para o Lar Betânia' },
+      { rotulo: 'Espaço', valor: 'Hangar7' },
+    ],
 
     vendaAberta: true,
 
     // Ingressos à venda no total, somando todos os lotes. O último lote fica
     // com o que sobrar dos anteriores; o que não for vendido online até a
     // abertura é vendido na porta, pelo preço do último lote.
-    ingressosAVenda: 100,
+    // Casa para 200; 10 lugares ficam para convidados e equipe das bandas.
+    ingressosAVenda: 190,
 
-    // Cada lote tem uma inteira e uma meia que dividem a mesma quantidade;
-    // a meia de cada lote para em 40% dele (8 de 20, 10 de 25, 12 de 30). O lote vira quando a data passa OU quando
-    // esgota — o que vier primeiro.
+    // Cada lote tem meia, inteira e entrada solidária (inteira + R$ 10 para
+    // o Lar Betânia) dividindo a mesma quantidade; a meia de cada lote para
+    // em 40% dele (16 de 40, 20 de 50, 24 de 60). O lote vira quando a data
+    // passa OU quando esgota — o que vier primeiro.
     lotes: [
-      ...lote(1, '1º lote', 2000, 20, '2026-11-10T23:59:59-03:00'),
-      ...lote(2, '2º lote', 2500, 25, '2026-11-15T23:59:59-03:00'),
-      ...lote(3, '3º lote', 3000, 30, '2026-11-19T23:59:59-03:00'),
-      ...lote(4, '4º lote', 3500, 100),
+      ...lote(1, '1º lote', 2000, 40, '2026-11-10T23:59:59-03:00'),
+      ...lote(2, '2º lote', 2500, 50, '2026-11-15T23:59:59-03:00'),
+      ...lote(3, '3º lote', 3000, 60, '2026-11-19T23:59:59-03:00'),
+      ...lote(4, '4º lote', 3500, 190),
     ],
   },
 
@@ -645,7 +671,10 @@ export const bandas: BandaConfig[] = [
     // A primeira é a capa: foto ao vivo. As ao-vivo-* e integrante-* foram
     // recortadas do mídia kit e são pequenas (até ~700px) — trocar pelos
     // originais quando a banda mandar.
+    // capa-ao-vivo.jpg é a mescla de ao-vivo-2, ao-vivo-3 e ao-vivo-1 em
+    // 1920x1080, para a capa não ficar com zoom numa foto pequena.
     fotos: [
+      '/imagens/bandas/nadabasta/capa-ao-vivo.jpg',
       '/imagens/bandas/nadabasta/ao-vivo-2.jpg',
       '/imagens/bandas/nadabasta/nadabastastudio-09967.jpg',
       '/imagens/bandas/nadabasta/ao-vivo-1.jpg',
@@ -699,13 +728,13 @@ export const bandas: BandaConfig[] = [
       'construída para transportar o público direto para a efervescência ' +
       'musical da época.',
 
+    // Só o que está para sair: os discos seguintes não entram no site
+    // antes da hora.
     discografia:
-      'Prestes a estrear o primeiro EP, antecedido por um single duplo, a ' +
-      'banda tem um roteiro claro de expansão: da densidade atmosférica e ' +
-      'progressiva de "Céu de Outono", inspirada na fase final de David ' +
-      'Gilmour, passando pela energia hard rock setentista do disco homônimo ' +
-      '"Delírio Parabólico", até as texturas do futuro "Hotel Lunar Base ' +
-      'Tranquila".',
+      'O primeiro EP, "Sinais da Vida", está em fase de masterização e ' +
+      'prestes a ser lançado. É o transe inicial da banda: som flutuante, ' +
+      'arranjos densos e passagens instrumentais longas, com ' +
+      'sintetizadores, flauta e sax na linhagem espacial do Pink Floyd.',
 
     formacao: [
       'Vocais',
@@ -725,8 +754,9 @@ export const bandas: BandaConfig[] = [
     ],
 
     fotos: [
-      '/imagens/bandas/delirioparabolico/banda-02-tocando.jpg',
+      // A banda inteira posando no O Sebo é a capa e o card.
       '/imagens/bandas/delirioparabolico/banda-01-completa.jpg',
+      '/imagens/bandas/delirioparabolico/banda-02-tocando.jpg',
       '/imagens/bandas/delirioparabolico/banda-03-plano-de-cima.jpg',
       '/imagens/bandas/delirioparabolico/integrante-01.jpg',
       '/imagens/bandas/delirioparabolico/integrante-02-sax.jpg',
@@ -781,6 +811,14 @@ export const faq = [
       '— sem documento válido, será cobrada a diferença para a inteira. A ' +
       'meia-entrada corresponde a 40% de cada lote; quando essa cota enche, ' +
       'o lote segue só com a inteira.',
+  },
+  {
+    p: 'O que é a entrada solidária?',
+    r:
+      'É a inteira mais R$ 10, e esses R$ 10 vão inteiros para o Lar Betânia, ' +
+      'de Joinville. É opcional: dá acesso igual à inteira. Depois do evento ' +
+      'a gente publica no Instagram o comprovante do repasse com o total ' +
+      'arrecadado.',
   },
   {
     p: 'Como funcionam os lotes?',

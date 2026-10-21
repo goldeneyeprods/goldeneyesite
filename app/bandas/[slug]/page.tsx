@@ -214,7 +214,7 @@ export default async function PaginaBanda({
                 { t: 'A sonoridade', c: banda.sonoridade },
                 { t: 'Ao vivo', c: banda.aoVivo },
                 ...(banda.discografia
-                  ? [{ t: 'Discografia e futuro', c: banda.discografia }]
+                  ? [{ t: 'Discografia', c: banda.discografia }]
                   : []),
               ].map((bloco) => (
                 <div key={bloco.t}>

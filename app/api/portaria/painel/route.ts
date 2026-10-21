@@ -81,6 +81,15 @@ export async function GET(req: Request) {
      where evento_id = ${sessao.eventoId} and status = 'pago'
   `
 
+  // Quanto da venda é doação (entrada solidária) e precisa ser repassado.
+  const [doacao] = await sql<{ total: number; ingressos: number }[]>`
+    select coalesce(sum(l.doacao_centavos), 0)::int as total,
+           count(*) filter (where l.doacao_centavos > 0)::int as ingressos
+      from ingressos i
+      join lotes l on l.id = i.lote_id
+     where i.evento_id = ${sessao.eventoId} and i.status <> 'cancelado'
+  `
+
   const porMinuto = await sql<{ minuto: Date; n: number }[]>`
     select date_trunc('minute', usado_em) as minuto, count(*)::int as n
       from ingressos
@@ -112,6 +121,8 @@ export async function GET(req: Request) {
       meias: totais.meias,
       taxaComparecimento: vendidos > 0 ? Math.round((totais.usados / vendidos) * 100) : 0,
       receitaCentavos: receita.total,
+      doacaoCentavos: doacao.total,
+      ingressosSolidarios: doacao.ingressos,
       porMinuto,
       ultimos,
     },
