@@ -671,10 +671,10 @@ export const bandas: BandaConfig[] = [
     // A primeira é a capa: foto ao vivo. As ao-vivo-* e integrante-* foram
     // recortadas do mídia kit e são pequenas (até ~700px) — trocar pelos
     // originais quando a banda mandar.
-    // capa-ao-vivo.jpg é a mescla de ao-vivo-2, ao-vivo-3 e ao-vivo-1 em
+    // capa-ao-vivo-2.jpg é a mescla de ao-vivo-2, ao-vivo-3 e ao-vivo-1 em
     // 1920x1080, para a capa não ficar com zoom numa foto pequena.
     fotos: [
-      '/imagens/bandas/nadabasta/capa-ao-vivo.jpg',
+      '/imagens/bandas/nadabasta/capa-ao-vivo-2.jpg',
       '/imagens/bandas/nadabasta/ao-vivo-2.jpg',
       '/imagens/bandas/nadabasta/nadabastastudio-09967.jpg',
       '/imagens/bandas/nadabasta/ao-vivo-1.jpg',
