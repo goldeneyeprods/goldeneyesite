@@ -94,7 +94,7 @@ export default function PainelPortaria() {
   const picoMinuto = Math.max(...dados.porMinuto.map((p) => p.n), 1)
 
   return (
-    <div className="min-h-svh px-4 py-5">
+    <div id="conteudo" className="min-h-svh px-4 py-5">
       <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="font-display text-xl font-bold texto-ouro">Painel ao vivo</h1>

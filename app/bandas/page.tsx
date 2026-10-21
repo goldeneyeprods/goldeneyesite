@@ -48,11 +48,6 @@ export default function PaginaBandas() {
       />
 
       <Header
-        links={[
-          { href: '/#agenda', rotulo: 'Agenda' },
-          { href: '/bandas', rotulo: 'Bandas' },
-          { href: '/#sobre', rotulo: 'A produtora' },
-        ]}
         cta={{ href: `https://wa.me/${produtora.whatsapp}`, rotulo: 'Contratar' }}
       />
 

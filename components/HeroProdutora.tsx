@@ -43,6 +43,11 @@ export function HeroProdutora() {
         {/* O olho é a marca: aqui ele aparece grande, e não como ícone */}
         {/* A marca original inteira — olho, nome e "Prods." como foram
             desenhados. Nada de recriar a tipografia com fonte parecida. */}
+        {/* O título da página é a própria marca; o texto fica para o Google
+            e para leitores de tela. */}
+        <h1 className="sr-only">
+          {produtora.nome} — rock psicodélico em {produtora.cidade}
+        </h1>
         <div className="surgir flex justify-center">
           <div className="pulsar-olho">
             <Marca className="w-[min(78vw,420px)]" />

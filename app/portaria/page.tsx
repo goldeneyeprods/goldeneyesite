@@ -495,7 +495,7 @@ export default function Portaria() {
   //  SCANNER / BUSCA
   // ==========================================================================
   return (
-    <div className="min-h-svh">
+    <div id="conteudo" className="min-h-svh">
       <header className="flex items-center justify-between border-b border-borda px-4 py-3">
         <div>
           <p className="text-sm font-medium text-texto">{operador.nome}</p>

@@ -21,11 +21,6 @@ export default function ListaEventos() {
   return (
     <>
       <Header
-        links={[
-          { href: '/#agenda', rotulo: 'Agenda' },
-          { href: '/#sobre', rotulo: 'A produtora' },
-          { href: '/#faq', rotulo: 'Dúvidas' },
-        ]}
       />
 
       <main id="conteudo" className="px-5 pb-24 pt-32">

@@ -2,30 +2,35 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Marca } from './OlhoDeHorus'
 
 // ============================================================================
 //  HEADER
-//  Na home, os links são âncoras da própria página.
-//  Dentro de um evento, vira "voltar para a produtora" + âncoras do evento.
+//  O menu é o mesmo em todas as páginas, para ninguém se perder. Só o botão
+//  dourado da direita muda conforme a página (ingressos, contratar…).
 // ============================================================================
 
-export interface LinkNav {
-  href: string
-  rotulo: string
-}
+const MENU = [
+  { href: '/#agenda', rotulo: 'Agenda' },
+  { href: '/eventos', rotulo: 'Eventos' },
+  { href: '/bandas', rotulo: 'Bandas' },
+  { href: '/#registros', rotulo: 'Registros' },
+  { href: '/#sobre', rotulo: 'A produtora' },
+  { href: '/#faq', rotulo: 'Dúvidas' },
+]
 
 export function Header({
-  links,
   cta,
-  voltar,
 }: {
-  links: LinkNav[]
   /** botão dourado da direita */
   cta?: { href: string; rotulo: string }
-  /** quando está dentro de um evento, mostra a trilha de volta */
-  voltar?: string
 }) {
+  const pathname = usePathname()
+  // marca a seção em que a pessoa está (/eventos/… e /bandas/…)
+  const ativo = (href: string) =>
+    !href.includes('#') && (pathname === href || pathname.startsWith(href + '/'))
+  const links = MENU
   const [rolou, setRolou] = useState(false)
   const [aberto, setAberto] = useState(false)
 
@@ -58,11 +63,6 @@ export function Header({
             <Link href="/" aria-label="Golden Eye Prods. — início">
               <Marca compacta />
             </Link>
-            {voltar && (
-              <span className="hidden items-center gap-3 border-l border-borda pl-3 text-xs text-texto-fraco sm:flex">
-                {voltar}
-              </span>
-            )}
           </div>
 
           <ul className="hidden items-center gap-8 lg:flex">
@@ -70,7 +70,10 @@ export function Header({
               <li key={l.href}>
                 <a
                   href={l.href}
-                  className="text-sm text-texto-suave transition-colors hover:text-ouro-claro"
+                  aria-current={ativo(l.href) ? 'page' : undefined}
+                  className={`text-sm transition-colors hover:text-ouro-claro ${
+                    ativo(l.href) ? 'text-ouro' : 'text-texto-suave'
+                  }`}
                 >
                   {l.rotulo}
                 </a>

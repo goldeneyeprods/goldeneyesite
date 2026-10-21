@@ -87,14 +87,6 @@ export default async function PaginaEvento({
 
   const videos = evento.videos ?? []
 
-  const links = [
-    ...(evento.cartaz ? [{ href: '#cartaz', rotulo: 'Cartaz' }] : []),
-    { href: '#lineup', rotulo: 'Line-up' },
-    ...(mostraIngressos ? [{ href: '#ingressos', rotulo: 'Ingressos' }] : []),
-    ...(videos.length > 0 ? [{ href: '#videos', rotulo: 'Vídeos' }] : []),
-    ...(fotos.length > 0 ? [{ href: '#galeria', rotulo: 'Fotos' }] : []),
-    { href: '#faq', rotulo: 'Dúvidas' },
-  ]
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -150,8 +142,6 @@ export default async function PaginaEvento({
       />
 
       <Header
-        links={links}
-        voltar={futuro ? 'Próximo evento' : 'Arquivo'}
         cta={
           mostraIngressos
             ? { href: '#ingressos', rotulo: 'Ingressos' }

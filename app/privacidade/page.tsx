@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: 'Política de Privacidade' }
 
 export default function Privacidade() {
   return (
-    <div className="min-h-screen px-5 py-10">
+    <div id="conteudo" className="min-h-screen px-5 py-10">
       <div className="mx-auto max-w-2xl">
         <Link href="/">
           <Marca compacta />

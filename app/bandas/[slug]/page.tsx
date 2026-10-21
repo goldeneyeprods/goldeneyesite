@@ -82,13 +82,6 @@ export default async function PaginaBanda({
       />
 
       <Header
-        links={[
-          { href: '#release', rotulo: 'Release' },
-          ...(banda.videos?.length ? [{ href: '#videos', rotulo: 'Vídeos' }] : []),
-          { href: '#fotos', rotulo: 'Fotos' },
-          { href: '#contratar', rotulo: 'Contratar' },
-        ]}
-        voltar="Bandas"
         cta={{ href: '#contratar', rotulo: 'Contratar' }}
       />
 
@@ -117,7 +110,7 @@ export default async function PaginaBanda({
             </Link>
 
             {banda.logo ? (
-              <div className="surgir mt-8" style={{ animationDelay: '80ms' }}>
+              <h1 className="surgir mt-8" style={{ animationDelay: '80ms' }}>
                 <Image
                   src={banda.logo}
                   alt={banda.nome}
@@ -128,7 +121,7 @@ export default async function PaginaBanda({
                   className="w-[min(80vw,380px)] object-contain"
                   style={{ height: 'auto' }}
                 />
-              </div>
+              </h1>
             ) : (
               <h1
                 className="surgir mt-6 font-display text-[11vw] font-black leading-[0.9] sm:text-6xl lg:text-7xl"

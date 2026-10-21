@@ -25,14 +25,6 @@ import {
 //  arquivo, cada um com link para a própria página em /eventos/<slug>.
 // ============================================================================
 
-const LINKS = [
-  { href: '#agenda', rotulo: 'Agenda' },
-  { href: '#bandas', rotulo: 'Bandas' },
-  { href: '#arquivo', rotulo: 'Arquivo' },
-  { href: '#registros', rotulo: 'Registros' },
-  { href: '#sobre', rotulo: 'A produtora' },
-  { href: '#faq', rotulo: 'Dúvidas' },
-]
 
 export default function Home() {
   const proximos = proximosEventos()
@@ -75,7 +67,6 @@ export default function Home() {
       />
 
       <Header
-        links={LINKS}
         cta={destaque ? { href: '#agenda', rotulo: 'Próximo evento' } : undefined}
       />
 

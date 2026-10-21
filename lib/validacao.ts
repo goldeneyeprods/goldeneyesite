@@ -98,7 +98,11 @@ export const schemaCheckout = z.object({
     .array(
       z.object({
         loteId: z.coerce.number().int().positive(),
-        quantidade: z.coerce.number().int().min(1).max(MAX_INGRESSOS_POR_CPF),
+        quantidade: z.coerce
+          .number()
+          .int()
+          .min(1, 'Escolha pelo menos um ingresso')
+          .max(MAX_INGRESSOS_POR_CPF, `Máximo de ${MAX_INGRESSOS_POR_CPF} ingressos por CPF.`),
       })
     )
     .min(1, 'Escolha pelo menos um ingresso')

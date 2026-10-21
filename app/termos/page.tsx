@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: 'Termos de Compra' }
 
 export default function Termos() {
   return (
-    <div className="min-h-screen px-5 py-10">
+    <div id="conteudo" className="min-h-screen px-5 py-10">
       <div className="mx-auto max-w-2xl">
         <Link href="/">
           <Marca compacta />
