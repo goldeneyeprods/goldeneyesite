@@ -514,9 +514,9 @@ export const eventos: EventoConfig[] = [
       // https://www.youtube.com/watch?v=ABC123xyz  →  id: 'ABC123xyz'
     ],
 
-    // As 3 fotos selecionadas da edição.
-        galeria: Array.from(
-      { length: 3 },
+    // A banda, cada integrante e o ambiente do O Sebo.
+    galeria: Array.from(
+      { length: 13 },
       (_, i) =>
         `/imagens/eventos/2026-08-concerto-solidario/foto-${String(i + 1).padStart(2, '0')}.jpg`
     ),
