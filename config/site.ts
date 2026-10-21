@@ -359,7 +359,7 @@ export const eventos: EventoConfig[] = [
     // /eventos/corujao-psicodelico) redirecionam para cá no next.config.mjs.
     slug: 'corujao-acido',
     nome: 'Corujão Ácido',
-    subtitulo: 'Uma noite, dois lados do ácido: o espacial e o tropical',
+    subtitulo: 'Pink Floyd e psicodelia brasileira, noite adentro',
 
     dataInicio: '2026-11-20T19:00:00-03:00',
     aberturaPortoes: '2026-11-20T19:00:00-03:00',
@@ -374,11 +374,11 @@ export const eventos: EventoConfig[] = [
     capacidade: 200,
 
     descricao:
-      'A coruja enxerga no escuro, e a noite tem dois lados. No Lado A, o ' +
-      'Delírio Parabólico leva o Hangar7 para o espaço com Pink Floyd: ' +
-      'atmosfera, delay e viagem longa. No Lado B, a Nada Basta desce de ' +
-      'Blumenau com a psicodelia brasileira de Mutantes, Rita Lee e Casa das ' +
-      'Máquinas, groove e calor. Depois, discotecagem até a coruja cansar.',
+      'Uma noite inteira de psicodelia no Hangar7. O Delírio Parabólico abre ' +
+      'com um set de Pink Floyd: atmosfera, delay e viagem longa. Depois, a ' +
+      'Nada Basta desce de Blumenau com a psicodelia brasileira de Mutantes, ' +
+      'Rita Lee e Casa das Máquinas, groove e calor. E a discotecagem segue ' +
+      'até a coruja cansar.',
 
     // Foto de palco como capa: o Delírio tocando (a Nada Basta ainda não
     // mandou foto ao vivo em alta resolução).
@@ -393,18 +393,17 @@ export const eventos: EventoConfig[] = [
       },
       {
         horario: '21:00',
-        titulo: 'Lado A — Delírio Parabólico',
+        titulo: 'Delírio Parabólico',
         descricao:
-          'O lado espacial. Um set de Pink Floyd, das paisagens longas ao ' +
-          'lado escuro da lua.',
+          'Um set de Pink Floyd, das paisagens longas ao lado escuro da lua.',
         destaque: true,
       },
       {
         horario: '22:30',
-        titulo: 'Lado B — Nada Basta',
+        titulo: 'Nada Basta',
         descricao:
-          'O lado tropical. Psicodelia brasileira, rock setentista e groove, ' +
-          'de Mutantes a Casa das Máquinas.',
+          'Psicodelia brasileira, rock setentista e groove, de Mutantes a ' +
+          'Casa das Máquinas.',
         destaque: true,
       },
       {
