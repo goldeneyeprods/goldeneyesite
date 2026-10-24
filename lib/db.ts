@@ -37,6 +37,17 @@ function criarConexao() {
     idle_timeout: 20,
     connect_timeout: 10,
     prepare: false, // obrigatório com o transaction pooler do Supabase
+    // bigint (os ids bigserial) chega como texto por padrão. Aqui vira número:
+    // o código compara ids com ===, e "2" !== 2 já quebrou a venda (lote) e a
+    // portaria (evento no QR). Os ids daqui nunca passam de 2^53.
+    types: {
+      bigint: {
+        to: 20,
+        from: [20],
+        serialize: (x: number) => String(x),
+        parse: (x: string) => Number(x),
+      },
+    },
   })
 }
 

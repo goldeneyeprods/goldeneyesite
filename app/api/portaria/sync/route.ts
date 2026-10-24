@@ -63,7 +63,7 @@ export async function POST(req: Request) {
 
   for (const item of corpo.fila.slice(0, 500)) {
     const payload = verificarTokenIngresso(item.token)
-    if (!payload || payload.e !== sessao.eventoId) {
+    if (!payload || Number(payload.e) !== Number(sessao.eventoId)) {
       relatorio.push({ token: item.token, resultado: 'invalido' })
       continue
     }

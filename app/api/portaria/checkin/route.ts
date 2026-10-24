@@ -47,7 +47,7 @@ export async function POST(req: Request) {
   }
 
   // ---- 2. É deste evento? -------------------------------------------------
-  if (payload.e !== sessao.eventoId) {
+  if (Number(payload.e) !== Number(sessao.eventoId)) {
     await registrar(payload.i, sessao.operadorId, sessao.eventoId, 'invalido', 'outro evento')
     return NextResponse.json({
       resultado: 'invalido',
