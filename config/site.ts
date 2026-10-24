@@ -200,6 +200,11 @@ export interface EventoConfig {
 
   /** imagem de fundo do hero da LP (opcional) */
   imagemHero?: string
+  /**
+   * Slugs das bandas cadastradas em `bandas` que tocam neste evento. Viram
+   * os blocos "Quem toca" na página do evento, com link para cada banda.
+   */
+  bandas?: string[]
   /** cartaz do evento (opcional) — exibido na página e usado no card */
   cartaz?: string
   /** recorte 1200x630 do cartaz, para a prévia do link */
@@ -383,6 +388,10 @@ export const eventos: EventoConfig[] = [
     // Foto de palco como capa: o Delírio tocando (a Nada Basta ainda não
     // mandou foto ao vivo em alta resolução).
     imagemHero: '/imagens/bandas/delirioparabolico/banda-02-tocando.jpg',
+    cartaz: '/imagens/cartazes/corujao-cartaz.jpg',
+    // recorte 1200x630 com os olhos da coruja e as duas bandas
+    cartazOg: '/imagens/cartazes/corujao-og.jpg',
+    bandas: ['nada-basta', 'delirio-parabolico'],
 
     lineup: [
       {
@@ -458,6 +467,7 @@ export const eventos: EventoConfig[] = [
     slug: 'concerto-solidario',
     nome: 'Concerto Solidário de Rock Psicodélico',
     subtitulo: 'Delírio Parabólico entre as estantes do O Sebo',
+    bandas: ['delirio-parabolico'],
 
     dataInicio: '2026-08-14T19:00:00-03:00',
     aberturaPortoes: '2026-08-14T19:00:00-03:00',

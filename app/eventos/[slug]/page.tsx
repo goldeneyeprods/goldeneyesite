@@ -11,10 +11,12 @@ import { CartazEvento } from '@/components/CartazEvento'
 import { FAQ } from '@/components/FAQ'
 import { Footer } from '@/components/Footer'
 import { CardEvento } from '@/components/CardEvento'
+import { CardBanda } from '@/components/CardBanda'
 import { Ornamento } from '@/components/OlhoDeHorus'
 import {
   eventos,
   eventoPorSlug,
+  bandaPorSlug,
   ehFuturo,
   proximosEventos,
   produtora,
@@ -86,6 +88,11 @@ export default async function PaginaEvento({
     .slice(0, 3)
 
   const videos = evento.videos ?? []
+  // Bandas cadastradas que tocam no evento — cada uma vira um bloco com link
+  // para a página dela. Slug que não existir em `bandas` é ignorado.
+  const atracoes = (evento.bandas ?? [])
+    .map((s) => bandaPorSlug(s))
+    .filter((b): b is NonNullable<typeof b> => !!b)
 
 
   const jsonLd = {
@@ -168,6 +175,34 @@ export default async function PaginaEvento({
         <div className="divisor mx-auto max-w-5xl" />
 
         <DetalhesEvento evento={evento} />
+
+        {atracoes.length > 0 && (
+          <section id="bandas" className="px-5 pb-24 sm:pb-32">
+            <div className="mx-auto max-w-5xl">
+              <div className="text-center">
+                <p className="rotulo">{futuro ? 'Quem toca' : 'Quem tocou'}</p>
+                <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
+                  {atracoes.length > 1 ? 'As bandas' : 'A banda'}
+                </h2>
+                <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-texto-suave">
+                  Clica na banda para ver o release, as fotos e onde ouvir.
+                </p>
+              </div>
+
+              <Ornamento className="my-12" />
+
+              <div
+                className={`mx-auto grid gap-6 ${
+                  atracoes.length > 1 ? 'sm:grid-cols-2' : 'max-w-md'
+                }`}
+              >
+                {atracoes.map((b) => (
+                  <CardBanda key={b.slug} banda={b} />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {mostraIngressos && (
           <>
