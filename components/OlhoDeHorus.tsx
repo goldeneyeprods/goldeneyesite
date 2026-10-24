@@ -36,7 +36,7 @@ export function OlhoDeHorus({
       style={{ width: tamanho, height: altura }}
     >
       <Image
-        src="/imagens/marca/olho.png"
+        src="/imagens/marca/olho-2.png"
         alt=""
         aria-hidden="true"
         width={tamanho}
@@ -72,7 +72,7 @@ export function Marca({
   // tamanho final é o CSS.
   return (
     <Image
-      src="/imagens/marca/completa.png"
+      src="/imagens/marca/completa-2.png"
       alt="Golden Eye Prods."
       width={1333}
       height={1124}
