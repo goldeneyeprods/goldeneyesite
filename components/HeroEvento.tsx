@@ -26,7 +26,12 @@ export function HeroEvento({ evento }: { evento: EventoConfig }) {
             fill
             sizes="100vw"
             priority
-            className="z-0 object-cover opacity-[0.55] grayscale contrast-[1.15]"
+            className={`z-0 object-cover ${
+              // foto vira preto e branco; a arte do cartaz mantém as cores
+              fundo?.includes('/cartazes/')
+                ? 'opacity-[0.5]'
+                : 'opacity-[0.55] grayscale contrast-[1.15]'
+            }`}
           />
           <div
             className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-noite/80 via-noite/45 to-noite"

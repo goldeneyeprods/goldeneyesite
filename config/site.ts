@@ -385,9 +385,8 @@ export const eventos: EventoConfig[] = [
       'Rita Lee e Casa das Máquinas, groove e calor. E a discotecagem segue ' +
       'até a coruja cansar.',
 
-    // Foto de palco como capa: o Delírio tocando (a Nada Basta ainda não
-    // mandou foto ao vivo em alta resolução).
-    imagemHero: '/imagens/bandas/delirioparabolico/banda-02-tocando.jpg',
+    // Capa: a coruja do cartaz, sem os nomes das bandas (não briga com o título).
+    imagemHero: '/imagens/cartazes/corujao-capa.jpg',
     cartaz: '/imagens/cartazes/corujao-cartaz.jpg',
     // recorte 1200x630 com os olhos da coruja e as duas bandas
     cartazOg: '/imagens/cartazes/corujao-og.jpg',
