@@ -9,83 +9,103 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 // ============================================================================
-//  GET  /api/portaria/login  -> lista os operadores do evento (só nome e id)
-//  POST /api/portaria/login  -> troca PIN por um JWT de 12h
+//  POST /api/portaria/login  -> troca usuário + PIN por um JWT de 12h
+//
+//  A tela não lista mais quem é da equipe: a pessoa digita o próprio usuário.
+//  Três travas contra força bruta:
+//    - por conexão: 10 tentativas a cada 5 minutos
+//    - por usuário: 5 erros seguidos bloqueiam esse usuário por 15 minutos
+//    - PIN de 6 a 8 dígitos (1 milhão de combinações ou mais)
 // ============================================================================
 
+const MAX_FALHAS = 5
+const MINUTOS_BLOQUEIO = 15
+// Hash de mentira: usuário inexistente gasta o mesmo tempo que PIN errado,
+// para o tempo de resposta não revelar quem existe.
+const HASH_FALSO = '$2a$10$Bfjq4wGF0/Q58fCNCI6kLus.oEF6ww8wilU5Dnrk9dhawAKiDvzn.'
+
 export async function GET() {
-  // Lista operadores de qualquer evento que ainda não terminou. Com vários
-  // eventos cadastrados, a equipe escolhe o dela — o evento vem junto no nome
-  // para não haver dúvida na hora do login.
-  const operadores = await sql<
-    { id: number; nome: string; gate: string; evento: string }[]
-  >`
-    select o.id, o.nome, o.gate, e.nome as evento
-      from operadores o
-      join eventos e on e.id = o.evento_id
-     where e.ativo = true
-       and o.ativo = true
-       and e.data_inicio > now() - interval '2 days'
-     order by e.data_inicio, o.nome
-  `
-  return NextResponse.json({ operadores })
+  return NextResponse.json({ erro: 'Método não permitido' }, { status: 405 })
 }
 
 export async function POST(req: Request) {
   const ip = ipDaRequisicao(req)
-
-  // PIN de 6 dígitos é fraco por natureza — o rate limit é que segura a força bruta.
   if (!(await permitir(`portaria:login:${ip}`, 10, 300))) {
-    return NextResponse.json(
-      { erro: 'Muitas tentativas. Aguarde 5 minutos.' },
-      { status: 429 }
-    )
+    return NextResponse.json({ erro: 'Muitas tentativas. Aguarde 5 minutos.' }, { status: 429 })
   }
 
   const parsed = schemaLoginPortaria.safeParse(await req.json().catch(() => null))
   if (!parsed.success) {
-    return NextResponse.json({ erro: 'Dados inválidos' }, { status: 400 })
+    return NextResponse.json({ erro: 'Usuário ou PIN incorretos.' }, { status: 401 })
   }
+  const { usuario, pin } = parsed.data
 
-  const [operador] = await sql<
+  // O evento mais próximo em que esse usuário trabalha (e que ainda não acabou).
+  const [op] = await sql<
     {
       id: number
       nome: string
       pin_hash: string
       gate: string
       evento_id: number
+      admin: boolean
+      bloqueado_ate: Date | null
       meia_solidaria: boolean
     }[]
   >`
-    select o.id, o.nome, o.pin_hash, o.gate, o.evento_id, e.meia_solidaria
+    select o.id, o.nome, o.pin_hash, o.gate, o.evento_id, o.admin, o.bloqueado_ate,
+           e.meia_solidaria
       from operadores o
       join eventos e on e.id = o.evento_id
-     where o.id = ${parsed.data.operadorId}
+     where lower(o.usuario) = lower(${usuario})
        and o.ativo = true and e.ativo = true
+       and e.data_inicio > now() - interval '2 days'
+     order by e.data_inicio
+     limit 1
   `
 
-  // Mesma mensagem para operador inexistente e PIN errado — não entrega dica.
-  const senhaOk =
-    operador && (await bcrypt.compare(parsed.data.pin, operador.pin_hash))
-  if (!senhaOk) {
-    return NextResponse.json({ erro: 'PIN incorreto.' }, { status: 401 })
+  if (op?.bloqueado_ate && new Date(op.bloqueado_ate) > new Date()) {
+    await bcrypt.compare(pin, HASH_FALSO)
+    return NextResponse.json(
+      { erro: `Usuário bloqueado por excesso de tentativas. Tente em ${MINUTOS_BLOQUEIO} minutos.` },
+      { status: 423 }
+    )
   }
 
+  const ok = await bcrypt.compare(pin, op?.pin_hash ?? HASH_FALSO)
+  if (!op || !ok) {
+    if (op) {
+      await sql`
+        update operadores
+           set falhas = falhas + 1,
+               bloqueado_ate = case when falhas + 1 >= ${MAX_FALHAS}
+                                    then now() + make_interval(mins => ${MINUTOS_BLOQUEIO})
+                                    else bloqueado_ate end
+         where id = ${op.id}
+      `
+    }
+    // Mesma mensagem para usuário inexistente e PIN errado — não entrega dica.
+    return NextResponse.json({ erro: 'Usuário ou PIN incorretos.' }, { status: 401 })
+  }
+
+  await sql`update operadores set falhas = 0, bloqueado_ate = null where id = ${op.id}`
+
   const token = await criarSessao({
-    operadorId: operador.id,
-    eventoId: operador.evento_id,
-    nome: operador.nome,
-    gate: operador.gate,
+    operadorId: op.id,
+    eventoId: op.evento_id,
+    nome: op.nome,
+    gate: op.gate,
+    admin: op.admin,
   })
 
   return NextResponse.json({
     token,
     operador: {
-      id: operador.id,
-      nome: operador.nome,
-      gate: operador.gate,
-      // Na meia solidária a portaria não pede comprovante de meia.
-      meiaSolidaria: operador.meia_solidaria,
+      id: op.id,
+      nome: op.nome,
+      gate: op.gate,
+      admin: op.admin,
+      meiaSolidaria: op.meia_solidaria,
     },
   })
 }

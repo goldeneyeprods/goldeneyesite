@@ -26,6 +26,8 @@ interface Operador {
   evento?: string
   /** meia aberta a todos: não há comprovante a pedir */
   meiaSolidaria?: boolean
+  /** vê o painel com o caixa e a lista de compradores */
+  admin?: boolean
 }
 
 const CHAVE_TOKEN = 'ge_portaria_token'
@@ -36,8 +38,7 @@ const CHAVE_FILA = 'ge_portaria_fila'
 export default function Portaria() {
   const [token, setToken] = useState<string | null>(null)
   const [operador, setOperador] = useState<Operador | null>(null)
-  const [operadores, setOperadores] = useState<Operador[]>([])
-  const [opSelecionado, setOpSelecionado] = useState<number | null>(null)
+  const [usuario, setUsuario] = useState('')
   const [pin, setPin] = useState('')
   const [erroLogin, setErroLogin] = useState('')
 
@@ -79,11 +80,6 @@ export default function Portaria() {
     if (t && o) {
       setToken(t)
       setOperador(JSON.parse(o))
-    } else {
-      fetch('/api/portaria/login')
-        .then((r) => r.json())
-        .then((d) => setOperadores(d.operadores ?? []))
-        .catch(() => {})
     }
 
     const fila = JSON.parse(localStorage.getItem(CHAVE_FILA) ?? '[]')
@@ -172,7 +168,7 @@ export default function Portaria() {
       const r = await fetch('/api/portaria/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ operadorId: opSelecionado, pin }),
+        body: JSON.stringify({ usuario: usuario.trim(), pin }),
       })
       const d = await r.json()
       if (!r.ok) {
@@ -357,20 +353,17 @@ export default function Portaria() {
         <p className="mt-2 text-xs tracking-widest text-texto-fraco">CONTROLE DE ENTRADA</p>
 
         <form onSubmit={entrar} className="cartao mt-10 w-full max-w-sm p-6">
-          <label className="mb-2 block text-xs text-texto-suave">Operador</label>
-          <select
+          <label htmlFor="usuario" className="mb-2 block text-xs text-texto-suave">Usuário</label>
+          <input
+            id="usuario"
             className="campo"
-            value={opSelecionado ?? ''}
-            onChange={(e) => setOpSelecionado(Number(e.target.value))}
+            autoComplete="username"
+            autoCapitalize="none"
+            spellCheck={false}
+            value={usuario}
+            onChange={(e) => setUsuario(e.target.value)}
             required
-          >
-            <option value="">Selecione…</option>
-            {operadores.map((o) => (
-              <option key={o.id} value={o.id}>
-                {o.evento ? `${o.evento} · ` : ''}{o.nome} — {o.gate}
-              </option>
-            ))}
-          </select>
+          />
 
           <label className="mb-2 mt-5 block text-xs text-texto-suave">PIN</label>
           <input
@@ -378,6 +371,8 @@ export default function Portaria() {
             inputMode="numeric"
             className="campo text-center font-display text-2xl tracking-[0.5em]"
             placeholder="••••••"
+            autoComplete="current-password"
+            minLength={6}
             maxLength={8}
             value={pin}
             onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
@@ -390,12 +385,6 @@ export default function Portaria() {
             Entrar
           </button>
 
-          {operadores.length === 0 && (
-            <p className="mt-5 text-center text-xs leading-relaxed text-texto-fraco">
-              Nenhum operador cadastrado. Rode <code className="text-ouro">npm run db:seed</code>{' '}
-              para criar os operadores da portaria.
-            </p>
-          )}
         </form>
       </div>
     )
@@ -518,9 +507,11 @@ export default function Portaria() {
               SINCRONIZAR {pendentes}
             </button>
           )}
-          <Link href="/portaria/painel" className="text-xs text-texto-suave">
-            Painel
-          </Link>
+          {operador.admin && (
+            <Link href="/portaria/painel" className="text-xs text-texto-suave">
+              Painel
+            </Link>
+          )}
           <button onClick={sair} className="text-xs text-texto-fraco">
             Sair
           </button>

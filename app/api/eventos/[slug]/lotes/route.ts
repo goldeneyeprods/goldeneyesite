@@ -41,6 +41,14 @@ export async function GET(
         validoAte: l.validoAte,
       })),
     },
-    { headers: { 'Cache-Control': 'no-store' } }
+    {
+      headers: {
+        // O navegador não guarda; a borda da Netlify segura 5 segundos. Uma
+        // enxurrada de acessos é respondida na borda e não chega ao banco.
+        // O checkout sempre reconta o estoque, então nada é vendido a mais.
+        'Cache-Control': 'no-store',
+        'Netlify-CDN-Cache-Control': 'public, s-maxage=5, stale-while-revalidate=10',
+      },
+    }
   )
 }

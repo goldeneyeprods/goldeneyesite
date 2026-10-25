@@ -14,6 +14,8 @@ export const dynamic = 'force-dynamic'
 export async function GET(req: Request) {
   const sessao = await sessaoDaRequisicao(req)
   if (!sessao) return NextResponse.json({ erro: 'Sessão expirada' }, { status: 401 })
+  // Caixa e lista de compradores (nome, CPF) são só para administrador.
+  if (!sessao.admin) return NextResponse.json({ erro: 'Acesso restrito' }, { status: 403 })
 
   // ---- Exportação CSV (backup impresso para o dia do evento) --------------
   if (new URL(req.url).searchParams.get('csv') === '1') {

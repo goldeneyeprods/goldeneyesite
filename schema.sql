@@ -142,6 +142,14 @@ create table if not exists operadores (
 
 create index if not exists idx_operadores_evento on operadores (evento_id, ativo);
 
+-- Login por usuário digitado (a tela não lista mais os nomes da equipe),
+-- bloqueio depois de tentativas erradas, e quem pode ver o caixa.
+alter table operadores add column if not exists usuario text;
+alter table operadores add column if not exists admin boolean not null default false;
+alter table operadores add column if not exists falhas integer not null default 0;
+alter table operadores add column if not exists bloqueado_ate timestamptz;
+create unique index if not exists idx_operadores_usuario on operadores (evento_id, lower(usuario));
+
 -- ----------------------------------------------------------------------------
 -- LOG DE WEBHOOK  (auditoria + trava de idempotência)
 -- ----------------------------------------------------------------------------

@@ -198,7 +198,8 @@ for (const ev of futuros) {
 
   const rl = createInterface({ input: process.stdin, output: process.stdout })
   console.log(`\n--- Operadores da portaria — ${ev.nome} ---`)
-  console.log('Cada pessoa da portaria entra com o próprio nome e PIN.')
+  console.log('Cada pessoa da portaria entra com o próprio usuário e PIN.')
+  console.log('Administrador vê o painel com o caixa e a lista de compradores.')
   console.log('Deixe o nome em branco para pular.\n')
 
   let n = 0
@@ -206,18 +207,22 @@ for (const ev of futuros) {
     const nome = (await rl.question('Nome do operador: ')).trim()
     if (!nome) break
 
-    const pin = (await rl.question('PIN (4 a 8 dígitos): ')).trim()
-    if (!/^\d{4,8}$/.test(pin)) {
+    const usuario =
+      (await rl.question(`Usuário de login [${nome.toLowerCase().split(/\s+/)[0]}]: `)).trim() ||
+      nome.toLowerCase().split(/\s+/)[0]
+    const pin = (await rl.question('PIN (6 a 8 dígitos): ')).trim()
+    if (!/^\d{6,8}$/.test(pin)) {
       console.log('  ⚠ PIN inválido, tente de novo.\n')
       continue
     }
 
     const gate =
       (await rl.question('Portão [Portão Principal]: ')).trim() || 'Portão Principal'
+    const admin = /^s/i.test((await rl.question('Administrador? (s/N): ')).trim())
 
     await sql`
-      insert into operadores (evento_id, nome, pin_hash, gate, ativo)
-      values (${eventoId}, ${nome}, ${bcrypt.hashSync(pin, 10)}, ${gate}, true)
+      insert into operadores (evento_id, nome, usuario, pin_hash, gate, admin, ativo)
+      values (${eventoId}, ${nome}, ${usuario}, ${bcrypt.hashSync(pin, 10)}, ${gate}, ${admin}, true)
     `
     console.log(`  ✓ ${nome} cadastrado\n`)
     n++

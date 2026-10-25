@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { sql } from '@/lib/db'
-import { permitir } from '@/lib/ratelimit'
+import { permitir, ipDaRequisicao } from '@/lib/ratelimit'
 import { sincronizarPagamento } from '@/lib/pedidos'
 
 export const runtime = 'nodejs'
@@ -17,10 +17,16 @@ export const dynamic = 'force-dynamic'
 // ============================================================================
 
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
+
+  // A tela do PIX consulta a cada poucos segundos; 90 por minuto por conexão
+  // sobra para quem está pagando e corta quem martela a rota.
+  if (!(await permitir(`status:ip:${ipDaRequisicao(req)}`, 90, 60))) {
+    return NextResponse.json({ erro: 'Muitas consultas' }, { status: 429 })
+  }
 
   if (!/^[0-9a-f-]{36}$/i.test(id)) {
     return NextResponse.json({ erro: 'id inválido' }, { status: 400 })

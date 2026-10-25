@@ -39,6 +39,10 @@ export default function PainelPortaria() {
           headers: { Authorization: `Bearer ${token}` },
           cache: 'no-store',
         })
+        if (r.status === 403) {
+          setErro('O painel é só para administrador.')
+          return
+        }
         if (r.status === 401) {
           setErro('Sessão expirada. Entre de novo na portaria.')
           return

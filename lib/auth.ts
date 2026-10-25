@@ -11,6 +11,8 @@ export interface SessaoPortaria {
   eventoId: number
   nome: string
   gate: string
+  /** vê o caixa: painel, receita e a lista de compradores */
+  admin: boolean
 }
 
 function segredo(): Uint8Array {
@@ -40,6 +42,7 @@ export async function lerSessao(token: string | null): Promise<SessaoPortaria | 
       eventoId: Number(payload.eventoId),
       nome: String(payload.nome),
       gate: String(payload.gate ?? ''),
+      admin: payload.admin === true,
     }
   } catch {
     return null

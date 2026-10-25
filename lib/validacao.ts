@@ -112,8 +112,8 @@ export const schemaCheckout = z.object({
 export type DadosCheckout = z.infer<typeof schemaCheckout>
 
 export const schemaLoginPortaria = z.object({
-  operadorId: z.coerce.number().int().positive(),
-  pin: z.string().regex(/^\d{4,8}$/, 'PIN deve ter de 4 a 8 dígitos'),
+  usuario: z.string().trim().min(2).max(40),
+  pin: z.string().regex(/^\d{6,8}$/, 'PIN deve ter de 6 a 8 dígitos'),
 })
 
 export const schemaCheckin = z.object({
