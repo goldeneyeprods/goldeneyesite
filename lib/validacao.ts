@@ -113,7 +113,8 @@ export type DadosCheckout = z.infer<typeof schemaCheckout>
 
 export const schemaLoginPortaria = z.object({
   usuario: z.string().trim().min(2).max(40),
-  pin: z.string().regex(/^\d{6,8}$/, 'PIN deve ter de 6 a 8 dígitos'),
+  // senha escrita: no mínimo 8 caracteres (o bcrypt usa até 72)
+  senha: z.string().min(8).max(72),
 })
 
 export const schemaCheckin = z.object({

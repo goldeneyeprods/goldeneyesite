@@ -168,7 +168,7 @@ export default function Portaria() {
       const r = await fetch('/api/portaria/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuario: usuario.trim(), pin }),
+        body: JSON.stringify({ usuario: usuario.trim(), senha: pin }),
       })
       const d = await r.json()
       if (!r.ok) {
@@ -365,17 +365,16 @@ export default function Portaria() {
             required
           />
 
-          <label className="mb-2 mt-5 block text-xs text-texto-suave">PIN</label>
+          <label htmlFor="senha" className="mb-2 mt-5 block text-xs text-texto-suave">Senha</label>
           <input
+            id="senha"
             type="password"
-            inputMode="numeric"
-            className="campo text-center font-display text-2xl tracking-[0.5em]"
-            placeholder="••••••"
+            className="campo"
             autoComplete="current-password"
-            minLength={6}
-            maxLength={8}
+            minLength={8}
+            maxLength={72}
             value={pin}
-            onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
+            onChange={(e) => setPin(e.target.value)}
             required
           />
 

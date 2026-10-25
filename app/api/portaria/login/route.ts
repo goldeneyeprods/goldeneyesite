@@ -9,18 +9,18 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 // ============================================================================
-//  POST /api/portaria/login  -> troca usuário + PIN por um JWT de 12h
+//  POST /api/portaria/login  -> troca usuário + senha por um JWT de 12h
 //
 //  A tela não lista mais quem é da equipe: a pessoa digita o próprio usuário.
 //  Três travas contra força bruta:
 //    - por conexão: 10 tentativas a cada 5 minutos
 //    - por usuário: 5 erros seguidos bloqueiam esse usuário por 15 minutos
-//    - PIN de 6 a 8 dígitos (1 milhão de combinações ou mais)
+//    - senha escrita de no mínimo 8 caracteres
 // ============================================================================
 
 const MAX_FALHAS = 5
 const MINUTOS_BLOQUEIO = 15
-// Hash de mentira: usuário inexistente gasta o mesmo tempo que PIN errado,
+// Hash de mentira: usuário inexistente gasta o mesmo tempo que senha errada,
 // para o tempo de resposta não revelar quem existe.
 const HASH_FALSO = '$2a$10$Bfjq4wGF0/Q58fCNCI6kLus.oEF6ww8wilU5Dnrk9dhawAKiDvzn.'
 
@@ -36,9 +36,9 @@ export async function POST(req: Request) {
 
   const parsed = schemaLoginPortaria.safeParse(await req.json().catch(() => null))
   if (!parsed.success) {
-    return NextResponse.json({ erro: 'Usuário ou PIN incorretos.' }, { status: 401 })
+    return NextResponse.json({ erro: 'Usuário ou senha incorretos.' }, { status: 401 })
   }
-  const { usuario, pin } = parsed.data
+  const { usuario, senha } = parsed.data
 
   // O evento mais próximo em que esse usuário trabalha (e que ainda não acabou).
   const [op] = await sql<
@@ -65,14 +65,14 @@ export async function POST(req: Request) {
   `
 
   if (op?.bloqueado_ate && new Date(op.bloqueado_ate) > new Date()) {
-    await bcrypt.compare(pin, HASH_FALSO)
+    await bcrypt.compare(senha, HASH_FALSO)
     return NextResponse.json(
       { erro: `Usuário bloqueado por excesso de tentativas. Tente em ${MINUTOS_BLOQUEIO} minutos.` },
       { status: 423 }
     )
   }
 
-  const ok = await bcrypt.compare(pin, op?.pin_hash ?? HASH_FALSO)
+  const ok = await bcrypt.compare(senha, op?.pin_hash ?? HASH_FALSO)
   if (!op || !ok) {
     if (op) {
       await sql`
@@ -84,8 +84,8 @@ export async function POST(req: Request) {
          where id = ${op.id}
       `
     }
-    // Mesma mensagem para usuário inexistente e PIN errado — não entrega dica.
-    return NextResponse.json({ erro: 'Usuário ou PIN incorretos.' }, { status: 401 })
+    // Mesma mensagem para usuário inexistente e senha errada — não entrega dica.
+    return NextResponse.json({ erro: 'Usuário ou senha incorretos.' }, { status: 401 })
   }
 
   await sql`update operadores set falhas = 0, bloqueado_ate = null where id = ${op.id}`

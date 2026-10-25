@@ -198,7 +198,7 @@ for (const ev of futuros) {
 
   const rl = createInterface({ input: process.stdin, output: process.stdout })
   console.log(`\n--- Operadores da portaria — ${ev.nome} ---`)
-  console.log('Cada pessoa da portaria entra com o próprio usuário e PIN.')
+  console.log('Cada pessoa da portaria entra com o próprio usuário e senha.')
   console.log('Administrador vê o painel com o caixa e a lista de compradores.')
   console.log('Deixe o nome em branco para pular.\n')
 
@@ -210,9 +210,10 @@ for (const ev of futuros) {
     const usuario =
       (await rl.question(`Usuário de login [${nome.toLowerCase().split(/\s+/)[0]}]: `)).trim() ||
       nome.toLowerCase().split(/\s+/)[0]
-    const pin = (await rl.question('PIN (6 a 8 dígitos): ')).trim()
-    if (!/^\d{6,8}$/.test(pin)) {
-      console.log('  ⚠ PIN inválido, tente de novo.\n')
+    const pin = (await rl.question('Senha (mínimo 8 caracteres): ')).trim()
+    if (pin.length < 8 || pin.length > 72) {
+      console.log('  ⚠ Senha curta demais, tente de novo.
+')
       continue
     }
 
