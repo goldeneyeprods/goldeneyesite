@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Cinzel, Inter } from 'next/font/google'
 import { produtora } from '@/config/site'
 import './globals.css'
+import { urlDoSite } from '@/lib/url'
 
 // Cinzel: serifa romana/egípcia — casa com o ouro do olho de Hórus do logo.
 const display = Cinzel({
@@ -18,7 +19,7 @@ const sans = Inter({
   display: 'swap',
 })
 
-const url = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+const url = urlDoSite()
 
 // O título padrão é o da PRODUTORA. Cada evento sobrescreve com o próprio
 // nome pelo template — ex.: "Corujão Ácido — Golden Eye Prods."

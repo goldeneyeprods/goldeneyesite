@@ -9,6 +9,7 @@ import { Videos } from '@/components/Videos'
 import { CardBanda } from '@/components/CardBanda'
 import { Ornamento } from '@/components/OlhoDeHorus'
 import { bandas, bandaPorSlug, produtora } from '@/config/site'
+import { urlDoSite } from '@/lib/url'
 
 // ============================================================================
 //  /bandas/<slug> — o release de cada banda
@@ -65,7 +66,7 @@ export default async function PaginaBanda({
     genre: banda.genero,
     description: banda.conceito,
     image: banda.fotos[0],
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}/bandas/${banda.slug}`,
+    url: `${urlDoSite()}/bandas/${banda.slug}`,
     foundingLocation: { '@type': 'City', name: banda.cidade },
     sameAs: Object.values(banda.redes ?? {}).filter(Boolean),
   }

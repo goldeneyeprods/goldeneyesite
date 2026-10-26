@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { eventos, ehFuturo, bandas } from '@/config/site'
+import { urlDoSite } from '@/lib/url'
 
 // ============================================================================
 //  /sitemap.xml — gerado sozinho a partir do config
@@ -9,7 +10,7 @@ import { eventos, ehFuturo, bandas } from '@/config/site'
 // ============================================================================
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+  const base = urlDoSite()
 
   const paginas: MetadataRoute.Sitemap = [
     { url: base, changeFrequency: 'weekly', priority: 1 },

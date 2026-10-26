@@ -5,6 +5,7 @@ import { gerarMagicToken, hashMagicToken } from '@/lib/ticket'
 import { enviarMagicLink } from '@/lib/email'
 import { permitir, ipDaRequisicao } from '@/lib/ratelimit'
 import { criarSessaoCliente, NOME_COOKIE, opcoesCookie } from '@/lib/sessao-cliente'
+import { urlDoSite } from '@/lib/url'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -45,7 +46,7 @@ export async function POST(req: Request) {
         insert into magic_links (token, email, expira_em)
         values (${hash}, ${email}, now() + interval '15 minutes')
       `
-      const link = `${process.env.NEXT_PUBLIC_SITE_URL}/meus-ingressos?token=${token}`
+      const link = `${urlDoSite()}/meus-ingressos?token=${token}`
       try {
         await enviarMagicLink(email, link)
       } catch (e) {

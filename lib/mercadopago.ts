@@ -1,5 +1,6 @@
 import { MercadoPagoConfig, Payment, PaymentRefund } from 'mercadopago'
 import { createHmac, timingSafeEqual } from 'crypto'
+import { urlDoSite } from './url'
 
 // ============================================================================
 //  MERCADO PAGO — Checkout Transparente PIX
@@ -47,7 +48,7 @@ export async function criarPagamentoPix(params: {
       payment_method_id: 'pix',
       date_of_expiration: params.expiraEm.toISOString(),
       external_reference: params.pedidoId,
-      notification_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/webhook/mercadopago`,
+      notification_url: `${urlDoSite()}/api/webhook/mercadopago`,
       payer: {
         email: params.email,
         first_name: params.nome,

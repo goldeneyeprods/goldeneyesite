@@ -4,6 +4,7 @@ import { CardBanda } from '@/components/CardBanda'
 import { Footer } from '@/components/Footer'
 import { Ornamento } from '@/components/OlhoDeHorus'
 import { bandas, produtora } from '@/config/site'
+import { urlDoSite } from '@/lib/url'
 
 export const metadata: Metadata = {
   title: 'Bandas',
@@ -35,7 +36,7 @@ export default function PaginaBandas() {
         '@type': 'MusicGroup',
         name: b.nome,
         genre: b.genero,
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/bandas/${b.slug}`,
+        url: `${urlDoSite()}/bandas/${b.slug}`,
       },
     })),
   }

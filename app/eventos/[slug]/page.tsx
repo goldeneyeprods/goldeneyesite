@@ -21,6 +21,7 @@ import {
   proximosEventos,
   produtora,
 } from '@/config/site'
+import { urlDoSite } from '@/lib/url'
 
 // ============================================================================
 //  /eventos/<slug> — a LP de cada evento
@@ -105,7 +106,7 @@ export default async function PaginaEvento({
     doorTime: evento.aberturaPortoes,
     eventStatus: 'https://schema.org/EventScheduled',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}/eventos/${evento.slug}`,
+    url: `${urlDoSite()}/eventos/${evento.slug}`,
     location: {
       '@type': 'Place',
       name: evento.local,
@@ -123,14 +124,14 @@ export default async function PaginaEvento({
     organizer: {
       '@type': 'Organization',
       name: produtora.nome,
-      url: process.env.NEXT_PUBLIC_SITE_URL,
+      url: urlDoSite(),
     },
     ...(mostraIngressos && evento.lotes.length > 0
       ? {
           offers: {
             '@type': 'Offer',
             availability: 'https://schema.org/InStock',
-            url: `${process.env.NEXT_PUBLIC_SITE_URL}/eventos/${evento.slug}#ingressos`,
+            url: `${urlDoSite()}/eventos/${evento.slug}#ingressos`,
             priceCurrency: 'BRL',
             price: (
               Math.min(...evento.lotes.map((l) => l.precoCentavos)) / 100

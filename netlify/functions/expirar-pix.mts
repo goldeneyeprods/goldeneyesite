@@ -15,7 +15,14 @@ import type { Config } from '@netlify/functions'
 
 export default async function expirarPix() {
   // URL é preenchida pela própria Netlify em cada deploy.
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.URL
+  // NEXT_PUBLIC_SITE_URL com localhost (de um .env.local importado) faria a
+  // rotina chamar a própria máquina e nunca expirar nada: usa a URL que a
+  // Netlify preenche sozinha.
+  const configurada = process.env.NEXT_PUBLIC_SITE_URL ?? ''
+  const base = (/^https:\/\//.test(configurada) && !configurada.includes('localhost')
+    ? configurada
+    : process.env.URL ?? 'https://goldeneyeprods.com'
+  ).replace(/\/+$/, '')
   const segredo = process.env.CRON_SECRET
 
   if (!base || !segredo) {

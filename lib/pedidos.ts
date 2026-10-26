@@ -3,6 +3,7 @@ import { consultarPagamento, reembolsarPagamento } from './mercadopago'
 import { gerarTokenIngresso } from './ticket'
 import { enviarEmailConfirmacao, type IngressoParaEmail } from './email'
 import { lerEstoque } from './lotes'
+import { urlDoSite } from './url'
 
 // ============================================================================
 //  CICLO DE VIDA DO PEDIDO
@@ -195,7 +196,7 @@ export async function aprovarPedido(pedidoId: string, mpPaymentId: string) {
       meiaSolidaria: evento.meia_solidaria,
       ingressos: resultado.ingressos,
       valorTotal: resultado.pedido.valor_total_centavos,
-      linkMeusIngressos: `${process.env.NEXT_PUBLIC_SITE_URL}/meus-ingressos`,
+      linkMeusIngressos: `${urlDoSite()}/meus-ingressos`,
     })
   } catch (erroEmail) {
     console.error('[pedidos] pedido pago mas e-mail falhou:', pedidoId, erroEmail)

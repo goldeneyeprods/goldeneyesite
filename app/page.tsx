@@ -18,6 +18,7 @@ import {
   todosOsVideos,
   bandas,
 } from '@/config/site'
+import { urlDoSite } from '@/lib/url'
 
 // ============================================================================
 //  HOME — A PRODUTORA
@@ -41,8 +42,8 @@ export default function Home() {
     '@type': 'Organization',
     name: produtora.nome,
     description: produtora.descricao,
-    url: process.env.NEXT_PUBLIC_SITE_URL,
-    logo: `${process.env.NEXT_PUBLIC_SITE_URL}/imagens/logo.png`,
+    url: urlDoSite(),
+    logo: `${urlDoSite()}/imagens/logo.png`,
     sameAs: Object.values(produtora.redes).filter(Boolean),
     email: produtora.email,
     founder: {
