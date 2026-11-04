@@ -60,8 +60,8 @@ export const produtora = {
   // ingressos@goldeneyeprods.com, pelo Resend) e aparece como contato de
   // suporte da compra.
   emailIngressos: 'goldeneyeingresso@gmail.com',
-  whatsapp: '5547996665826', // internacional, só dígitos
-  whatsappLabel: '(47) 99666-5826',
+  whatsapp: '554797879551', // internacional, só dígitos
+  whatsappLabel: '(47) 9787-9551',
 
   redes: {
     instagram: 'https://www.instagram.com/goldeneye.prods/',
