@@ -4,6 +4,7 @@ import { gerarTokenIngresso } from './ticket'
 import { enviarEmailConfirmacao, type IngressoParaEmail } from './email'
 import { lerEstoque } from './lotes'
 import { urlDoSite } from './url'
+import { enviarIngressoWhatsapp, whatsappConfigurado } from './whatsapp'
 
 // ============================================================================
 //  CICLO DE VIDA DO PEDIDO
@@ -53,11 +54,13 @@ export async function aprovarPedido(pedidoId: string, mpPaymentId: string) {
         comprador_nome: string
         comprador_email: string
         comprador_cpf: string
+        comprador_telefone: string
+        whatsapp_optin: boolean
         valor_total_centavos: number
       }[]
     >`
       select id, evento_id, status, comprador_nome, comprador_email,
-             comprador_cpf, valor_total_centavos
+             comprador_cpf, comprador_telefone, whatsapp_optin, valor_total_centavos
         from pedidos
        where id = ${pedidoId}
        for update
@@ -74,9 +77,9 @@ export async function aprovarPedido(pedidoId: string, mpPaymentId: string) {
     const reservaPerdida = pedido.status !== 'pendente'
 
     const itens = await tx<
-      { lote_id: number; quantidade: number; tipo: 'inteira' | 'meia' }[]
+      { lote_id: number; quantidade: number; tipo: 'inteira' | 'meia'; lote_nome: string }[]
     >`
-      select pi.lote_id::int as lote_id, pi.quantidade, l.tipo
+      select pi.lote_id::int as lote_id, pi.quantidade, l.tipo, l.nome as lote_nome
         from pedido_itens pi
         join lotes l on l.id = pi.lote_id
        where pi.pedido_id = ${pedidoId}
@@ -109,7 +112,7 @@ export async function aprovarPedido(pedidoId: string, mpPaymentId: string) {
        where id = ${pedidoId}
     `
 
-    const ingressos: IngressoParaEmail[] = []
+    const ingressos: (IngressoParaEmail & { loteNome: string })[] = []
 
     for (const item of itens) {
       // Reserva vira venda. Se a reserva já tinha sido devolvida, só soma.
@@ -147,6 +150,7 @@ export async function aprovarPedido(pedidoId: string, mpPaymentId: string) {
           tipo: item.tipo,
           titularNome: pedido.comprador_nome,
           tokenQr: token,
+          loteNome: item.lote_nome,
         })
       }
     }
@@ -163,44 +167,84 @@ export async function aprovarPedido(pedidoId: string, mpPaymentId: string) {
     return
   }
 
-  // ---- E-mail (fora da transação) ------------------------------------------
-  // Se o e-mail falhar, a venda continua válida — o ingresso está no banco e
-  // aparece em /meus-ingressos. Melhor um e-mail perdido que uma venda perdida.
+  // ---- E-mail e WhatsApp (fora da transação) -------------------------------
+  // Se um envio falhar, a venda continua válida — o ingresso está no banco e
+  // aparece em /meus-ingressos. Melhor uma mensagem perdida que uma venda
+  // perdida. Cada canal tenta sozinho: um não derruba o outro.
+  const { pedido, ingressos } = resultado
+  const evento = await lerEventoParaAviso(pedido.evento_id).catch((erro) => {
+    console.error('[pedidos] pedido pago mas não li o evento para avisar:', pedidoId, erro)
+    return null
+  })
+  if (!evento) return
+
+  const dataFormatada = new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'full',
+    timeStyle: 'short',
+    timeZone: 'America/Sao_Paulo',
+  }).format(new Date(evento.data_inicio))
+
   try {
-    const [evento] = await sql<
-      {
-        nome: string
-        local_nome: string
-        endereco: string
-        data_inicio: Date
-        meia_solidaria: boolean
-      }[]
-    >`
-      select nome, local_nome, endereco, data_inicio, meia_solidaria
-        from eventos where id = ${resultado.pedido.evento_id}
-    `
-
-    const dataFormatada = new Intl.DateTimeFormat('pt-BR', {
-      dateStyle: 'full',
-      timeStyle: 'short',
-      timeZone: 'America/Sao_Paulo',
-    }).format(new Date(evento.data_inicio))
-
     await enviarEmailConfirmacao({
-      para: resultado.pedido.comprador_email,
-      nome: resultado.pedido.comprador_nome,
+      para: pedido.comprador_email,
+      nome: pedido.comprador_nome,
       eventoNome: evento.nome,
       dataFormatada,
       local: evento.local_nome,
       endereco: evento.endereco,
       meiaSolidaria: evento.meia_solidaria,
-      ingressos: resultado.ingressos,
-      valorTotal: resultado.pedido.valor_total_centavos,
+      ingressos,
+      valorTotal: pedido.valor_total_centavos,
       linkMeusIngressos: `${urlDoSite()}/meus-ingressos`,
     })
   } catch (erroEmail) {
     console.error('[pedidos] pedido pago mas e-mail falhou:', pedidoId, erroEmail)
   }
+
+  if (pedido.whatsapp_optin && whatsappConfigurado()) {
+    try {
+      await enviarIngressoWhatsapp({
+        telefone: pedido.comprador_telefone,
+        nome: pedido.comprador_nome,
+        eventoNome: evento.nome,
+        dataFormatada,
+        local: `${evento.local_nome}, ${evento.endereco}`,
+        ingressos: ingressos.map((i) => ({
+          tokenQr: i.tokenQr,
+          descricao:
+            i.tipo === 'meia' && !evento.meia_solidaria
+              ? `${i.loteNome} (leve o comprovante da meia)`
+              : i.loteNome,
+        })),
+      })
+      await sql`
+        update pedidos set whatsapp_enviado_em = now(), whatsapp_erro = null
+         where id = ${pedidoId}
+      `
+    } catch (erroZap) {
+      console.error('[pedidos] pedido pago mas WhatsApp falhou:', pedidoId, erroZap)
+      await sql`
+        update pedidos set whatsapp_erro = ${String(erroZap).slice(0, 500)}
+         where id = ${pedidoId}
+      `.catch(() => {})
+    }
+  }
+}
+
+async function lerEventoParaAviso(eventoId: number) {
+  const [evento] = await sql<
+    {
+      nome: string
+      local_nome: string
+      endereco: string
+      data_inicio: Date
+      meia_solidaria: boolean
+    }[]
+  >`
+    select nome, local_nome, endereco, data_inicio, meia_solidaria
+      from eventos where id = ${eventoId}
+  `
+  return evento ?? null
 }
 
 // ----------------------------------------------------------------------------

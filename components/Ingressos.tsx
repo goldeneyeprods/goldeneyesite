@@ -59,6 +59,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
     emailConfirma: '',
     telefone: '',
     cpf: '',
+    whatsapp: true,
     aceite: false,
   })
   const [erros, setErros] = useState<Record<string, string>>({})
@@ -168,6 +169,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
           email: form.email.trim().toLowerCase(),
           telefone: soDigitos(form.telefone),
           cpf: soDigitos(form.cpf),
+          receberWhatsapp: form.whatsapp,
           aceiteTermos: true,
           eventoSlug: evento.slug,
           itens: Object.entries(qtds).map(([loteId, quantidade]) => ({
@@ -436,6 +438,19 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
                 />
               </Campo>
             </div>
+
+            <label className="mt-5 flex cursor-pointer gap-3">
+              <input
+                type="checkbox"
+                checked={form.whatsapp}
+                onChange={(e) => setForm({ ...form, whatsapp: e.target.checked })}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-[#d4a64a]"
+              />
+              <span className="text-xs leading-relaxed text-texto-suave">
+                Quero receber o ingresso também pelo WhatsApp, com um lembrete
+                na véspera e outro no dia. Só isso, nada de propaganda.
+              </span>
+            </label>
 
             {temMeia && (
               <div className="mt-6 rounded-xl border border-alerta/35 bg-alerta/[0.07] p-4">

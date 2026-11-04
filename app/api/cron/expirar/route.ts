@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { sql } from '@/lib/db'
 import { limparRateLimit } from '@/lib/ratelimit'
 import { sincronizarPagamento } from '@/lib/pedidos'
+import { enviarLembretes } from '@/lib/lembretes'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -10,7 +11,7 @@ export const dynamic = 'force-dynamic'
 //  GET /api/cron/expirar
 //
 //  Roda a cada 10 minutos (netlify/functions/expirar-pix.mts). Devolve ao estoque os ingressos de
-//  PIX que ninguém pagou. Sem isso, um evento "esgota" cheio de reservas
+//  PIX que ninguém pagou e manda os lembretes do evento no WhatsApp. Sem isso, um evento "esgota" cheio de reservas
 //  fantasma e você perde venda de verdade.
 // ============================================================================
 
@@ -76,7 +77,14 @@ export async function GET(req: Request) {
     return vencidos.length
   })
 
+  // ---- 3. Lembretes do evento no WhatsApp (véspera e dia) -----------------
+  // Falha aqui não pode impedir a rotina de devolver estoque nas próximas.
+  const lembretes = await enviarLembretes().catch((erro) => {
+    console.error('[cron] lembretes falharam:', erro)
+    return { enviados: 0, falhas: -1 }
+  })
+
   await limparRateLimit()
 
-  return NextResponse.json({ ok: true, conferidos, pedidosExpirados: liberados })
+  return NextResponse.json({ ok: true, conferidos, pedidosExpirados: liberados, lembretes })
 }

@@ -90,6 +90,8 @@ export const schemaCheckout = z.object({
     .transform(soDigitos)
     .refine(cpfValido, 'CPF inválido'),
 
+  receberWhatsapp: z.boolean().default(false),
+
   aceiteTermos: z.literal(true, {
     errorMap: () => ({ message: 'É preciso aceitar os termos para continuar' }),
   }),

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { OlhoDeHorus } from './OlhoDeHorus'
+import { produtora } from '@/config/site'
 
 // ============================================================================
 //  MODAL DO PIX
@@ -183,6 +184,17 @@ export function ModalPix({ dados, onFechar }: Props) {
               Esta tela reconhece o pagamento sozinha. Não feche até confirmar —
               mas se fechar, o ingresso ainda vai para o seu e-mail.
             </p>
+            <p className="mt-2 text-center text-[11px] text-texto-fraco">
+              Travou em algo?{' '}
+              <a
+                href={`https://wa.me/${produtora.whatsapp}?text=${encodeURIComponent('Oi! Tô com dúvida no PIX do ingresso.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ouro underline underline-offset-2"
+              >
+                Chama no WhatsApp
+              </a>
+            </p>
           </>
         )}
 
@@ -200,7 +212,8 @@ export function ModalPix({ dados, onFechar }: Props) {
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-texto-suave">
               Pagamento confirmado. Seu ingresso com QR Code já foi enviado para
-              o seu e-mail — confira também a caixa de spam.
+              o seu e-mail (confira também a caixa de spam) e, se você marcou,
+              chega no seu WhatsApp em instantes.
             </p>
 
             <div className="my-7 flex justify-center opacity-70">

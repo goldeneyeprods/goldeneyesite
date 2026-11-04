@@ -100,6 +100,47 @@ No Windows, sem openssl:
 2. Verifique seu domínio e ajuste `EMAIL_REMETENTE`.
 3. Sem domínio verificado, use `onboarding@resend.dev` — só envia para o seu próprio e-mail, serve para testar.
 
+### 4b. WhatsApp — Cloud API da Meta (opcional)
+
+Com isso ligado, quem marca a opção na compra recebe o QR de cada ingresso no
+WhatsApp e um lembrete na véspera e outro no dia (a partir das 11h). Sem as
+variáveis, nada é enviado e o e-mail segue funcionando sozinho.
+
+1. [business.facebook.com](https://business.facebook.com) → crie o app em
+   [developers.facebook.com](https://developers.facebook.com) com o produto
+   **WhatsApp** e conecte o número da produtora.
+2. Gere um token permanente (usuário do sistema, permissão
+   `whatsapp_business_messaging`) → `WHATSAPP_TOKEN`. O id do número
+   (não o número em si) → `WHATSAPP_PHONE_NUMBER_ID`.
+3. Em WhatsApp Manager → Modelos de mensagem, crie os dois modelos abaixo,
+   categoria **Utilidade**, idioma **Português (BR)**. Os nomes e a ordem das
+   variáveis precisam ser exatamente estes.
+
+**`ingresso_confirmado`** — cabeçalho: **Imagem**
+
+> Oi, {{1}}! Seu ingresso para {{2}} está confirmado.
+>
+> Data: {{3}}
+> Local: {{4}}
+> Ingresso: {{5}}
+>
+> Mostre este QR Code na entrada, junto com um documento com foto. Ele também está no seu e-mail.
+
+Rodapé: `Golden Eye Prods.` · Botão de site: `Meus ingressos` → `https://goldeneyeprods.com/meus-ingressos`
+
+**`lembrete_evento`** — sem cabeçalho
+
+> Oi, {{1}}! {{2}} tem {{3}}.
+>
+> Os portões abrem às {{4}} no {{5}}, {{6}}.
+>
+> Seu QR Code está na mensagem do ingresso, aqui nesta conversa, e no seu e-mail. Leve um documento com foto. Até lá!
+
+Rodapé: `Golden Eye Prods.`
+
+Se um envio falhar, o motivo fica em `pedidos.whatsapp_erro`. Mensagem de
+utilidade custa centavos (tabela da Meta em reais desde out/2026).
+
 ### 5. Rodar
 
 ```bash

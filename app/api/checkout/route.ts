@@ -155,11 +155,11 @@ export async function POST(req: Request) {
         insert into pedidos (
           evento_id, comprador_nome, comprador_email, comprador_cpf,
           comprador_telefone, valor_total_centavos, status,
-          pix_expira_em, ip_origem, aceite_termos_em
+          pix_expira_em, ip_origem, aceite_termos_em, whatsapp_optin
         ) values (
           ${evento.id}, ${dados.nome}, ${dados.email}, ${dados.cpf},
           ${dados.telefone}, ${valorTotal}, 'pendente',
-          ${expiraEm}, ${ip}, now()
+          ${expiraEm}, ${ip}, now(), ${dados.receberWhatsapp}
         )
         returning id
       `

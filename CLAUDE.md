@@ -27,6 +27,8 @@ sandbox do README.
 - `lib/lotes.ts` — regra de estoque e virada de lote (fases + teto do evento).
 - `lib/pedidos.ts` — aprovar/liberar pedido; `sincronizarPagamento` consulta o MP.
 - `lib/mercadopago.ts` — criação do PIX, consulta, estorno, assinatura do webhook.
+- `lib/whatsapp.ts` — Cloud API da Meta: QR do ingresso e lembretes, só por modelo aprovado.
+- `lib/lembretes.ts` — véspera e dia do show; roda dentro do `/api/cron/expirar`.
 - `app/api/checkout` → cria pedido pendente e reserva estoque.
 - `app/api/webhook/mercadopago` → aviso do MP; sempre reconsulta a API.
 - `app/api/pedidos/[id]/status` → polling da tela do PIX; consulta o MP se o webhook atrasar.
@@ -41,7 +43,7 @@ sandbox do README.
   não é fonte de verdade. Um mesmo pagamento recebe vários avisos com o mesmo
   id (criado → aprovado), então o `webhook_log` não pode servir para descartar
   aviso; a idempotência fica no `aprovarPedido` (`for update` + status).
-- Chamada de rede (MP, e-mail) **nunca** dentro de transação com linha travada.
+- Chamada de rede (MP, e-mail, WhatsApp) **nunca** dentro de transação com linha travada.
 - `TICKET_HMAC_SECRET` não muda depois que houve venda: invalida todos os QR.
 - Meia-entrada: o seed recusa evento com menos de 40% de meia (Lei 12.933/13).
   `meiaSolidaria: true` = meia aberta a todos, sem comprovante em lugar nenhum.

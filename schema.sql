@@ -93,6 +93,13 @@ create index if not exists idx_pedidos_evento  on pedidos (evento_id, status);
 -- ----------------------------------------------------------------------------
 -- ITENS DO PEDIDO (quantos de cada lote)
 -- ----------------------------------------------------------------------------
+-- WhatsApp: o comprador escolhe receber; o envio é registrado para não repetir.
+alter table pedidos add column if not exists whatsapp_optin boolean not null default false;
+alter table pedidos add column if not exists whatsapp_enviado_em timestamptz;
+alter table pedidos add column if not exists whatsapp_erro text;
+alter table pedidos add column if not exists lembrete_vespera_em timestamptz;
+alter table pedidos add column if not exists lembrete_dia_em timestamptz;
+
 create table if not exists pedido_itens (
   id             bigserial primary key,
   pedido_id      uuid not null references pedidos(id) on delete cascade,
