@@ -118,15 +118,18 @@ variáveis, nada é enviado e o e-mail segue funcionando sozinho.
 
 **`ingresso_confirmado`** — cabeçalho: **Imagem**
 
-> Oi, {{1}}! Seu ingresso para {{2}} está confirmado.
+> Olá {{1}}!
 >
-> Data: {{3}}
-> Local: {{4}}
+> Segue aqui seu ingresso para o evento "{{2}}" dia {{3}} às {{4}}.
 > Ingresso: {{5}}
+> Contamos com sua presença!
 >
-> Mostre este QR Code na entrada, junto com um documento com foto. Ele também está no seu e-mail.
+> Qualquer dúvida ou auxílio conte com nossa equipe por este número de WhatsApp.
+> A Golden Eye Produções agradece o seu prestígio, bom evento!
 
-Rodapé: `Golden Eye Prods.` · Botão de site: `Meus ingressos` → `https://goldeneyeprods.com/meus-ingressos`
+Variáveis: {{1}} primeiro nome · {{2}} evento · {{3}} `20/11` · {{4}} `19:00` ·
+{{5}} lote e tipo (na meia, lembra o comprovante).
+Botão de site (opcional): `Meus ingressos` → `https://goldeneyeprods.com/meus-ingressos`
 
 **`lembrete_evento`** — sem cabeçalho
 

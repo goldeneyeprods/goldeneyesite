@@ -84,8 +84,10 @@ export async function enviarIngressoWhatsapp(dados: {
   telefone: string
   nome: string
   eventoNome: string
-  dataFormatada: string
-  local: string
+  /** "20/11" */
+  data: string
+  /** "19:00" */
+  hora: string
   ingressos: { tokenQr: string; descricao: string }[]
 }): Promise<void> {
   const para = telefoneInternacional(dados.telefone)
@@ -102,8 +104,8 @@ export async function enviarIngressoWhatsapp(dados: {
         parameters: [
           texto(primeiroNome),
           texto(dados.eventoNome),
-          texto(dados.dataFormatada),
-          texto(dados.local),
+          texto(dados.data),
+          texto(dados.hora),
           texto(ing.descricao),
         ],
       },

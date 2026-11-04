@@ -207,8 +207,16 @@ export async function aprovarPedido(pedidoId: string, mpPaymentId: string) {
         telefone: pedido.comprador_telefone,
         nome: pedido.comprador_nome,
         eventoNome: evento.nome,
-        dataFormatada,
-        local: `${evento.local_nome}, ${evento.endereco}`,
+        data: new Intl.DateTimeFormat('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          timeZone: 'America/Sao_Paulo',
+        }).format(new Date(evento.data_inicio)),
+        hora: new Intl.DateTimeFormat('pt-BR', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'America/Sao_Paulo',
+        }).format(new Date(evento.data_inicio)),
         ingressos: ingressos.map((i) => ({
           tokenQr: i.tokenQr,
           descricao:

@@ -74,23 +74,55 @@ export async function gerarPdfIngressos(
       x: 40, y: height - 106, size: 26, font: fonteBold, color: claro,
     })
 
-    const linhas = [
+    // A coluna de texto termina antes do QR; o que passar disso encolhe ou
+    // quebra de linha em vez de invadir o quadro branco.
+    const larguraTexto = width - 252 - 40 - 16
+    const caber = (texto: string, tamanho: number, minimo = 9) => {
+      let t = tamanho
+      while (t > minimo && fonte.widthOfTextAtSize(texto, t) > larguraTexto) t -= 0.5
+      return t
+    }
+    const quebrar = (texto: string, tamanho: number) => {
+      const linhas: string[] = []
+      let atual = ''
+      for (const palavra of texto.split(/\s+/)) {
+        const tentativa = atual ? `${atual} ${palavra}` : palavra
+        if (atual && fonte.widthOfTextAtSize(tentativa, tamanho) > larguraTexto) {
+          linhas.push(atual)
+          atual = palavra
+        } else atual = tentativa
+      }
+      if (atual) linhas.push(atual)
+      return linhas.slice(0, 2)
+    }
+
+    const linhas: [string, string, string?][] = [
       ['DATA', evento.data],
-      ['LOCAL', `${evento.local} — ${evento.endereco}`],
+      ['LOCAL', evento.local, evento.endereco],
       ['TITULAR', ing.titularNome],
       ['TIPO', ing.tipo === 'meia' ? rotuloMeia : 'INTEIRA'],
     ]
     let y = height - 152
-    for (const [rotulo, valor] of linhas) {
+    for (const [rotulo, valor, detalhe] of linhas) {
       pagina.drawText(rotulo, { x: 40, y, size: 8, font: fonteBold, color: ouro })
-      pagina.drawText(valor.slice(0, 58), {
-        x: 40, y: y - 15, size: 12, font: fonte, color: claro,
+      pagina.drawText(valor, {
+        x: 40, y: y - 15, size: caber(valor, 12), font: fonte, color: claro,
       })
       y -= 42
+      if (detalhe) {
+        // Endereço: menor e mais apagado, logo abaixo do nome do lugar
+        const linhasDetalhe = quebrar(detalhe, 8.5)
+        linhasDetalhe.forEach((linha, i) => {
+          pagina.drawText(linha, {
+            x: 40, y: y + 13 - i * 11, size: 8.5, font: fonte, color: rgb(0.66, 0.6, 0.74),
+          })
+        })
+        y -= linhasDetalhe.length * 11 - 2
+      }
     }
 
     if (ing.tipo === 'meia' && !evento.meiaSolidaria) {
-      pagina.drawText('Comprovante de meia-entrada obrigatorio na portaria.', {
+      pagina.drawText('Comprovante de meia-entrada obrigatório na portaria.', {
         x: 40, y: 46, size: 8, font: fonte, color: rgb(0.95, 0.8, 0.3),
       })
     }
