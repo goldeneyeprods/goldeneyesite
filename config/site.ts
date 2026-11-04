@@ -810,9 +810,9 @@ export const faq = [
     r:
       'Assim que o PIX é confirmado (leva segundos), o ingresso com QR Code vai ' +
       'automaticamente para o seu e-mail, em PDF, e aparece na tela. Se você ' +
-      'marcar a opção na compra, ele chega também no seu WhatsApp, com um ' +
-      'lembrete na véspera e outro no dia. Fica sempre disponível na página ' +
-      'Meus Ingressos.',
+      'marcar a opção na compra, a produção te manda também pelo WhatsApp. ' +
+      'Na véspera e no dia do evento chega um lembrete no e-mail. Fica sempre ' +
+      'disponível na página Meus Ingressos.',
   },
   {
     p: 'Quem tem direito à meia-entrada?',

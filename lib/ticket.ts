@@ -100,3 +100,25 @@ export function gerarMagicToken(): { token: string; hash: string } {
 export function hashMagicToken(token: string): string {
   return createHash('sha256').update(token).digest('hex')
 }
+
+// --- Link do pedido (/ingresso/<id>?k=...) ------------------------------------
+// Vai na mensagem de WhatsApp e no lembrete por e-mail. Quem tem o link vê os
+// QR do pedido, exatamente como quem tem o PDF do e-mail: é um anexo, não uma
+// área logada. Cancelar ou transferir continua só em /meus-ingressos.
+
+function assinaturaPedido(pedidoId: string): string {
+  return b64url(
+    createHmac('sha256', segredo()).update(`link-pedido:${pedidoId}`).digest().subarray(0, 12)
+  )
+}
+
+export function chaveLinkPedido(pedidoId: string): string {
+  return assinaturaPedido(pedidoId)
+}
+
+export function linkPedidoValido(pedidoId: string, chave: string | undefined): boolean {
+  if (!chave || chave.length > 64) return false
+  const a = Buffer.from(chave)
+  const b = Buffer.from(assinaturaPedido(pedidoId))
+  return a.length === b.length && timingSafeEqual(a, b)
+}

@@ -144,6 +144,8 @@ export default function PainelPortaria() {
         </div>
       )}
 
+      <EnviosWhatsapp />
+
       {/* --- Fluxo da última hora --- */}
       <div className="cartao mt-5 p-5">
         <p className="rotulo">Entradas por minuto — última hora</p>
@@ -226,6 +228,125 @@ function Cartao({
       >
         {valor}
       </p>
+    </div>
+  )
+}
+
+// ----------------------------------------------------------------------------
+//  Ingressos a mandar pelo WhatsApp Business da produção
+//  O botão abre a conversa do comprador com a mensagem pronta; quem envia é
+//  a produção, do próprio celular. Marcar como enviado evita mandar em dobro.
+// ----------------------------------------------------------------------------
+interface EnvioWhatsapp {
+  id: string
+  nome: string
+  telefone: string
+  ingresso: string
+  enviadoEm: string | null
+  link: string | null
+}
+
+function EnviosWhatsapp() {
+  const [pedidos, setPedidos] = useState<EnvioWhatsapp[] | null>(null)
+  const [verEnviados, setVerEnviados] = useState(false)
+
+  const token = () => localStorage.getItem('ge_portaria_token') ?? ''
+
+  async function carregar() {
+    try {
+      const r = await fetch('/api/portaria/whatsapp', {
+        headers: { Authorization: `Bearer ${token()}` },
+        cache: 'no-store',
+      })
+      if (r.ok) setPedidos((await r.json()).pedidos)
+    } catch {
+      /* tenta de novo na próxima atualização */
+    }
+  }
+
+  useEffect(() => {
+    carregar()
+    const id = setInterval(carregar, 30_000)
+    return () => clearInterval(id)
+  }, [])
+
+  async function marcar(id: string, enviado: boolean) {
+    setPedidos((atual) =>
+      atual?.map((p) => (p.id === id ? { ...p, enviadoEm: enviado ? new Date().toISOString() : null } : p)) ??
+      null
+    )
+    await fetch('/api/portaria/whatsapp', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token()}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pedidoId: id, enviado }),
+    }).catch(() => carregar())
+  }
+
+  if (!pedidos) return null
+  const pendentes = pedidos.filter((p) => !p.enviadoEm)
+  const visiveis = verEnviados ? pedidos : pendentes
+
+  return (
+    <div className="cartao mt-5 p-5">
+      <div className="flex items-center justify-between gap-3">
+        <p className="rotulo">Mandar ingresso no WhatsApp</p>
+        <span className={`text-xs tabular-nums ${pendentes.length ? 'text-alerta' : 'text-texto-fraco'}`}>
+          {pendentes.length} a mandar
+        </span>
+      </div>
+      <p className="mt-2 text-[11px] leading-relaxed text-texto-fraco">
+        Abre a conversa no seu WhatsApp Business com a mensagem e o link do
+        ingresso prontos. É só apertar enviar.
+      </p>
+
+      <div className="mt-4 space-y-2">
+        {visiveis.length === 0 && (
+          <p className="text-sm text-texto-fraco">
+            {pedidos.length === 0 ? 'Ninguém pediu pelo WhatsApp ainda.' : 'Tudo enviado. 🦉'}
+          </p>
+        )}
+        {visiveis.map((p) => (
+          <div
+            key={p.id}
+            className="flex items-center justify-between gap-3 border-b border-borda/50 pb-2 last:border-0"
+          >
+            <div className="min-w-0">
+              <p className="truncate text-sm text-texto">{p.nome}</p>
+              <p className="truncate text-[11px] text-texto-fraco">{p.ingresso}</p>
+            </div>
+            {p.enviadoEm ? (
+              <button
+                onClick={() => marcar(p.id, false)}
+                className="shrink-0 text-[11px] text-ok"
+                title="Desmarcar"
+              >
+                ✓ enviado
+              </button>
+            ) : p.link ? (
+              <a
+                href={p.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => marcar(p.id, true)}
+                className="botao-ouro shrink-0 !px-4 !py-2 !text-xs"
+              >
+                Mandar
+              </a>
+            ) : (
+              <span className="shrink-0 text-[11px] text-erro">telefone inválido</span>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {pedidos.length > pendentes.length && (
+        <button
+          onClick={() => setVerEnviados((v) => !v)}
+          className="mt-3 text-[11px] text-texto-fraco underline underline-offset-2"
+        >
+          {verEnviados ? 'Esconder enviados' : `Ver enviados (${pedidos.length - pendentes.length})`}
+        </button>
+      )}
     </div>
   )
 }

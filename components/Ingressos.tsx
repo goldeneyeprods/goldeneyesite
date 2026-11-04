@@ -447,8 +447,8 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
                 className="mt-0.5 h-4 w-4 shrink-0 accent-[#d4a64a]"
               />
               <span className="text-xs leading-relaxed text-texto-suave">
-                Quero receber o ingresso também pelo WhatsApp, com um lembrete
-                na véspera e outro no dia. Só isso, nada de propaganda.
+                Quero receber o ingresso também pelo WhatsApp. Só isso, nada de
+                propaganda.
               </span>
             </label>
 

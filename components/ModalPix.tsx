@@ -212,8 +212,8 @@ export function ModalPix({ dados, onFechar }: Props) {
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-texto-suave">
               Pagamento confirmado. Seu ingresso com QR Code já foi enviado para
-              o seu e-mail (confira também a caixa de spam) e, se você marcou,
-              chega no seu WhatsApp em instantes.
+              o seu e-mail (confira também a caixa de spam). Se você marcou o
+              WhatsApp, a produção te manda por lá também.
             </p>
 
             <div className="my-7 flex justify-center opacity-70">

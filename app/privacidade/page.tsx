@@ -48,7 +48,7 @@ export default function Privacidade() {
                   ['Nome completo', 'Emitir o ingresso nominal e conferir na portaria', 'Execução de contrato'],
                   ['CPF', 'Identificação na entrada, limite por comprador e exigência do gateway', 'Execução de contrato'],
                   ['E-mail', 'Enviar o ingresso e dar acesso à área do comprador', 'Execução de contrato'],
-                  ['Telefone', 'Contato sobre a compra e, se você marcar, envio do ingresso e lembretes do evento pelo WhatsApp', 'Execução de contrato e consentimento'],
+                  ['Telefone', 'Contato sobre a compra e, se você marcar, envio do ingresso pelo WhatsApp', 'Execução de contrato e consentimento'],
                   ['IP e data do aceite', 'Registro do consentimento aos termos', 'Obrigação legal'],
                   ['Horário de entrada', 'Controle de acesso e segurança do evento', 'Legítimo interesse'],
                 ].map((linha) => (
@@ -75,11 +75,11 @@ export default function Privacidade() {
               </li>
               <li>
                 <strong className="text-texto">Resend</strong> — envio dos e-mails
-                transacionais (ingresso, acesso e reembolso).
+                transacionais (ingresso, lembretes do evento, acesso e reembolso).
               </li>
               <li>
                 <strong className="text-texto">Meta (WhatsApp)</strong> — envio
-                do ingresso e dos lembretes, só para quem escolheu receber.
+                do ingresso, só para quem escolheu receber.
               </li>
               <li>
                 <strong className="text-texto">Supabase e Netlify</strong> —

@@ -358,3 +358,54 @@ export async function enviarEmailReembolso(dados: {
     </body></html>`,
   })
 }
+
+// ----------------------------------------------------------------------------
+//  Lembrete do evento — véspera e dia (lib/lembretes.ts)
+// ----------------------------------------------------------------------------
+export async function enviarEmailLembrete(dados: {
+  para: string
+  nome: string
+  quando: 'Amanhã' | 'Hoje'
+  eventoNome: string
+  horaPortoes: string
+  local: string
+  endereco: string
+  temMeia: boolean
+  linkIngresso: string
+}): Promise<void> {
+  const primeiroNome = dados.nome.trim().split(/\s+/)[0]
+  await resend().emails.send({
+    from: REMETENTE(),
+    replyTo: produtora.emailIngressos,
+    to: dados.para,
+    subject: `${dados.quando} tem ${dados.eventoNome} 🦉`,
+    html: `<!doctype html><html lang="pt-BR"><body style="margin:0;background:#0b0710;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;padding:40px 16px">
+      <table role="presentation" align="center" width="100%" style="max-width:480px;background:#120c1c;border:1px solid #2a1f38;border-radius:16px">
+        <tr><td style="padding:32px;text-align:center">
+          <div style="color:#d4a64a;font-size:11px;letter-spacing:.28em;font-weight:700;margin-bottom:20px">GOLDEN EYE PRODS.</div>
+          <h1 style="color:#f4f1f8;font-size:24px;margin:0 0 8px">${dados.quando} tem ${dados.eventoNome}</h1>
+          <p style="color:#a99bbd;font-size:14px;line-height:1.6;margin:0 0 20px">
+            Fala, ${primeiroNome}! Os portões abrem às <strong style="color:#f4f1f8">${dados.horaPortoes}</strong>.
+          </p>
+          <div style="background:#0b0710;border:1px solid #2a1f38;border-radius:12px;padding:16px 18px;margin-bottom:20px;text-align:left">
+            <div style="color:#d4a64a;font-size:10px;letter-spacing:.16em;margin-bottom:6px">ONDE</div>
+            <div style="color:#f4f1f8;font-size:15px;font-weight:600">${dados.local}</div>
+            <div style="color:#a99bbd;font-size:13px;margin-top:4px">${dados.endereco}</div>
+          </div>
+          ${
+            dados.temMeia
+              ? `<p style="color:#f4c542;font-size:13px;line-height:1.5;margin:0 0 20px">
+                   Seu ingresso é meia-entrada: leve o comprovante.
+                 </p>`
+              : ''
+          }
+          <a href="${dados.linkIngresso}" style="display:inline-block;background:#d4a64a;color:#0b0710;text-decoration:none;padding:14px 30px;border-radius:999px;font-weight:700;font-size:14px">Abrir meu ingresso</a>
+          <p style="color:#7e7290;font-size:12px;line-height:1.6;margin:20px 0 0">
+            Mostre o QR na entrada, junto com um documento com foto.<br>
+            Dúvidas: WhatsApp ${produtora.whatsappLabel}
+          </p>
+        </td></tr>
+      </table>
+    </body></html>`,
+  })
+}

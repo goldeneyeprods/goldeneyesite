@@ -17,3 +17,8 @@ export function urlDoSite(): string {
   if (!local && /^https?:\/\//.test(valor)) return valor
   return (process.env.URL ?? DOMINIO_OFICIAL).replace(/\/+$/, '')
 }
+
+/** Endereço público dos QR de um pedido, assinado. */
+export function linkDoIngresso(pedidoId: string, chave: string): string {
+  return `${urlDoSite()}/ingresso/${pedidoId}?k=${chave}`
+}
