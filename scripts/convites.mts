@@ -3,7 +3,9 @@
 //
 //    npx tsx scripts/convites.mts --para voce@exemplo.com "Fulane de Tal:2" "Ciclane:1"
 //    (opcional: --evento <slug>, padrão corujao-acido; --forcar emite de novo
-//     para um nome que já tem convite)
+//     para um nome que já tem convite; --fora-do-total para produção e
+//     acompanhantes: sobe o teto do evento na mesma quantidade, e a venda
+//     não perde lugar. Depois ajuste `ingressosAVenda` no config/site.ts!)
 //
 //  Cada convidado vira um pedido pago de R$ 0, com ingressos meia no nome dele,
 //  saídos do lote "Convite Especial" (cortesia: fora das fases e da cota de
@@ -35,6 +37,7 @@ const valor = (flag: string) => {
 const para = valor('--para')
 const slug = valor('--evento') ?? 'corujao-acido'
 const forcar = args.includes('--forcar')
+const foraDoTotal = args.includes('--fora-do-total')
 const convidados = args
   .filter((a) => !a.startsWith('--'))
   .map((a) => {
@@ -89,7 +92,24 @@ const emitidos = await sql.begin(async (tx) => {
   }
 
   const total = convidados.reduce((s, c) => s + c.qtd, 0)
-  if (total > estoque.restanteEvento) {
+  if (foraDoTotal) {
+    // Quem trabalha no show não tira lugar da venda: o teto cresce junto,
+    // mas nunca passa da capacidade da casa.
+    const [{ capacidade }] = await tx<{ capacidade: number }[]>`
+      select capacidade from eventos where id = ${evento.id}
+    `
+    if (estoque.teto + total > capacidade) {
+      throw new Error(
+        `A casa é para ${capacidade} e o total já é ${estoque.teto}: cabem mais ${capacidade - estoque.teto}.`
+      )
+    }
+    const [ev] = await tx<{ teto: number }[]>`
+      update eventos set ingressos_a_venda = ${estoque.teto + total}
+       where id = ${evento.id}
+      returning ingressos_a_venda as teto
+    `
+    console.log(`  teto do evento: ${estoque.teto} → ${ev.teto}`)
+  } else if (total > estoque.restanteEvento) {
     throw new Error(`Só cabem mais ${estoque.restanteEvento} no evento; pedidos ${total}.`)
   }
 
