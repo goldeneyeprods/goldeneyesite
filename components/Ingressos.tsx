@@ -222,26 +222,28 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
 
         <Ornamento className="my-12" />
 
-        {/* --- Quanto do evento já saiu --- */}
-        {!carregandoLotes && progresso !== null && (lotes.length > 0 || esgotadoTudo) && (
+        {/* --- Quanto do lote vigente já saiu --- */}
+        {!carregandoLotes && progresso !== null && lotes.length > 0 && !esgotadoTudo && (
           <div className="mb-8">
             <div className="flex items-baseline justify-between gap-3 text-xs">
-              <span className="uppercase tracking-widest text-texto-fraco">Ingressos</span>
+              <span className="uppercase tracking-widest text-texto-fraco">
+                {lotes[0].nome.split(' — ')[0]}
+              </span>
               <span className="tabular-nums text-texto-suave">
-                <strong className="texto-ouro">{esgotadoTudo ? 100 : progresso}%</strong> já foram
+                <strong className="texto-ouro">{progresso}%</strong> já foi
               </span>
             </div>
             <div
               className="mt-2 h-2.5 overflow-hidden rounded-full bg-borda/60"
               role="progressbar"
-              aria-label="Ingressos já vendidos"
+              aria-label="Quanto do lote já foi vendido"
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-valuenow={esgotadoTudo ? 100 : progresso}
+              aria-valuenow={progresso}
             >
               <div
                 className="h-full rounded-full bg-gradient-to-r from-ouro-escuro to-ouro transition-[width] duration-700"
-                style={{ width: `${Math.max(esgotadoTudo ? 100 : progresso, 2)}%` }}
+                style={{ width: `${Math.max(progresso, 2)}%` }}
               />
             </div>
           </div>

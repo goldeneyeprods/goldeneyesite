@@ -27,10 +27,10 @@ export async function GET(
     {
       // Nada à venda num evento com lotes cadastrados = esgotou.
       esgotado: !!evento && vigentes.length === 0,
-      // Quanto do evento já saiu (pagos + convites), de 0 a 100, para a barra.
+      // Quanto do lote vigente já foi pago, de 0 a 100, para a barra.
       progresso:
-        estoque && estoque.teto > 0
-          ? Math.min(100, Math.round((estoque.vendidosEvento / estoque.teto) * 100))
+        estoque && estoque.tamanhoFase > 0
+          ? Math.min(100, Math.round((estoque.vendidosFase / estoque.tamanhoFase) * 100))
           : null,
       lotes: vigentes.map((l) => ({
         id: l.id,

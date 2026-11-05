@@ -49,6 +49,9 @@ export interface Estoque {
   /** teto do evento e quantos ingressos já saíram de vez (pagos + convites) */
   teto: number
   vendidosEvento: number
+  /** lote vigente: tamanho real e quantos já foram pagos, para a barra */
+  tamanhoFase: number
+  vendidosFase: number
 }
 
 interface Linha {
@@ -61,6 +64,7 @@ interface Linha {
   valido_ate: Date | null
   quantidade_total: number
   ocupado: number
+  vendido: number
 }
 
 /**
@@ -83,7 +87,7 @@ export async function lerEstoque(
   const linhas = travar
     ? await q<Linha[]>`
         select id::int as id, nome, tipo, preco_centavos, fase, ordem, valido_ate, quantidade_total,
-               (quantidade_vendida + quantidade_reservada) as ocupado
+               (quantidade_vendida + quantidade_reservada) as ocupado, quantidade_vendida as vendido
           from lotes
          where evento_id = ${eventoId} and ativo = true and not cortesia
          order by id
@@ -91,7 +95,7 @@ export async function lerEstoque(
       `
     : await q<Linha[]>`
         select id::int as id, nome, tipo, preco_centavos, fase, ordem, valido_ate, quantidade_total,
-               (quantidade_vendida + quantidade_reservada) as ocupado
+               (quantidade_vendida + quantidade_reservada) as ocupado, quantidade_vendida as vendido
           from lotes
          where evento_id = ${eventoId} and ativo = true and not cortesia
       `
@@ -125,6 +129,8 @@ export async function lerEstoque(
   const agora = Date.now()
   let vigentes: LoteVigente[] = []
   let restanteFase = 0
+  let tamanhoFaseVigente = 0
+  let vendidosFase = 0
 
   if (restanteEvento > 0) {
     for (const f of ordemFases) {
@@ -139,6 +145,8 @@ export async function lerEstoque(
       // ainda cabe — no último, isso é o que sobrou dos anteriores, não o
       // teto inteiro.
       const tamanhoFase = ocupadoFase(ls) + restanteFase
+      tamanhoFaseVigente = tamanhoFase
+      vendidosFase = ls.reduce((s, l) => s + l.vendido, 0)
       const cotaMeia = Math.ceil(tamanhoFase * PERCENTUAL_MEIA)
       const meiaOcupada = ls
         .filter((l) => l.tipo === 'meia')
@@ -171,5 +179,6 @@ export async function lerEstoque(
      where evento_id = ${eventoId} and (ativo or cortesia)
   `
 
-  return { vigentes, restanteFase, restanteEvento, livrePorLote, teto, vendidosEvento: vendidos }
+  return { vigentes, restanteFase, restanteEvento, livrePorLote, teto, vendidosEvento: vendidos,
+    tamanhoFase: tamanhoFaseVigente, vendidosFase }
 }
