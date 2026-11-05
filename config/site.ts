@@ -443,8 +443,10 @@ export const eventos: EventoConfig[] = [
     // Ingressos à venda no total, somando todos os lotes. O último lote fica
     // com o que sobrar dos anteriores; o que não for vendido online até a
     // abertura é vendido na porta, pelo preço do último lote.
-    // Casa para 200; 10 lugares ficam para convidados e equipe das bandas.
-    ingressosAVenda: 190,
+    // Casa para 200, e este é o total de gente: venda + convites + produção.
+    // Eram 190; os 10 de folga foram para a produção (scripts/convites.mts
+    // --fora-do-total). Não baixe sem descontar os 26 ingressos de cortesia.
+    ingressosAVenda: 200,
 
     // Cada lote tem meia, inteira e entrada solidária (inteira + R$ 10 para
     // o Lar Betânia) dividindo a mesma quantidade; a meia de cada lote para
