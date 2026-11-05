@@ -99,6 +99,9 @@ alter table pedidos add column if not exists whatsapp_enviado_em timestamptz;
 alter table pedidos add column if not exists whatsapp_erro text;
 alter table pedidos add column if not exists lembrete_vespera_em timestamptz;
 alter table pedidos add column if not exists lembrete_dia_em timestamptz;
+-- lembrete pelo WhatsApp (mandado à mão pelo painel, ou pela API se ligada)
+alter table pedidos add column if not exists whatsapp_vespera_em timestamptz;
+alter table pedidos add column if not exists whatsapp_dia_em timestamptz;
 
 create table if not exists pedido_itens (
   id             bigserial primary key,

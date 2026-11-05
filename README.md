@@ -100,6 +100,16 @@ No Windows, sem openssl:
 2. Verifique seu domínio e ajuste `EMAIL_REMETENTE`.
 3. Sem domínio verificado, use `onboarding@resend.dev` — só envia para o seu próprio e-mail, serve para testar.
 
+### 4a. WhatsApp — envio à mão pelo painel (o padrão)
+
+Quem marca "receber pelo WhatsApp" na compra aparece em `/portaria/painel`
+(login de administrador), na lista **Mandar ingresso no WhatsApp**. O botão
+**Mandar** abre a conversa no WhatsApp Business do celular com a mensagem e o
+link do ingresso prontos; é só enviar. Na véspera e no dia do show (até abrir
+os portões) aparece também a lista **Lembrete**, do mesmo jeito. O lembrete
+por e-mail sai sozinho para todo mundo. Mandou por engano ou não mandou?
+Toque em "✓ enviado" e o pedido volta para a lista.
+
 ### 4b. WhatsApp — Cloud API da Meta (opcional)
 
 Com isso ligado, quem marca a opção na compra recebe o QR de cada ingresso no
@@ -223,6 +233,9 @@ Só depois disso troque para as credenciais de **produção**.
 - [ ] Testar o scanner **na iluminação real do Hangar7** (luz de festa engana)
 - [ ] Cadastrar todos os operadores com PIN próprio (`npm run db:seed`)
 - [ ] Instalar o app no celular de cada um: abrir `/portaria` → menu → *Adicionar à tela de início*
+
+**Véspera e no dia**
+- [ ] Mandar os lembretes do WhatsApp pelo painel (lista **Lembrete**)
 
 **No dia**
 - [ ] Cada operador faz login **com internet** antes de abrir os portões — é quando o pacote offline é baixado

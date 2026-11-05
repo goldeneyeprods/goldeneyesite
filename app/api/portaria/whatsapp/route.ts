@@ -5,6 +5,7 @@ import { sessaoDaRequisicao } from '@/lib/auth'
 import { chaveLinkPedido } from '@/lib/ticket'
 import { linkDoIngresso } from '@/lib/url'
 import { telefoneInternacional } from '@/lib/whatsapp'
+import { lembretesWhatsappDoDia } from '@/lib/lembretes'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -14,8 +15,9 @@ export const dynamic = 'force-dynamic'
 //
 //  Sem API da Meta: o painel abre a conversa do comprador no WhatsApp da
 //  produção com a mensagem pronta, e a produção só aperta enviar.
-//    GET  → pedidos pagos que pediram WhatsApp, com o link wa.me de cada um
-//    POST → { pedidoId, enviado } marca ou desmarca como enviado
+//    GET  → pedidos pagos que pediram WhatsApp, com o link wa.me de cada um,
+//           e, na véspera e no dia do evento, os lembretes a mandar
+//    POST → { pedidoId, tipo, enviado } marca ou desmarca como enviado
 // ============================================================================
 
 const fmtData = new Intl.DateTimeFormat('pt-BR', {
@@ -92,10 +94,23 @@ export async function GET(req: Request) {
     }
   })
 
-  return NextResponse.json({ pedidos: lista }, { headers: { 'Cache-Control': 'no-store' } })
+  return NextResponse.json(
+    { pedidos: lista, lembretes: await lembretesWhatsappDoDia(sessao.eventoId) },
+    { headers: { 'Cache-Control': 'no-store' } }
+  )
 }
 
-const schemaMarcar = z.object({ pedidoId: z.string().uuid(), enviado: z.boolean() })
+const COLUNAS = {
+  ingresso: 'whatsapp_enviado_em',
+  vespera: 'whatsapp_vespera_em',
+  dia: 'whatsapp_dia_em',
+} as const
+
+const schemaMarcar = z.object({
+  pedidoId: z.string().uuid(),
+  tipo: z.enum(['ingresso', 'vespera', 'dia']).default('ingresso'),
+  enviado: z.boolean(),
+})
 
 export async function POST(req: Request) {
   const sessao = await sessaoDaRequisicao(req)
@@ -107,7 +122,7 @@ export async function POST(req: Request) {
 
   await sql`
     update pedidos
-       set whatsapp_enviado_em = ${parsed.data.enviado ? sql`now()` : null}
+       set ${sql(COLUNAS[parsed.data.tipo])} = ${parsed.data.enviado ? sql`now()` : null}
      where id = ${parsed.data.pedidoId} and evento_id = ${sessao.eventoId}
   `
   return NextResponse.json({ ok: true })

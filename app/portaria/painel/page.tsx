@@ -241,14 +241,20 @@ interface EnvioWhatsapp {
   id: string
   nome: string
   telefone: string
-  ingresso: string
+  ingresso?: string
   enviadoEm: string | null
   link: string | null
 }
 
+type TipoEnvio = 'ingresso' | 'vespera' | 'dia'
+
+interface DadosWhatsapp {
+  pedidos: EnvioWhatsapp[]
+  lembretes: { qual: 'vespera' | 'dia'; itens: EnvioWhatsapp[] } | null
+}
+
 function EnviosWhatsapp() {
-  const [pedidos, setPedidos] = useState<EnvioWhatsapp[] | null>(null)
-  const [verEnviados, setVerEnviados] = useState(false)
+  const [dados, setDados] = useState<DadosWhatsapp | null>(null)
 
   const token = () => localStorage.getItem('ge_portaria_token') ?? ''
 
@@ -258,7 +264,7 @@ function EnviosWhatsapp() {
         headers: { Authorization: `Bearer ${token()}` },
         cache: 'no-store',
       })
-      if (r.ok) setPedidos((await r.json()).pedidos)
+      if (r.ok) setDados(await r.json())
     } catch {
       /* tenta de novo na próxima atualização */
     }
@@ -270,40 +276,79 @@ function EnviosWhatsapp() {
     return () => clearInterval(id)
   }, [])
 
-  async function marcar(id: string, enviado: boolean) {
-    setPedidos((atual) =>
-      atual?.map((p) => (p.id === id ? { ...p, enviadoEm: enviado ? new Date().toISOString() : null } : p)) ??
-      null
+  async function marcar(tipo: TipoEnvio, id: string, enviado: boolean) {
+    const quando = enviado ? new Date().toISOString() : null
+    const trocar = (lista: EnvioWhatsapp[]) =>
+      lista.map((p) => (p.id === id ? { ...p, enviadoEm: quando } : p))
+    setDados((atual) =>
+      !atual
+        ? atual
+        : tipo === 'ingresso'
+          ? { ...atual, pedidos: trocar(atual.pedidos) }
+          : { ...atual, lembretes: atual.lembretes && { ...atual.lembretes, itens: trocar(atual.lembretes.itens) } }
     )
     await fetch('/api/portaria/whatsapp', {
       method: 'POST',
       headers: { Authorization: `Bearer ${token()}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pedidoId: id, enviado }),
+      body: JSON.stringify({ pedidoId: id, tipo, enviado }),
     }).catch(() => carregar())
   }
 
-  if (!pedidos) return null
-  const pendentes = pedidos.filter((p) => !p.enviadoEm)
-  const visiveis = verEnviados ? pedidos : pendentes
+  if (!dados) return null
+  const lembrete = dados.lembretes
+
+  return (
+    <>
+      {lembrete && (
+        <ListaEnvios
+          titulo={lembrete.qual === 'vespera' ? 'Lembrete: o show é amanhã' : 'Lembrete: o show é hoje'}
+          explicacao="Mensagem com horário dos portões, endereço e o link do ingresso. O e-mail de lembrete sai sozinho; este é o reforço pelo WhatsApp."
+          vazio="Ninguém pediu pelo WhatsApp."
+          itens={lembrete.itens}
+          onMarcar={(id, enviado) => marcar(lembrete.qual, id, enviado)}
+        />
+      )}
+      <ListaEnvios
+        titulo="Mandar ingresso no WhatsApp"
+        explicacao="Abre a conversa no seu WhatsApp Business com a mensagem e o link do ingresso prontos. É só apertar enviar."
+        vazio="Ninguém pediu pelo WhatsApp ainda."
+        itens={dados.pedidos}
+        onMarcar={(id, enviado) => marcar('ingresso', id, enviado)}
+      />
+    </>
+  )
+}
+
+function ListaEnvios({
+  titulo,
+  explicacao,
+  vazio,
+  itens,
+  onMarcar,
+}: {
+  titulo: string
+  explicacao: string
+  vazio: string
+  itens: EnvioWhatsapp[]
+  onMarcar: (id: string, enviado: boolean) => void
+}) {
+  const [verEnviados, setVerEnviados] = useState(false)
+  const pendentes = itens.filter((p) => !p.enviadoEm)
+  const visiveis = verEnviados ? itens : pendentes
 
   return (
     <div className="cartao mt-5 p-5">
       <div className="flex items-center justify-between gap-3">
-        <p className="rotulo">Mandar ingresso no WhatsApp</p>
+        <p className="rotulo">{titulo}</p>
         <span className={`text-xs tabular-nums ${pendentes.length ? 'text-alerta' : 'text-texto-fraco'}`}>
           {pendentes.length} a mandar
         </span>
       </div>
-      <p className="mt-2 text-[11px] leading-relaxed text-texto-fraco">
-        Abre a conversa no seu WhatsApp Business com a mensagem e o link do
-        ingresso prontos. É só apertar enviar.
-      </p>
+      <p className="mt-2 text-[11px] leading-relaxed text-texto-fraco">{explicacao}</p>
 
       <div className="mt-4 space-y-2">
         {visiveis.length === 0 && (
-          <p className="text-sm text-texto-fraco">
-            {pedidos.length === 0 ? 'Ninguém pediu pelo WhatsApp ainda.' : 'Tudo enviado. 🦉'}
-          </p>
+          <p className="text-sm text-texto-fraco">{itens.length === 0 ? vazio : 'Tudo enviado. 🦉'}</p>
         )}
         {visiveis.map((p) => (
           <div
@@ -312,11 +357,11 @@ function EnviosWhatsapp() {
           >
             <div className="min-w-0">
               <p className="truncate text-sm text-texto">{p.nome}</p>
-              <p className="truncate text-[11px] text-texto-fraco">{p.ingresso}</p>
+              <p className="truncate text-[11px] text-texto-fraco">{p.ingresso ?? p.telefone}</p>
             </div>
             {p.enviadoEm ? (
               <button
-                onClick={() => marcar(p.id, false)}
+                onClick={() => onMarcar(p.id, false)}
                 className="shrink-0 text-[11px] text-ok"
                 title="Desmarcar"
               >
@@ -327,7 +372,7 @@ function EnviosWhatsapp() {
                 href={p.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => marcar(p.id, true)}
+                onClick={() => onMarcar(p.id, true)}
                 className="botao-ouro shrink-0 !px-4 !py-2 !text-xs"
               >
                 Mandar
@@ -339,12 +384,12 @@ function EnviosWhatsapp() {
         ))}
       </div>
 
-      {pedidos.length > pendentes.length && (
+      {itens.length > pendentes.length && (
         <button
           onClick={() => setVerEnviados((v) => !v)}
           className="mt-3 text-[11px] text-texto-fraco underline underline-offset-2"
         >
-          {verEnviados ? 'Esconder enviados' : `Ver enviados (${pedidos.length - pendentes.length})`}
+          {verEnviados ? 'Esconder enviados' : `Ver enviados (${itens.length - pendentes.length})`}
         </button>
       )}
     </div>
