@@ -22,6 +22,8 @@ export interface IngressoParaEmail {
   tipo: 'inteira' | 'meia'
   titularNome: string
   tokenQr: string
+  /** convite da produção: no ingresso aparece "CONVITE ESPECIAL", sem comprovante */
+  convite?: boolean
 }
 
 /** PNG do QR Code em base64, para embutir no e-mail e no PDF. */
@@ -100,7 +102,7 @@ export async function gerarPdfIngressos(
       ['DATA', evento.data],
       ['LOCAL', evento.local, evento.endereco],
       ['TITULAR', ing.titularNome],
-      ['TIPO', ing.tipo === 'meia' ? rotuloMeia : 'INTEIRA'],
+      ['TIPO', ing.convite ? 'CONVITE ESPECIAL' : ing.tipo === 'meia' ? rotuloMeia : 'INTEIRA'],
     ]
     let y = height - 152
     for (const [rotulo, valor, detalhe] of linhas) {
@@ -121,7 +123,7 @@ export async function gerarPdfIngressos(
       }
     }
 
-    if (ing.tipo === 'meia' && !evento.meiaSolidaria) {
+    if (ing.tipo === 'meia' && !evento.meiaSolidaria && !ing.convite) {
       pagina.drawText('Comprovante de meia-entrada obrigatório na portaria.', {
         x: 40, y: 46, size: 8, font: fonte, color: rgb(0.95, 0.8, 0.3),
       })
@@ -289,6 +291,82 @@ export async function enviarEmailConfirmacao(dados: {
     attachments: [
       {
         filename: `ingressos-${dados.eventoNome.toLowerCase().replace(/\s+/g, '-')}.pdf`,
+        content: pdf.toString('base64'),
+      },
+    ],
+  })
+}
+
+// ----------------------------------------------------------------------------
+//  Convite especial: vai para a produção, que encaminha ao convidado
+// ----------------------------------------------------------------------------
+export async function enviarEmailConvite(dados: {
+  para: string
+  convidado: string
+  eventoNome: string
+  dataFormatada: string
+  local: string
+  endereco: string
+  ingressos: IngressoParaEmail[]
+  linkIngresso: string
+}): Promise<void> {
+  const pdf = await gerarPdfIngressos(dados.ingressos, {
+    nome: dados.eventoNome,
+    local: dados.local,
+    endereco: dados.endereco,
+    data: dados.dataFormatada,
+  })
+  const n = dados.ingressos.length
+  const primeiro = dados.convidado.trim().split(/\s+/)[0]
+
+  const html = `<!doctype html>
+<html lang="pt-BR"><body style="margin:0;padding:0;background:#0b0710;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b0710;padding:32px 16px">
+    <tr><td align="center">
+      <table role="presentation" width="100%" style="max-width:560px;background:#120c1c;border:1px solid #2a1f38;border-radius:16px;overflow:hidden">
+        <tr><td style="padding:32px 32px 8px;text-align:center">
+          <div style="color:#d4a64a;font-size:12px;letter-spacing:.28em;font-weight:700">GOLDEN EYE PRODS.</div>
+        </td></tr>
+        <tr><td style="padding:16px 32px 0;text-align:center">
+          <div style="color:#d4a64a;font-size:13px;letter-spacing:.12em">✦ CONVITE ESPECIAL</div>
+          <h1 style="margin:12px 0 4px;color:#f4f1f8;font-size:28px;line-height:1.2">${dados.eventoNome}</h1>
+          <div style="color:#a99bbd;font-size:14px">${dados.dataFormatada}</div>
+        </td></tr>
+        <tr><td style="padding:24px 32px 32px">
+          <p style="color:#cdc4dc;font-size:15px;line-height:1.6;margin:0 0 20px">
+            Fala, ${primeiro}! Você está na lista de convidados da Golden Eye
+            Produções${n > 1 ? `, com ${n} entradas` : ''}. O ingresso vai em anexo, em PDF,
+            com o QR Code que a equipe lê na portaria. A tela do celular resolve.
+          </p>
+          <div style="background:#0b0710;border:1px solid #2a1f38;border-radius:12px;padding:18px 20px;margin-bottom:20px">
+            <div style="color:#d4a64a;font-size:10px;letter-spacing:.16em;margin-bottom:8px">ONDE</div>
+            <div style="color:#f4f1f8;font-size:15px;font-weight:600">${dados.local}</div>
+            <div style="color:#a99bbd;font-size:13px;margin-top:4px">${dados.endereco}</div>
+          </div>
+          <div style="text-align:center;margin:28px 0 8px">
+            <a href="${dados.linkIngresso}"
+               style="display:inline-block;background:#d4a64a;color:#0b0710;text-decoration:none;padding:14px 28px;border-radius:999px;font-weight:700;font-size:14px">
+              Abrir o ingresso
+            </a>
+          </div>
+          <p style="color:#5c5270;font-size:11px;margin:24px 0 0;text-align:center">
+            Dúvidas: WhatsApp ${produtora.whatsappLabel}
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`
+
+  await resend().emails.send({
+    from: REMETENTE(),
+    replyTo: produtora.emailIngressos,
+    to: dados.para,
+    subject: `✦ Convite especial — ${dados.eventoNome} — ${dados.convidado}${n > 1 ? ` (${n})` : ''}`,
+    html,
+    attachments: [
+      {
+        filename: `convite-${dados.convidado.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-')}.pdf`,
         content: pdf.toString('base64'),
       },
     ],

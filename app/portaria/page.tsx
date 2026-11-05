@@ -12,11 +12,11 @@ import { OlhoDeHorus } from '@/components/OlhoDeHorus'
 // ============================================================================
 
 type Resultado =
-  | { resultado: 'ok'; nome: string; tipo: 'inteira' | 'meia'; cpf: string; pedido: string }
+  | { resultado: 'ok'; nome: string; tipo: 'inteira' | 'meia'; convite?: boolean; cpf: string; pedido: string }
   | { resultado: 'ja_usado'; nome: string; usadoEm: string; usadoPor: string | null }
   | { resultado: 'cancelado'; nome: string }
   | { resultado: 'invalido'; motivo: string }
-  | { resultado: 'offline_ok'; nome: string; tipo: string }
+  | { resultado: 'offline_ok'; nome: string; tipo: string; convite?: boolean }
 
 interface Operador {
   id: number
@@ -50,7 +50,7 @@ export default function Portaria() {
 
   const [busca, setBusca] = useState('')
   const [resultadosBusca, setResultadosBusca] = useState<
-    { id: string; nome: string; cpf: string; cpfFinal: string; tipo: string; status: string }[]
+    { id: string; nome: string; cpf: string; cpfFinal: string; tipo: string; convite?: boolean; status: string }[]
   >([])
 
   const scannerRef = useRef<{ stop: () => Promise<void> } | null>(null)
@@ -234,7 +234,7 @@ export default function Portaria() {
         achado.s = 'usado'
         localStorage.setItem(CHAVE_PACOTE, JSON.stringify(pacote))
 
-        setResultado({ resultado: 'offline_ok', nome: achado.n, tipo: achado.t })
+        setResultado({ resultado: 'offline_ok', nome: achado.n, tipo: achado.t, convite: achado.c === 1 })
         navigator.vibrate?.(60)
         bipar(true)
         return
@@ -334,7 +334,7 @@ export default function Portaria() {
     })
     const d = await r.json()
     if (r.ok) {
-      setResultado({ resultado: 'ok', nome: d.nome, tipo: d.tipo, cpf: d.cpf, pedido: 'MANUAL' })
+      setResultado({ resultado: 'ok', nome: d.nome, tipo: d.tipo, convite: !!d.convite, cpf: d.cpf, pedido: 'MANUAL' })
       bipar(true)
     } else {
       alert(d.erro)
@@ -417,7 +417,14 @@ export default function Portaria() {
               <p className="mt-1 text-sm text-white/60">{resultado.cpf}</p>
             )}
 
-            {resultado.tipo === 'meia' && !operador.meiaSolidaria && (
+            {resultado.convite && (
+              <div className="mt-8 rounded-xl border-2 border-ouro bg-ouro/15 px-6 py-4">
+                <p className="font-display text-lg font-bold texto-ouro">✦ CONVITE ESPECIAL</p>
+                <p className="mt-1 text-sm text-white">Convidado da produção</p>
+              </div>
+            )}
+
+            {resultado.tipo === 'meia' && !resultado.convite && !operador.meiaSolidaria && (
               <div className="mt-8 rounded-xl border-2 border-alerta bg-alerta/20 px-6 py-4">
                 <p className="font-display text-lg font-bold text-alerta">
                   ⚠ MEIA-ENTRADA
@@ -574,8 +581,8 @@ export default function Portaria() {
                   <p className="truncate text-sm font-medium text-texto">{r.nome}</p>
                   <p className="text-xs text-texto-fraco">
                     {r.cpf} (final {r.cpfFinal}) ·{' '}
-                    <span className={r.tipo === 'meia' ? 'text-alerta' : ''}>
-                      {r.tipo === 'meia' ? 'MEIA' : 'INTEIRA'}
+                    <span className={r.convite ? 'text-ouro' : r.tipo === 'meia' ? 'text-alerta' : ''}>
+                      {r.convite ? 'CONVITE' : r.tipo === 'meia' ? 'MEIA' : 'INTEIRA'}
                     </span>
                   </p>
                 </div>

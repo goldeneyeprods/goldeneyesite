@@ -16,6 +16,8 @@ import { produtora } from '@/config/site'
 interface Ingresso {
   id: string
   tipo: string
+  /** convite da produção: entra sem comprovante de meia */
+  convite?: boolean
   titularNome: string
   titularCpf: string
   tokenQr: string | null
@@ -312,10 +314,16 @@ export default function MeusIngressos() {
                               {i.titularCpf} ·{' '}
                               <span
                                 className={
-                                  i.tipo === 'meia' && !p.evento.meiaSolidaria ? 'text-alerta' : ''
+                                  i.convite
+                                    ? 'text-ouro'
+                                    : i.tipo === 'meia' && !p.evento.meiaSolidaria
+                                      ? 'text-alerta'
+                                      : ''
                                 }
                               >
-                                {i.tipo === 'meia'
+                                {i.convite
+                                  ? 'Convite especial'
+                                  : i.tipo === 'meia'
                                   ? p.evento.meiaSolidaria
                                     ? 'Meia solidária'
                                     : 'Meia-entrada'
@@ -516,13 +524,15 @@ export default function MeusIngressos() {
               {qrAberto.titularNome}
             </p>
             <p className="mt-1 text-xs text-texto-suave">
-              {qrAberto.tipo === 'meia'
+              {qrAberto.convite
+                ? 'Convite especial'
+                : qrAberto.tipo === 'meia'
                 ? qrAberto.meiaSolidaria
                   ? 'Meia solidária'
                   : 'Meia-entrada'
                 : 'Inteira'}
             </p>
-            {qrAberto.tipo === 'meia' && !qrAberto.meiaSolidaria && (
+            {qrAberto.tipo === 'meia' && !qrAberto.convite && !qrAberto.meiaSolidaria && (
               <p className="mx-auto mt-4 max-w-[280px] text-[11px] leading-relaxed text-alerta">
                 Leve o comprovante de meia-entrada, ou a diferença será cobrada
                 na portaria.

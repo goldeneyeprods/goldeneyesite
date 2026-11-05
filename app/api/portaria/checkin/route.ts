@@ -17,7 +17,7 @@ export const dynamic = 'force-dynamic'
 // ============================================================================
 
 export type ResultadoCheckin =
-  | { resultado: 'ok'; nome: string; tipo: 'inteira' | 'meia'; cpf: string; pedido: string }
+  | { resultado: 'ok'; nome: string; tipo: 'inteira' | 'meia'; convite: boolean; cpf: string; pedido: string }
   | { resultado: 'ja_usado'; nome: string; usadoEm: string; usadoPor: string | null }
   | { resultado: 'cancelado'; nome: string }
   | { resultado: 'invalido'; motivo: string }
@@ -57,17 +57,20 @@ export async function POST(req: Request) {
 
   // ---- 3. Check-in atômico ------------------------------------------------
   const [marcado] = await sql<
-    { id: string; titular_nome: string; titular_cpf: string; tipo: 'inteira' | 'meia'; pedido_id: string }[]
+    { id: string; titular_nome: string; titular_cpf: string; tipo: 'inteira' | 'meia'; pedido_id: string; convite: boolean }[]
   >`
     update ingressos
        set status    = 'usado',
            usado_em  = now(),
            usado_por = ${sessao.operadorId},
            gate      = ${parsed.data.gate ?? sessao.gate}
-     where id = ${payload.i}
-       and evento_id = ${sessao.eventoId}
-       and status = 'valido'
-    returning id, titular_nome, titular_cpf, tipo, pedido_id
+      from lotes l
+     where ingressos.id = ${payload.i}
+       and ingressos.evento_id = ${sessao.eventoId}
+       and ingressos.status = 'valido'
+       and l.id = ingressos.lote_id
+    returning ingressos.id, ingressos.titular_nome, ingressos.titular_cpf, ingressos.tipo,
+              ingressos.pedido_id, l.cortesia as convite
   `
 
   if (marcado) {
@@ -76,6 +79,7 @@ export async function POST(req: Request) {
       resultado: 'ok',
       nome: marcado.titular_nome,
       tipo: marcado.tipo,
+      convite: marcado.convite,
       cpf: mascararCpf(marcado.titular_cpf),
       pedido: marcado.pedido_id.slice(0, 8).toUpperCase(),
     } satisfies ResultadoCheckin)

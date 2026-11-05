@@ -110,6 +110,19 @@ os portões) aparece também a lista **Lembrete**, do mesmo jeito. O lembrete
 por e-mail sai sozinho para todo mundo. Mandou por engano ou não mandou?
 Toque em "✓ enviado" e o pedido volta para a lista.
 
+### 4c. Convites especiais (cortesia)
+
+```bash
+npx tsx scripts/convites.mts --para seu@email.com "Fulane de Tal:2" "Ciclane:1"
+```
+
+Cada convidado vira um pedido de R$ 0 com ingressos no nome dele. O PDF de
+cada um chega no e-mail de `--para`, para você encaminhar. Os convites contam
+no total do evento (`ingressosAVenda`) e aparecem como meia no painel, mas não
+gastam a cota de meia dos lotes, e na portaria aparecem como **CONVITE
+ESPECIAL**, sem pedir comprovante. Rodar de novo com o mesmo nome dá erro (para
+não duplicar); para mandar mais para alguém, use `--forcar`.
+
 ### 4b. WhatsApp — Cloud API da Meta (opcional)
 
 Com isso ligado, quem marca a opção na compra recebe o QR de cada ingresso no

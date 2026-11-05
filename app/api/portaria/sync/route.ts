@@ -22,11 +22,12 @@ export async function GET(req: Request) {
   if (!sessao) return NextResponse.json({ erro: 'Sessão expirada' }, { status: 401 })
 
   const ingressos = await sql<
-    { id: string; token_qr: string; titular_nome: string; tipo: string; status: string }[]
+    { id: string; token_qr: string; titular_nome: string; tipo: string; status: string; convite: boolean }[]
   >`
-    select id, token_qr, titular_nome, tipo, status
-      from ingressos
-     where evento_id = ${sessao.eventoId} and status in ('valido','usado')
+    select i.id, i.token_qr, i.titular_nome, i.tipo, i.status, l.cortesia as convite
+      from ingressos i
+      join lotes l on l.id = i.lote_id
+     where i.evento_id = ${sessao.eventoId} and i.status in ('valido','usado')
   `
 
   // Mandamos o HASH do token, nunca o token puro: se o celular do segurança
@@ -41,6 +42,7 @@ export async function GET(req: Request) {
         n: i.titular_nome,
         t: i.tipo,
         s: i.status,
+        ...(i.convite ? { c: 1 } : {}),
       })),
     },
     { headers: { 'Cache-Control': 'no-store' } }

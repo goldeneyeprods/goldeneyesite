@@ -49,6 +49,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
 
   const [lotes, setLotes] = useState<Lote[]>([])
   const [esgotadoEvento, setEsgotadoEvento] = useState(false)
+  const [progresso, setProgresso] = useState<number | null>(null)
   const [carregandoLotes, setCarregandoLotes] = useState(true)
   const solidaria = !!evento.meiaSolidaria
   const [qtds, setQtds] = useState<Record<number, number>>({})
@@ -75,6 +76,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
         const novos: Lote[] = d.lotes ?? []
         setLotes(novos)
         setEsgotadoEvento(!!d.esgotado)
+        setProgresso(typeof d.progresso === 'number' ? d.progresso : null)
         // O lote pode ter virado: quantidade escolhida de lote que saiu some.
         setQtds((atual) =>
           Object.fromEntries(
@@ -219,6 +221,31 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
         </div>
 
         <Ornamento className="my-12" />
+
+        {/* --- Quanto do evento já saiu --- */}
+        {!carregandoLotes && progresso !== null && (lotes.length > 0 || esgotadoTudo) && (
+          <div className="mb-8">
+            <div className="flex items-baseline justify-between gap-3 text-xs">
+              <span className="uppercase tracking-widest text-texto-fraco">Ingressos</span>
+              <span className="tabular-nums text-texto-suave">
+                <strong className="texto-ouro">{esgotadoTudo ? 100 : progresso}%</strong> já foram
+              </span>
+            </div>
+            <div
+              className="mt-2 h-2.5 overflow-hidden rounded-full bg-borda/60"
+              role="progressbar"
+              aria-label="Ingressos já vendidos"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={esgotadoTudo ? 100 : progresso}
+            >
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-ouro-escuro to-ouro transition-[width] duration-700"
+                style={{ width: `${Math.max(esgotadoTudo ? 100 : progresso, 2)}%` }}
+              />
+            </div>
+          </div>
+        )}
 
         {/* --- LOTES --- */}
         {carregandoLotes ? (

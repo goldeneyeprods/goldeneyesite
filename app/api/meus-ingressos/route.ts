@@ -55,12 +55,14 @@ export async function GET() {
       token_qr: string
       status: string
       usado_em: Date | null
+      convite: boolean
     }[]
   >`
     select i.id, i.pedido_id, i.tipo, i.titular_nome, i.titular_cpf,
-           i.token_qr, i.status, i.usado_em
+           i.token_qr, i.status, i.usado_em, l.cortesia as convite
       from ingressos i
       join pedidos p on p.id = i.pedido_id
+      join lotes l on l.id = i.lote_id
      where lower(p.comprador_email) = ${email}
      order by i.criado_em
   `
@@ -113,6 +115,7 @@ export async function GET() {
       ingressos: meus.map((i) => ({
         id: i.id,
         tipo: i.tipo,
+        convite: i.convite,
         titularNome: i.titular_nome,
         titularCpf: mascararCpf(i.titular_cpf),
         tokenQr: i.status === 'valido' ? i.token_qr : null,

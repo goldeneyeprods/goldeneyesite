@@ -58,6 +58,9 @@ create table if not exists lotes (
 alter table lotes add column if not exists fase integer not null default 1;
 -- Parte de cada ingresso que vai para doação (entrada solidária).
 alter table lotes add column if not exists doacao_centavos integer not null default 0;
+-- Lote de convite (cortesia): nunca vai à venda, mas o que sai dele conta no
+-- teto do evento. Fica com ativo = false, fora das fases e da cota de meia.
+alter table lotes add column if not exists cortesia boolean not null default false;
 
 create index if not exists idx_lotes_evento on lotes (evento_id, ativo, ordem);
 

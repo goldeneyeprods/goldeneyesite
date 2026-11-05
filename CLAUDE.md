@@ -14,6 +14,7 @@ npx tsc --noEmit   # só os tipos
 npm run db:setup   # roda schema.sql (idempotente: create/alter if not exists)
 npm run db:seed    # grava eventos/lotes do config/site.ts e pede operadores da portaria
 npm run mp:check   # diagnóstico real da conta Mercado Pago (cria e cancela PIX de R$ 0,01)
+npx tsx scripts/convites.mts --para <email> "Nome:2"   # emite convites (cortesia) e manda o PDF
 ```
 
 Não há testes automatizados. Valide com `tsc`/`build` e com o checklist de
@@ -54,6 +55,10 @@ Lotes com a mesma `fase` dividem a `quantidade` (meia + inteira) e só a menor
 fase aberta vende. A fase fecha no `validoAte` ou ao esgotar. `ingressosAVenda`
 é o teto do evento; o último lote tem quantidade igual ao teto para ficar com
 "o que sobrou". Use o atalho `lote(fase, nome, precoMeia, qtd, validoAte?)`.
+Convites saem do lote `cortesia` (inativo, tipo meia, R$ 0, criado pelo
+`scripts/convites.mts`): fora das fases e da cota de meia, mas contam no teto.
+Na portaria, no PDF e nas telas aparecem como "CONVITE ESPECIAL", sem cobrar
+comprovante; não recebem lembrete (o e-mail é o da produção).
 Rodar o seed de novo atualiza preço/quantidade/data sem tocar no vendido.
 
 ## Conteúdo

@@ -33,10 +33,13 @@ export async function GET(req: Request) {
       tipo: string
       status: string
       usado_em: Date | null
+      convite: boolean
     }[]
   >`
-    select i.id, i.titular_nome, i.titular_cpf, i.tipo, i.status, i.usado_em
+    select i.id, i.titular_nome, i.titular_cpf, i.tipo, i.status, i.usado_em,
+           l.cortesia as convite
       from ingressos i
+      join lotes l on l.id = i.lote_id
      where i.evento_id = ${sessao.eventoId}
        and (
          ${porCpf}::boolean and i.titular_cpf like ${'%' + digitos + '%'}
@@ -54,6 +57,7 @@ export async function GET(req: Request) {
       // Últimos 3 dígitos abertos para conferir com o documento na mão.
       cpfFinal: r.titular_cpf.slice(-3),
       tipo: r.tipo,
+      convite: r.convite,
       status: r.status,
       usadoEm: r.usado_em,
     })),
@@ -71,13 +75,15 @@ export async function POST(req: Request) {
   }
 
   const [marcado] = await sql<
-    { titular_nome: string; tipo: 'inteira' | 'meia'; titular_cpf: string }[]
+    { titular_nome: string; tipo: 'inteira' | 'meia'; titular_cpf: string; convite: boolean }[]
   >`
     update ingressos
        set status = 'usado', usado_em = now(),
            usado_por = ${sessao.operadorId}, gate = ${sessao.gate}
-     where id = ${id} and evento_id = ${sessao.eventoId} and status = 'valido'
-    returning titular_nome, tipo, titular_cpf
+      from lotes l
+     where ingressos.id = ${id} and ingressos.evento_id = ${sessao.eventoId}
+       and ingressos.status = 'valido' and l.id = ingressos.lote_id
+    returning ingressos.titular_nome, ingressos.tipo, ingressos.titular_cpf, l.cortesia as convite
   `
 
   if (!marcado) {
@@ -98,6 +104,7 @@ export async function POST(req: Request) {
     ok: true,
     nome: marcado.titular_nome,
     tipo: marcado.tipo,
+    convite: marcado.convite,
     cpf: mascararCpf(marcado.titular_cpf),
   })
 }

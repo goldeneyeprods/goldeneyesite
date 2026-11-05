@@ -52,9 +52,9 @@ export default async function PaginaIngresso({
   if (!pedido) notFound()
 
   const ingressos = await sql<
-    { id: string; titular_nome: string; tipo: string; status: string; token_qr: string; lote: string }[]
+    { id: string; titular_nome: string; tipo: string; status: string; token_qr: string; lote: string; convite: boolean }[]
   >`
-    select i.id, i.titular_nome, i.tipo, i.status, i.token_qr, l.nome as lote
+    select i.id, i.titular_nome, i.tipo, i.status, i.token_qr, l.nome as lote, l.cortesia as convite
       from ingressos i
       join lotes l on l.id = i.lote_id
      where i.pedido_id = ${id}
@@ -66,7 +66,7 @@ export default async function PaginaIngresso({
     timeStyle: 'short',
     timeZone: 'America/Sao_Paulo',
   }).format(new Date(pedido.data_inicio))
-  const temMeia = !pedido.meia_solidaria && ingressos.some((i) => i.tipo === 'meia')
+  const temMeia = !pedido.meia_solidaria && ingressos.some((i) => i.tipo === 'meia' && !i.convite)
 
   return (
     <div id="conteudo" className="min-h-svh px-5 py-10">

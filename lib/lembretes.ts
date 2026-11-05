@@ -47,6 +47,9 @@ async function reservar(qual: 'vespera' | 'dia'): Promise<Alvo[]> {
          and now() < e.abertura_portoes
          -- quem acabou de comprar já recebeu o ingresso agora há pouco
          and p.pago_em < now() - interval '3 hours'
+         -- convite vai para o e-mail da produção, não para o convidado
+         and not exists (select 1 from pedido_itens pi join lotes l on l.id = pi.lote_id
+                          where pi.pedido_id = p.id and l.cortesia)
        limit 40
        for update of p skip locked
     )

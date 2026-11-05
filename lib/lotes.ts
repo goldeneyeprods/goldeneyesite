@@ -11,6 +11,9 @@ import type { Sql, TransactionSql } from 'postgres'
 //  costuma ter quantidade igual ao teto, e é o teto que faz dele "o que
 //  sobrou" dos lotes anteriores.
 //
+//  Convites saem de um lote de cortesia (`cortesia`, sempre inativo): não
+//  entram nas fases nem na cota de meia, mas ocupam lugar no teto.
+//
 //  Meia-entrada: em cada lote, a meia vende até 40% da quantidade do lote
 //  (Lei 12.933/13), arredondado para cima para nunca ficar abaixo da lei.
 //  Passou disso, a meia daquele lote bloqueia e só a inteira continua.
@@ -43,6 +46,9 @@ export interface Estoque {
   restanteEvento: number
   /** espaço livre de cada lote, ignorando fase e data — para casos de exceção */
   livrePorLote: Map<number, number>
+  /** teto do evento e quantos ingressos já saíram de vez (pagos + convites) */
+  teto: number
+  vendidosEvento: number
 }
 
 interface Linha {
@@ -79,7 +85,7 @@ export async function lerEstoque(
         select id::int as id, nome, tipo, preco_centavos, fase, ordem, valido_ate, quantidade_total,
                (quantidade_vendida + quantidade_reservada) as ocupado
           from lotes
-         where evento_id = ${eventoId} and ativo = true
+         where evento_id = ${eventoId} and ativo = true and not cortesia
          order by id
            for update
       `
@@ -87,8 +93,14 @@ export async function lerEstoque(
         select id::int as id, nome, tipo, preco_centavos, fase, ordem, valido_ate, quantidade_total,
                (quantidade_vendida + quantidade_reservada) as ocupado
           from lotes
-         where evento_id = ${eventoId} and ativo = true
+         where evento_id = ${eventoId} and ativo = true and not cortesia
       `
+
+  const [cortesia] = await q<{ ocupado: number }[]>`
+    select coalesce(sum(quantidade_vendida + quantidade_reservada), 0)::int as ocupado
+      from lotes
+     where evento_id = ${eventoId} and cortesia
+  `
 
   // Agrupa por fase.
   const fases = new Map<number, Linha[]>()
@@ -101,7 +113,10 @@ export async function lerEstoque(
   const teto =
     evento?.ingressos_a_venda ??
     ordemFases.reduce((s, f) => s + capacidadeFase(fases.get(f)!), 0)
-  const restanteEvento = Math.max(teto - linhas.reduce((s, l) => s + l.ocupado, 0), 0)
+  const restanteEvento = Math.max(
+    teto - linhas.reduce((s, l) => s + l.ocupado, 0) - cortesia.ocupado,
+    0
+  )
 
   const livrePorLote = new Map(
     linhas.map((l) => [l.id, Math.max(l.quantidade_total - l.ocupado, 0)])
@@ -150,5 +165,11 @@ export async function lerEstoque(
     }
   }
 
-  return { vigentes, restanteFase, restanteEvento, livrePorLote }
+  const [{ vendidos }] = await q<{ vendidos: number }[]>`
+    select coalesce(sum(quantidade_vendida), 0)::int as vendidos
+      from lotes
+     where evento_id = ${eventoId} and (ativo or cortesia)
+  `
+
+  return { vigentes, restanteFase, restanteEvento, livrePorLote, teto, vendidosEvento: vendidos }
 }
