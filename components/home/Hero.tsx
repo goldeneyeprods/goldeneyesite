@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { produtora, bandas, type EventoConfig } from '@/config/site'
 import { SimboloMarca, corDaMarca } from '../Marcas'
@@ -114,21 +115,42 @@ function IngressoDeCinema({ evento }: { evento: EventoConfig }) {
       className="overflow-hidden rounded-2xl border"
       style={{ borderColor: c.borda, background: '#120a1c' }}
     >
-      {/* A arte: o símbolo da marca dentro dos anéis */}
-      <div
-        className="relative flex h-44 items-center justify-center overflow-hidden sm:h-56"
+      {/* A arte: o cartaz original (recortado no título e na coruja); sem
+          cartaz, o símbolo da marca dentro dos anéis */}
+      <Link
+        href={`/eventos/${evento.slug}`}
+        className={`relative flex items-center justify-center overflow-hidden ${
+          evento.cartaz ? 'aspect-[4/3]' : 'h-44 sm:h-56'
+        }`}
         style={{ background: c.fundo }}
+        tabIndex={-1}
+        aria-hidden="true"
       >
-        <div
-          className="aneis h-[30rem] w-[30rem]"
-          style={{ ['--cor-anel' as string]: `${c.cor}55` }}
-          aria-hidden="true"
-        />
+        {evento.cartaz ? (
+          <>
+            <Image
+              src={evento.cartaz}
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 1024px) 92vw, 520px"
+              className="object-cover object-[50%_3%]"
+            />
+            <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#120a1c] to-transparent" />
+          </>
+        ) : (
+          <>
+            <div
+              className="aneis h-[30rem] w-[30rem]"
+              style={{ ['--cor-anel' as string]: `${c.cor}55` }}
+            />
+            <SimboloMarca marca={marca} className="relative h-24 w-24 sm:h-28 sm:w-28" />
+          </>
+        )}
         <span className="absolute left-4 top-4 rounded-full bg-noite/85 px-3.5 py-1.5 text-[10px] uppercase tracking-[0.26em] text-texto-suave">
           Próximo evento
         </span>
-        <SimboloMarca marca={marca} className="relative h-24 w-24 sm:h-28 sm:w-28" />
-      </div>
+      </Link>
 
       <div className="picote" style={{ ['--cor-picote' as string]: `${c.clara}88` }} />
 

@@ -43,7 +43,7 @@ export function Universos({ proximos }: { proximos: EventoConfig[] }) {
               ? vende
                 ? 'ingressos à venda'
                 : `${quando(evento.dataInicio)}`
-              : 'em breve'
+              : 'no caldeirão'
             const aviso = `https://wa.me/${produtora.whatsapp}?text=${encodeURIComponent(
               `Oi! Quero ser avisado quando sair data do ${u.nome}.`
             )}`
@@ -74,7 +74,7 @@ export function Universos({ proximos }: { proximos: EventoConfig[] }) {
                   </h3>
                   {/* no celular o portal é uma linha só */}
                   <p className="mt-0.5 text-sm md:hidden" style={{ color: c.clara }}>
-                    {u.tipo} · {evento ? `${quando(evento.dataInicio)} ${vende ? 'à venda' : ''}` : 'em breve'}
+                    {u.tipo} · {evento ? `${quando(evento.dataInicio)} ${vende ? 'à venda' : ''}` : 'no caldeirão'}
                   </p>
                   <p className="mt-4 hidden text-[15px] leading-relaxed text-texto-suave md:block">
                     {u.texto}
