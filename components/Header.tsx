@@ -3,22 +3,34 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Marca } from './OlhoDeHorus'
+import { OlhoDeHorus } from './OlhoDeHorus'
 
 // ============================================================================
 //  HEADER
-//  O menu é o mesmo em todas as páginas, para ninguém se perder. Só o botão
-//  dourado da direita muda conforme a página (ingressos, contratar…).
+//  O menu é o mesmo em todas as páginas, para ninguém se perder. Fundo
+//  sempre sólido: nada de menu transparente passando por cima do texto.
+//  O botão da direita é contorno — o dourado cheio fica para a compra.
 // ============================================================================
 
 const MENU = [
   { href: '/#agenda', rotulo: 'Agenda' },
-  { href: '/eventos', rotulo: 'Eventos' },
+  { href: '/#universos', rotulo: 'Festivais' },
   { href: '/bandas', rotulo: 'Bandas' },
-  { href: '/#registros', rotulo: 'Registros' },
-  { href: '/#sobre', rotulo: 'A produtora' },
-  { href: '/#faq', rotulo: 'Dúvidas' },
+  { href: '/#arquivo', rotulo: 'Arquivo' },
+  { href: '/#quem-faz', rotulo: 'Quem faz' },
 ]
+
+/** Símbolo pequeno + o nome: a logo completa fica para usos grandes. */
+function Assinatura() {
+  return (
+    <span className="flex items-center gap-3">
+      <OlhoDeHorus tamanho={46} brilho={false} prioridade />
+      <span className="font-display text-[15px] font-bold tracking-[0.04em] text-texto sm:text-base">
+        Golden Eye <span className="text-ouro">Prods.</span>
+      </span>
+    </span>
+  )
+}
 
 export function Header({
   cta,
@@ -51,21 +63,19 @@ export function Header({
   return (
     <>
       <header
-        className={`sem-impressao fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-          rolou
-            ? 'border-b border-borda bg-noite/85 backdrop-blur-xl'
-            : 'border-b border-transparent'
+        className={`sem-impressao fixed inset-x-0 top-0 z-50 border-b bg-noite/92 backdrop-blur-xl transition-colors duration-300 ${
+          rolou ? 'border-borda' : 'border-borda/40'
         }`}
       >
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           {/* A marca SEMPRE leva para a home da produtora */}
           <div className="flex items-center gap-3">
             <Link href="/" aria-label="Golden Eye Prods. — início">
-              <Marca compacta />
+              <Assinatura />
             </Link>
           </div>
 
-          <ul className="hidden items-center gap-8 lg:flex">
+          <ul className="hidden items-center gap-7 lg:flex">
             {links.map((l) => (
               <li key={l.href}>
                 <a
@@ -89,19 +99,19 @@ export function Header({
               Meus ingressos
             </Link>
             {cta && (
-              <a href={cta.href} className="botao-ouro hidden !px-6 !py-2.5 !text-sm md:inline-flex">
+              <a href={cta.href} className="botao-fantasma hidden !px-5 !py-2 !text-sm md:inline-flex">
                 {cta.rotulo}
               </a>
             )}
 
             <button
               onClick={() => setAberto(true)}
-              className="p-2 text-texto lg:hidden"
+              className="rounded-xl border border-borda p-2.5 text-ouro lg:hidden"
               aria-label="Abrir menu"
               aria-expanded={aberto}
             >
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M3 6h18M3 12h18M3 18h18" strokeLinecap="round" />
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 7h16M4 12h12M4 17h8" strokeLinecap="round" />
               </svg>
             </button>
           </div>
@@ -112,7 +122,7 @@ export function Header({
       {aberto && (
         <div className="fixed inset-0 z-[70] bg-noite/98 backdrop-blur-2xl lg:hidden">
           <div className="flex items-center justify-between px-5 py-4">
-            <Marca compacta />
+            <Assinatura />
             <button onClick={() => setAberto(false)} className="p-2 text-texto" aria-label="Fechar menu">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />

@@ -1,29 +1,29 @@
-import Link from 'next/link'
 import { Header } from '@/components/Header'
-import { HeroProdutora } from '@/components/HeroProdutora'
 import { CardEvento } from '@/components/CardEvento'
-import { CardBanda } from '@/components/CardBanda'
-import { Contador } from '@/components/Contador'
-import { Galeria } from '@/components/Galeria'
-import { Videos } from '@/components/Videos'
-import { Sobre } from '@/components/Sobre'
 import { FAQ } from '@/components/FAQ'
 import { Footer } from '@/components/Footer'
-import { Ornamento } from '@/components/OlhoDeHorus'
+import { Hero, linkDeCompra } from '@/components/home/Hero'
+import { Creditos } from '@/components/home/Creditos'
+import { Universos } from '@/components/home/Universos'
+import { Dossies } from '@/components/home/Dossies'
+import { Arquivo } from '@/components/home/Arquivo'
+import { Manifesto } from '@/components/home/Manifesto'
+import { BarraCompra } from '@/components/home/BarraCompra'
 import {
   produtora,
   proximosEventos,
   eventosPassados,
   todasAsFotos,
-  todosOsVideos,
   bandas,
 } from '@/config/site'
 import { urlDoSite } from '@/lib/url'
 
 // ============================================================================
 //  HOME — A PRODUTORA
-//  Aqui quem se apresenta é a Golden Eye. Os eventos aparecem como agenda e
-//  arquivo, cada um com link para a própria página em /eventos/<slug>.
+//  Direção "a noite como ritual" (noir · 007 · Egito). A primeira tela diz
+//  quem é a Golden Eye e já mostra o próximo evento como ingresso de cinema,
+//  com o único botão dourado da tela. Depois: créditos, os três universos,
+//  os dossiês das bandas, o arquivo em tira de filme e o manifesto.
 // ============================================================================
 
 
@@ -32,8 +32,28 @@ export default function Home() {
   const passados = eventosPassados()
   const destaque = proximos[0]
   const outros = proximos.slice(1)
-  const fotos = todasAsFotos()
-  const videos = todosOsVideos()
+  const totalFotos = todasAsFotos().length
+  const creditos = [
+    ...(destaque?.bandas ?? [])
+      .map((s) => bandas.find((b) => b.slug === s)?.nome)
+      .filter((n): n is string => !!n),
+    'Fuzz',
+    'Luz líquida',
+    'Projeção',
+    'Vinil até a madrugada',
+  ]
+  const compra = destaque ? linkDeCompra(destaque) : null
+  const quandoDestaque = destaque
+    ? new Intl.DateTimeFormat('pt-BR', {
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'America/Sao_Paulo',
+      })
+        .format(new Date(destaque.dataInicio))
+        .replace('.', '')
+    : ''
 
   // Dados estruturados da organização: ajudam o Google a entender que a
   // Golden Eye é a produtora, e não apenas mais uma página de evento.
@@ -67,181 +87,48 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <Header
-        cta={destaque ? { href: '#agenda', rotulo: 'Próximo evento' } : undefined}
-      />
+      <Header />
 
       <main id="conteudo">
-        <HeroProdutora />
+        <div id="agenda">
+          <Hero destaque={destaque} />
+        </div>
 
-        <div className="divisor mx-auto max-w-5xl" />
+        <Creditos itens={creditos} />
 
-        {/* ================= AGENDA ================= */}
-        <section id="agenda" className="relative px-5 py-24 sm:py-32">
-          <div className="mx-auto max-w-5xl">
-            <div className="text-center">
-              <p className="rotulo">O que vem por aí</p>
-              <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
-                Agenda
-              </h2>
+        {/* Mais de um evento marcado: os outros entram logo abaixo */}
+        {outros.length > 0 && (
+          <section className="px-5 pt-20">
+            <div className="mx-auto max-w-6xl">
+              <p className="rotulo">Também na agenda</p>
+              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {outros.map((e) => (
+                  <CardEvento key={e.slug} evento={e} />
+                ))}
+              </div>
             </div>
-
-            <Ornamento className="my-12" />
-
-            {destaque ? (
-              <>
-                <CardEvento evento={destaque} destaque />
-
-                {/* Contador do próximo, logo abaixo do card */}
-                <div className="mt-10 flex flex-col items-center">
-                  <p className="mb-5 text-[10px] uppercase tracking-[0.3em] text-texto-fraco">
-                    Faltam
-                  </p>
-                  <Contador ate={destaque.dataInicio} />
-                </div>
-
-                {outros.length > 0 && (
-                  <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                    {outros.map((e) => (
-                      <CardEvento key={e.slug} evento={e} />
-                    ))}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="cartao p-10 text-center">
-                <p className="font-display text-xl text-texto">
-                  Nenhum evento marcado no momento.
-                </p>
-                <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-texto-suave">
-                  Estamos preparando a próxima. Siga a gente no Instagram para
-                  saber na hora em que a data sair.
-                </p>
-                {produtora.redes.instagram && (
-                  <a
-                    href={produtora.redes.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="botao-ouro mt-7 inline-flex"
-                  >
-                    Seguir no Instagram
-                  </a>
-                )}
-              </div>
-            )}
-          </div>
-        </section>
-
-        <div className="divisor mx-auto max-w-5xl" />
-
-        {/* ================= BANDAS (casting) ================= */}
-        {bandas.length > 0 && (
-          <>
-            <section id="bandas" className="relative px-5 py-24 sm:py-32">
-              <div className="mx-auto max-w-5xl">
-                <div className="text-center">
-                  <p className="rotulo">Quem toca com a gente</p>
-                  <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
-                    Bandas
-                  </h2>
-                  <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-texto-suave">
-                    Tem um bar, uma casa ou uma data em aberto? Estas são as
-                    bandas que tocam com a gente.
-                  </p>
-                </div>
-
-                <Ornamento className="my-12" />
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  {bandas.map((b) => (
-                    <CardBanda key={b.slug} banda={b} />
-                  ))}
-                </div>
-
-                <div className="mt-10 text-center">
-                  <Link href="/bandas" className="botao-fantasma !py-3 !text-sm">
-                    Ver o casting completo
-                  </Link>
-                </div>
-              </div>
-            </section>
-
-            <div className="divisor mx-auto max-w-5xl" />
-          </>
+          </section>
         )}
 
-        {/* ================= ARQUIVO ================= */}
-        {passados.length > 0 && (
-          <>
-            <section id="arquivo" className="relative px-5 py-24 sm:py-32">
-              <div className="mx-auto max-w-5xl">
-                <div className="text-center">
-                  <p className="rotulo">O que já rolou</p>
-                  <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
-                    Edições anteriores
-                  </h2>
-                  <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-texto-suave">
-                    Cada noite deixa um rastro. Clica pra ver como foi.
-                  </p>
-                </div>
-
-                <Ornamento className="my-12" />
-
-                <div
-                  className={`mx-auto grid gap-5 sm:grid-cols-2 ${
-                    passados.length >= 3 ? 'lg:grid-cols-3' : 'max-w-3xl'
-                  }`}
-                >
-                  {passados.map((e) => (
-                    <CardEvento key={e.slug} evento={e} />
-                  ))}
-                </div>
-
-                <div className="mt-10 text-center">
-                  <Link href="/eventos" className="botao-fantasma !py-3 !text-sm">
-                    Ver todos os eventos
-                  </Link>
-                </div>
-              </div>
-            </section>
-
-            <div className="divisor mx-auto max-w-5xl" />
-          </>
-        )}
-
-        {/* ================= VÍDEOS ================= */}
-        {videos.length > 0 && (
-          <>
-            <Videos
-              videos={videos.slice(0, 4)}
-              rotulo="A cena, em movimento"
-              titulo="Vídeos"
-              canal={produtora.redes.youtube || undefined}
-            />
-            <div className="divisor mx-auto max-w-5xl" />
-          </>
-        )}
-
-        {/* ================= REGISTROS (todas as fotos) ================= */}
-        <Galeria
-          id="registros"
-          fotos={fotos}
-          rotulo="A cena, em imagem"
-          titulo="Registros"
-          subtitulo="Fotos de todas as edições. Clica pra ampliar."
-          limite={12}
-        />
+        <Universos proximos={proximos} />
+        <Dossies />
+        <Arquivo passados={passados} totalFotos={totalFotos} />
+        <Manifesto />
 
         <div className="divisor mx-auto max-w-5xl" />
-
-        <Sobre />
-
-        <div className="divisor mx-auto max-w-5xl" />
-
         <FAQ />
       </main>
 
       <Footer />
+
+      {destaque && compra && (
+        <BarraCompra
+          nome={destaque.nome}
+          quando={`${quandoDestaque} · ${destaque.local}`}
+          href={compra.href}
+          rotulo={compra.rotulo === 'Comprar ingresso' ? 'Comprar' : compra.rotulo}
+        />
+      )}
     </>
   )
 }

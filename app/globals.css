@@ -1,22 +1,35 @@
 @import 'tailwindcss';
 
 /* ============================================================================
-   GOLDEN EYE PRODS. — Sistema visual
-   Paleta tirada da própria identidade: ouro do olho de Hórus sobre o roxo
-   profundo do beco psicodélico, com o verde-água que aparece no paisley.
+   GOLDEN EYE PRODS. — Sistema visual "a noite como ritual"
+   Um filme noir de espionagem rodado dentro de um templo egípcio. O breu e o
+   ouro são da Golden Eye; cada marca de evento empresta só a sua cor:
+   Corujão = violeta neon, Psicoelho = vermelho de copas, Hórus = lápis-lazúli.
+   Regras: um botão dourado por tela, ouro só em título e ação, movimento lento.
    ============================================================================ */
 
 @theme {
   /* Fundos — do mais escuro ao mais claro */
-  --color-noite: #0a0610;
-  --color-noite-2: #120b1d;
-  --color-noite-3: #1b1030;
+  --color-noite: #0a0610; /* breu */
+  --color-noite-2: #1a1024; /* ameixa: cartões */
+  --color-noite-3: #221532;
   --color-borda: #2c1f42;
 
   /* Ouro do logo */
-  --color-ouro: #d4a64a;
-  --color-ouro-claro: #f6e2a8;
+  --color-ouro: #c9a24a; /* ouro velho: ação e títulos */
+  --color-ouro-claro: #e8c77a; /* brilho e links */
   --color-ouro-escuro: #8a6520;
+
+  /* Dossiê */
+  --color-papiro: #f3ecdd;
+  --color-tinta: #1c140c;
+  --color-carimbo: #a3362e;
+
+  /* Sotaque de cada marca */
+  --color-corujao: #8e5cff;
+  --color-corujao-claro: #b794ff;
+  --color-copas: #d04a44;
+  --color-lapis: #2a4ba0;
 
   /* Psicodelia */
   --color-violeta: #9d4edd;
@@ -24,8 +37,8 @@
   --color-turquesa: #3ec7b0;
 
   /* Texto */
-  --color-texto: #ede7f6;
-  --color-texto-suave: #a99bbd;
+  --color-texto: #f3ecdd;
+  --color-texto-suave: #b9aecb;
   --color-texto-fraco: #6d6285;
 
   /* Estados */
@@ -35,6 +48,7 @@
 
   --font-display: var(--fonte-display), Georgia, serif;
   --font-sans: var(--fonte-sans), system-ui, sans-serif;
+  --font-cinema: var(--fonte-cinema), Georgia, serif;
 
   --radius-card: 1rem;
 }
@@ -106,10 +120,10 @@ body {
   background: linear-gradient(
     100deg,
     #8a6520 0%,
-    #d4a64a 22%,
-    #f6e2a8 44%,
-    #d4a64a 62%,
-    #b8862f 100%
+    #c9a24a 22%,
+    #e8c77a 44%,
+    #c9a24a 62%,
+    #a8822f 100%
   );
   background-size: 200% 100%;
   -webkit-background-clip: text;
@@ -202,9 +216,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #f6e2a8, #d4a64a 45%, #a87c26);
+  background: var(--color-ouro);
   color: #0a0610;
-  font-weight: 700;
+  font-weight: 650;
   letter-spacing: 0.02em;
   border: none;
   border-radius: 999px;
@@ -214,17 +228,13 @@ body {
     transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 0.25s ease,
     filter 0.2s ease;
-  box-shadow:
-    0 0 0 1px rgba(246, 226, 168, 0.35),
-    0 10px 34px -12px rgba(212, 166, 74, 0.7);
+  box-shadow: 0 10px 30px -14px rgba(201, 162, 74, 0.75);
 }
 
 .botao-ouro:hover:not(:disabled) {
   transform: translateY(-2px);
-  filter: brightness(1.06);
-  box-shadow:
-    0 0 0 1px rgba(246, 226, 168, 0.6),
-    0 18px 46px -12px rgba(212, 166, 74, 0.85);
+  background: #d6b25a;
+  box-shadow: 0 16px 40px -14px rgba(201, 162, 74, 0.9);
 }
 
 .botao-ouro:active:not(:disabled) {
@@ -242,9 +252,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border: 1px solid var(--color-borda);
-  color: var(--color-texto);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(201, 162, 74, 0.45);
+  color: var(--color-ouro-claro);
+  background: transparent;
   border-radius: 999px;
   padding: 0.9rem 1.75rem;
   font-weight: 600;
@@ -255,14 +265,14 @@ body {
 .botao-fantasma:hover {
   border-color: var(--color-ouro);
   color: var(--color-ouro-claro);
-  background: rgba(212, 166, 74, 0.07);
+  background: rgba(201, 162, 74, 0.07);
 }
 
 .cartao {
   background: linear-gradient(
     160deg,
-    rgba(27, 16, 48, 0.82),
-    rgba(10, 6, 16, 0.92)
+    rgba(26, 16, 36, 0.92),
+    rgba(14, 9, 22, 0.94)
   );
   border: 1px solid var(--color-borda);
   border-radius: var(--radius-card);
@@ -310,6 +320,121 @@ body {
     rgba(212, 166, 74, 0.45),
     transparent
   );
+}
+
+/* ---------------------------------------------------------------------------
+   Peças do redesign — noir · 007 · Egito
+   --------------------------------------------------------------------------- */
+
+/* Data e frase de cinema */
+.cinema {
+  font-family: var(--font-cinema);
+  font-style: italic;
+}
+
+/* Anéis concêntricos: o cano do 007 atrás do hero e da arte do ingresso */
+.aneis {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle at center,
+    transparent 0 68px,
+    var(--cor-anel, rgba(201, 162, 74, 0.16)) 68px 69px
+  );
+  -webkit-mask-image: radial-gradient(circle, #000 35%, transparent 70%);
+  mask-image: radial-gradient(circle, #000 35%, transparent 70%);
+}
+
+/* A íris abre uma vez: os anéis crescem do centro e param */
+@keyframes iris-abre {
+  from {
+    opacity: 0;
+    transform: scale(0.35) rotate(-25deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.iris-abre {
+  animation: iris-abre 1.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Faixa de créditos de filme, rolando devagar */
+.creditos {
+  display: flex;
+  width: max-content;
+  animation: rolar-creditos 48s linear infinite;
+}
+@keyframes rolar-creditos {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Picote do ingresso */
+.picote {
+  background-image: linear-gradient(
+    90deg,
+    var(--cor-picote, rgba(183, 148, 255, 0.45)) 50%,
+    transparent 50%
+  );
+  background-size: 12px 1px;
+  background-repeat: repeat-x;
+  height: 1px;
+}
+
+/* Dossiê confidencial */
+.dossie {
+  background: var(--color-papiro);
+  color: var(--color-tinta);
+  border-radius: 0.5rem;
+  box-shadow: 0 24px 50px -30px rgba(0, 0, 0, 0.9);
+}
+.carimbo {
+  display: inline-block;
+  border: 1.5px solid var(--color-carimbo);
+  color: var(--color-carimbo);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  transform: rotate(-4deg);
+  opacity: 0.88;
+}
+
+/* Tira de filme do arquivo */
+.fita {
+  background: #050308;
+  border-radius: 0.75rem;
+  position: relative;
+}
+.fita::before,
+.fita::after {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  height: 6px;
+  background-image: radial-gradient(circle, rgba(185, 174, 203, 0.35) 2.2px, transparent 2.6px);
+  background-size: 14px 6px;
+}
+.fita::before {
+  top: 0.75rem;
+}
+.fita::after {
+  bottom: 0.75rem;
+}
+
+/* Foto em preto e branco: só o ouro fica colorido */
+.pb {
+  filter: grayscale(1) contrast(1.05) brightness(0.9);
+  transition: filter 0.6s ease;
+}
+.pb:hover,
+a:hover .pb {
+  filter: grayscale(0.2) contrast(1.05);
 }
 
 /* ---------------------------------------------------------------------------

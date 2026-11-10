@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Cinzel, Inter } from 'next/font/google'
+import { Cinzel, Inter, Playfair_Display } from 'next/font/google'
 import { produtora } from '@/config/site'
 import './globals.css'
 import { urlDoSite } from '@/lib/url'
@@ -9,6 +9,15 @@ const display = Cinzel({
   subsets: ['latin'],
   weight: ['500', '700', '900'],
   variable: '--fonte-display',
+  display: 'swap',
+})
+
+// Playfair itálico: datas, números e frases de cinema.
+const cinema = Playfair_Display({
+  subsets: ['latin'],
+  style: ['italic'],
+  weight: ['400', '500'],
+  variable: '--fonte-cinema',
   display: 'swap',
 })
 
@@ -70,7 +79,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-BR" className={`${display.variable} ${sans.variable}`}>
+    <html lang="pt-BR" className={`${display.variable} ${sans.variable} ${cinema.variable}`}>
       <body className="grao">
         {/* Atalho para quem navega por teclado */}
         <a

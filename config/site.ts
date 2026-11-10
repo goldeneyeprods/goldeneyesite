@@ -74,11 +74,58 @@ export const produtora = {
 
   // Os pilares mostrados na home
   pilares: [
-    { titulo: 'Rock', texto: 'Psicodélico, garage, krautrock e o que vier junto.' },
-    { titulo: 'Fora do eixo', texto: 'Espaço que não é casa de show é onde a gente prefere tocar.' },
-    { titulo: 'Sem catraca', texto: 'Até hoje, toda edição foi de graça e em troca de doação.' },
+    { titulo: 'Rock', texto: 'Psicodélico, garage e o que vier junto.' },
+    { titulo: 'Ritual', texto: 'Luz, projeção e som como uma coisa só.' },
+    { titulo: 'Causa', texto: 'Toda edição devolve algo para a cidade.' },
   ],
 }
+
+// ----------------------------------------------------------------------------
+//  AS MARCAS DE EVENTO — os "universos" da home
+//  Corujão: noites em bar e espaço que não é palco. Psicoelho: o festival
+//  médio (Alice no País das Maravilhas). Hórus: o grande, que segue o sol.
+//  Nada de referência a substância na arte nem no texto (sem cogumelo, sem
+//  "trip"): o psicodélico aqui é estético.
+// ----------------------------------------------------------------------------
+export type MarcaEvento = 'corujao' | 'psicoelho' | 'horus'
+
+export const universos: {
+  marca: MarcaEvento
+  nome: string
+  /** linha de cima do cartão */
+  tipo: string
+  texto: string
+  /** sem evento à venda: o botão vira "quero ser avisado" pelo WhatsApp */
+  aviso: string
+}[] = [
+  {
+    marca: 'corujao',
+    nome: 'Corujão Ácido',
+    tipo: 'Noites',
+    texto:
+      'Madrugada de rock psicodélico em espaços que não são palco. Banda ao ' +
+      'vivo, luz líquida e vinil.',
+    aviso: 'Quero saber da próxima',
+  },
+  {
+    marca: 'psicoelho',
+    nome: 'Psicoelho',
+    tipo: 'Festival',
+    texto:
+      'Pela toca do coelho: cartas, relógios, chá do Chapeleiro, circo e um ' +
+      'parque sensorial para todas as idades.',
+    aviso: 'Quero ser avisado',
+  },
+  {
+    marca: 'horus',
+    nome: 'Hórus Festival',
+    tipo: 'O grande ritual',
+    texto:
+      'Dois dias seguindo o sol: palco no poente, camping, cinema, circo e ' +
+      'vinil até o nascer do dia.',
+    aviso: 'Entrar na lista',
+  },
+]
 
 // ----------------------------------------------------------------------------
 //  TIPOS
@@ -153,6 +200,8 @@ export interface EventoConfig {
   nome: string
   subtitulo: string
   descricao: string
+  /** a marca de evento a que pertence: empresta a cor e o símbolo */
+  marca?: MarcaEvento
 
   /** ISO com fuso de São Paulo (-03:00) */
   dataInicio: string
@@ -364,6 +413,7 @@ export const eventos: EventoConfig[] = [
     // /eventos/corujao-psicodelico) redirecionam para cá no next.config.mjs.
     slug: 'corujao-acido',
     nome: 'Corujão Ácido',
+    marca: 'corujao',
     subtitulo: 'Pink Floyd e psicodelia brasileira, noite adentro',
 
     dataInicio: '2026-11-20T19:00:00-03:00',
@@ -600,6 +650,8 @@ export interface BandaConfig {
   resumo: string
   /** o gênero, curto — vira etiqueta */
   genero: string
+  /** palavra do carimbo no dossiê da home (ex.: "Autoral") */
+  carimbo?: string
   /** cidade de origem */
   cidade: string
 
@@ -634,6 +686,7 @@ export const bandas: BandaConfig[] = [
     nome: 'Nada Basta',
     resumo: 'Uma viagem aos anos 70, entre psicodelia e brasilidades',
     genero: 'Rock setentista, brasilidades e psicodelia',
+    carimbo: 'Anos 70',
     cidade: 'Blumenau/SC',
 
     conceito:
@@ -715,6 +768,7 @@ export const bandas: BandaConfig[] = [
     nome: 'Delírio Parabólico',
     resumo: 'Rock psicodélico autoral e a contracultura dos anos 60 e 70',
     genero: 'Rock psicodélico',
+    carimbo: 'Autoral',
     cidade: 'Joinville/SC',
 
     conceito:
