@@ -97,6 +97,8 @@ export const universos: {
   texto: string
   /** sem evento à venda: o botão vira "quero ser avisado" pelo WhatsApp */
   aviso: string
+  /** sem data marcada, o que aparece no lugar da data */
+  status: string
 }[] = [
   {
     marca: 'corujao',
@@ -106,6 +108,7 @@ export const universos: {
       'Madrugada de rock psicodélico em espaços que não são palco. Banda ao ' +
       'vivo, luz líquida e vinil.',
     aviso: 'Quero saber da próxima',
+    status: 'no caldeirão',
   },
   {
     marca: 'psicoelho',
@@ -115,6 +118,7 @@ export const universos: {
       'Pela toca do coelho: cartas, relógios, chá do Chapeleiro, circo e um ' +
       'parque sensorial para todas as idades.',
     aviso: 'Quero ser avisado',
+    status: 'no caldeirão',
   },
   {
     marca: 'horus',
@@ -124,6 +128,7 @@ export const universos: {
       'Dois dias seguindo o sol: palco no poente, camping, cinema, circo e ' +
       'vinil até o nascer do dia.',
     aviso: 'Entrar na lista',
+    status: 'em criação',
   },
 ]
 
