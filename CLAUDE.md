@@ -15,7 +15,7 @@ npm run db:setup   # roda schema.sql (idempotente: create/alter if not exists)
 npm run db:seed    # grava eventos/lotes do config/site.ts e pede operadores da portaria
 npm run mp:check   # diagnóstico real da conta Mercado Pago (cria e cancela PIX de R$ 0,01)
 npx tsx scripts/convites.mts --para <email> "Nome:2"   # emite convites (cortesia) e manda o PDF
-npx tsx scripts/cupons.mts --quantidade 50 --percentual 25 --origem "Texas Bar 14/11"   # cupons + PDF dos cartões
+npx tsx scripts/cupons.mts --quantidade 50 --percentual 25   # cupons + PDF dos cartões
 ```
 
 Não há testes automatizados. Valide com `tsc`/`build` e com o checklist de

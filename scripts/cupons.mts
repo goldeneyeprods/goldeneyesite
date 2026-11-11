@@ -1,9 +1,10 @@
 // ============================================================================
 //  CUPONS DE DESCONTO — gera os códigos e o PDF dos cartões para imprimir
 //
-//    npx tsx scripts/cupons.mts --quantidade 50 --percentual 25 --origem "Texas Bar 14/11"
+//    npx tsx scripts/cupons.mts --quantidade 50 --percentual 25
 //    (opcional: --evento <slug>, padrão corujao-acido; --saida <pasta>,
-//     padrão cupons/)
+//     padrão cupons/; --origem "texto" só para controle interno, não sai
+//     no cartão)
 //  Sai o PDF em duas versões com os mesmos códigos: escura (a da marca) e
 //  clara (fundo branco, gasta menos tinta).
 //
@@ -39,7 +40,7 @@ const slug = valor('--evento') ?? 'corujao-acido'
 const pasta = valor('--saida') ?? 'cupons'
 
 if (!(quantidade >= 1 && quantidade <= 500) || !(percentual >= 1 && percentual <= 100)) {
-  console.error('Uso: npx tsx scripts/cupons.mts --quantidade 50 --percentual 25 --origem "Texas Bar 14/11"')
+  console.error('Uso: npx tsx scripts/cupons.mts --quantidade 50 --percentual 25')
   process.exit(1)
 }
 
@@ -143,7 +144,10 @@ return pdf.save()
 }
 
 mkdirSync(pasta, { recursive: true })
-const nome = `${slug}-${percentual}off-${(origem ?? 'cupons').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`
+const sufixo = origem
+  ? '-' + origem.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  : ''
+const nome = `${slug}-cupons-${percentual}off${sufixo}`
 writeFileSync(`${pasta}/${nome}-escuro.pdf`, await gerarPdf(false))
 writeFileSync(`${pasta}/${nome}-claro.pdf`, await gerarPdf(true))
 writeFileSync(

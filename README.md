@@ -113,7 +113,7 @@ Toque em "✓ enviado" e o pedido volta para a lista.
 ### 4d. Cupons de desconto
 
 ```bash
-npx tsx scripts/cupons.mts --quantidade 50 --percentual 25 --origem "Texas Bar 14/11"
+npx tsx scripts/cupons.mts --quantidade 50 --percentual 25
 ```
 
 Gera códigos de 6 caracteres (tipo `Y87TJ5`), cada um de uso único, e salva
