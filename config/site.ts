@@ -26,9 +26,9 @@ export const produtora = {
   tagline: 'Rock psicodélico, ritual e reverberação',
 
   manifesto:
-    'Sebo, café, bar, o que aparecer. A gente pega um espaço que não é ' +
-    'palco e faz virar palco por uma noite — em Joinville, com fuzz, luz e ' +
-    'projeção.',
+    'Banda ao vivo, luz líquida, projeção e vinil até a madrugada. Cada ' +
+    'noite da Golden Eye é uma experiência para todos os sentidos: música, ' +
+    'arte e cultura no mesmo ritual, em Joinville.',
 
   descricao:
     'A Golden Eye Prods. nasceu da vontade de transformar a noite em ritual. ' +
@@ -36,8 +36,8 @@ export const produtora = {
     'numa mesma viagem — do fuzz saturado à discotecagem que atravessa a ' +
     'madrugada. Começamos em Joinville, entre as estantes de um sebo, ' +
     'tocando Raul Seixas e Pink Floyd em troca de doações para o Lar ' +
-    'Betânia. A ideia segue a mesma: ocupar espaços improváveis e devolver ' +
-    'alguma coisa para a cidade.',
+    'Betânia. A ideia segue a mesma: fazer de cada noite uma experiência ' +
+    'inteira e devolver alguma coisa para a cidade.',
 
   // Quem assina a direção artística — aparece no "Quem faz", no rodapé e
   // nos dados estruturados (o Google liga a pessoa à produtora).
@@ -82,7 +82,7 @@ export const produtora = {
 
 // ----------------------------------------------------------------------------
 //  AS MARCAS DE EVENTO — os "universos" da home
-//  Corujão: noites em bar e espaço que não é palco. Psicoelho: o festival
+//  Corujão: as noites, em bar e casa de show. Psicoelho: o festival
 //  médio (Alice no País das Maravilhas). Hórus: o grande, que segue o sol.
 //  Nada de referência a substância na arte nem no texto (sem cogumelo, sem
 //  "trip"): o psicodélico aqui é estético.
@@ -105,8 +105,8 @@ export const universos: {
     nome: 'Corujão Ácido',
     tipo: 'Noites',
     texto:
-      'Madrugada de rock psicodélico em espaços que não são palco. Banda ao ' +
-      'vivo, luz líquida e vinil.',
+      'Madrugada de rock psicodélico com banda ao vivo, luz líquida, ' +
+      'projeção e vinil. Uma noite para ouvir, ver e sentir.',
     aviso: 'Quero saber da próxima',
     status: 'no caldeirão',
   },

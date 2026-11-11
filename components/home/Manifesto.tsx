@@ -18,7 +18,7 @@ export function Manifesto() {
         </div>
 
         <blockquote className="cinema mt-9 text-3xl leading-snug text-texto sm:text-[2.6rem] sm:leading-[1.25]">
-          “Ocupar espaços improváveis e devolver alguma coisa para a cidade.”
+          “Fazer de cada noite uma experiência inteira e devolver alguma coisa para a cidade.”
         </blockquote>
         <p className="mt-7 text-xs uppercase tracking-[0.26em] text-ouro">
           {produtora.direcao.nome} · {produtora.direcao.cargo}
