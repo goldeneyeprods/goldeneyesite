@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Ornamento } from './OlhoDeHorus'
 import { ModalPix } from './ModalPix'
 import { formatarBRL, cpfValido, soDigitos } from '@/lib/validacao'
+import { descontoDoCupom, normalizarCupom, formatoDeCupom } from '@/lib/cupons'
 import { MAX_INGRESSOS_POR_CPF, type EventoConfig } from '@/config/site'
 
 // ============================================================================
@@ -15,6 +16,7 @@ interface Lote {
   nome: string
   tipo: 'inteira' | 'meia'
   precoCentavos: number
+  doacaoCentavos?: number
   disponivel: number
   poucos: boolean
   esgotado: boolean
@@ -98,6 +100,65 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
       lotes.reduce((s, l) => s + (qtds[l.id] ?? 0) * l.precoCentavos, 0),
     [lotes, qtds]
   )
+  // ---- cupom de desconto -------------------------------------------------
+  const [cupomTexto, setCupomTexto] = useState('')
+  const [cupom, setCupom] = useState<{ codigo: string; percentual: number } | null>(null)
+  const [cupomErro, setCupomErro] = useState('')
+  const [conferindoCupom, setConferindoCupom] = useState(false)
+
+  async function aplicarCupom(texto = cupomTexto) {
+    const codigo = normalizarCupom(texto)
+    setCupomErro('')
+    if (!formatoDeCupom(codigo)) {
+      setCupomErro('O cupom tem 6 letras e números, como Y87TJ5.')
+      return
+    }
+    setConferindoCupom(true)
+    try {
+      const r = await fetch(
+        `/api/cupons?codigo=${encodeURIComponent(codigo)}&evento=${encodeURIComponent(evento.slug)}`,
+        { cache: 'no-store' }
+      )
+      const d = await r.json()
+      if (!r.ok) {
+        setCupom(null)
+        setCupomErro(d.erro ?? 'Cupom inválido.')
+        return
+      }
+      setCupom({ codigo: d.codigo, percentual: d.percentual })
+      setCupomTexto(d.codigo)
+    } catch {
+      setCupomErro('Não deu para conferir o cupom agora. Tente de novo.')
+    } finally {
+      setConferindoCupom(false)
+    }
+  }
+
+  // Chegou pelo QR do cartão (?cupom=Y87TJ5): já preenche e confere.
+  useEffect(() => {
+    const doLink = new URLSearchParams(window.location.search).get('cupom')
+    if (doLink) {
+      setCupomTexto(normalizarCupom(doLink))
+      aplicarCupom(doLink)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const desconto = useMemo(
+    () =>
+      cupom
+        ? descontoDoCupom(
+            lotes.map((l) => ({
+              precoCentavos: l.precoCentavos,
+              doacaoCentavos: l.doacaoCentavos ?? 0,
+              quantidade: qtds[l.id] ?? 0,
+            })),
+            cupom.percentual
+          )
+        : 0,
+    [cupom, lotes, qtds]
+  )
+
   const totalIngressos = useMemo(
     () => Object.values(qtds).reduce((s, q) => s + q, 0),
     [qtds]
@@ -173,6 +234,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
           cpf: soDigitos(form.cpf),
           receberWhatsapp: form.whatsapp,
           aceiteTermos: true,
+          cupom: cupom?.codigo,
           eventoSlug: evento.slug,
           itens: Object.entries(qtds).map(([loteId, quantidade]) => ({
             loteId: Number(loteId),
@@ -273,6 +335,12 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
           </div>
         ) : (
           <div className="space-y-3">
+            {cupom && (
+              <p className="rounded-xl border border-ok/35 bg-ok/[0.07] px-4 py-3 text-center text-sm text-texto">
+                <span className="font-semibold tracking-[0.12em] text-ok">✓ Cupom {cupom.codigo}</span>{' '}
+                aplicado: {cupom.percentual}% de desconto em 1 ingresso.
+              </p>
+            )}
             {viraEm && (
               <p className="text-center text-xs text-texto-fraco">
                 Este lote vale até {viraEm} ou enquanto durar. Depois o preço sobe.
@@ -516,6 +584,66 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
               <p className="mt-2 text-xs text-erro">{erros.aceite}</p>
             )}
 
+            {/* --- CUPOM --- */}
+            <div className="mt-8">
+              <label htmlFor="cupom" className="text-xs uppercase tracking-[0.2em] text-texto-fraco">
+                Cupom de desconto
+              </label>
+              {cupom ? (
+                <div className="mt-2 flex items-center justify-between gap-3 rounded-xl border border-ok/40 bg-ok/[0.07] px-4 py-3">
+                  <p className="text-sm text-texto">
+                    <span className="font-semibold tracking-[0.15em] text-ok">✓ {cupom.codigo}</span>
+                    <span className="text-texto-suave">
+                      {' '}· {cupom.percentual}% em 1 ingresso
+                      {desconto > 0 && <> (− {formatarBRL(desconto)})</>}
+                    </span>
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCupom(null)
+                      setCupomTexto('')
+                    }}
+                    className="shrink-0 text-xs text-texto-fraco underline underline-offset-2"
+                  >
+                    remover
+                  </button>
+                </div>
+              ) : (
+                <div className="mt-2 flex gap-2">
+                  <input
+                    id="cupom"
+                    value={cupomTexto}
+                    onChange={(e) => {
+                      setCupomTexto(e.target.value.toUpperCase())
+                      setCupomErro('')
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        aplicarCupom()
+                      }
+                    }}
+                    placeholder="Ex.: Y87TJ5"
+                    maxLength={8}
+                    autoCapitalize="characters"
+                    autoComplete="off"
+                    className="campo !w-auto flex-1 uppercase tracking-[0.2em]"
+                    aria-invalid={!!cupomErro}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => aplicarCupom()}
+                    disabled={conferindoCupom || !cupomTexto.trim()}
+                    className="botao-fantasma shrink-0 !px-5 !py-2.5 !text-sm"
+                  >
+                    {conferindoCupom ? 'Conferindo…' : 'Aplicar'}
+                  </button>
+                </div>
+              )}
+              {cupomErro && <p className="mt-2 text-xs text-erro">{cupomErro}</p>}
+            </div>
+
             {/* --- TOTAL + AÇÃO --- */}
             <div className="mt-8 border-t border-borda pt-6">
               <div className="flex items-end justify-between gap-4">
@@ -523,8 +651,11 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
                   <p className="text-xs text-texto-fraco">
                     {totalIngressos} ingresso{totalIngressos === 1 ? '' : 's'}
                   </p>
+                  {desconto > 0 && (
+                    <p className="mt-1 text-sm text-texto-fraco line-through">{formatarBRL(total)}</p>
+                  )}
                   <p className="mt-1 font-display text-3xl font-bold texto-ouro">
-                    {formatarBRL(total)}
+                    {formatarBRL(total - desconto)}
                   </p>
                 </div>
                 <button

@@ -37,6 +37,7 @@ export async function GET(
         nome: l.nome,
         tipo: l.tipo,
         precoCentavos: l.precoCentavos,
+        doacaoCentavos: l.doacaoCentavos,
         disponivel: l.disponivel,
         // "Últimas unidades" só aparece quando é verdade — urgência falsa
         // queima a confiança de quem volta em todo evento.

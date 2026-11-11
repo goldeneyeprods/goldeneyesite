@@ -18,6 +18,7 @@ interface Painel {
   receitaCentavos: number
   doacaoCentavos: number
   ingressosSolidarios: number
+  cupons: { total: number; usados: number; descontoCentavos: number }
   porMinuto: { minuto: string; n: number }[]
   ultimos: { nome: string; tipo: string; quando: string; operador: string | null }[]
 }
@@ -140,6 +141,22 @@ export default function PainelPortaria() {
           </div>
           <p className="font-display text-2xl font-bold texto-ouro">
             {formatarBRL(dados.doacaoCentavos)}
+          </p>
+        </div>
+      )}
+
+      {/* --- Cupons de desconto --- */}
+      {dados.cupons.total > 0 && (
+        <div className="cartao mt-3 flex items-center justify-between gap-4 p-5">
+          <div>
+            <p className="rotulo">Cupons usados</p>
+            <p className="mt-1 text-xs text-texto-fraco">
+              {formatarBRL(dados.cupons.descontoCentavos)} em desconto
+            </p>
+          </div>
+          <p className="font-display text-2xl font-bold tabular-nums text-texto">
+            {dados.cupons.usados}
+            <span className="text-base text-texto-fraco"> / {dados.cupons.total}</span>
           </p>
         </div>
       )}

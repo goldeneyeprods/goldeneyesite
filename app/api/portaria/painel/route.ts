@@ -92,6 +92,16 @@ export async function GET(req: Request) {
      where i.evento_id = ${sessao.eventoId} and i.status <> 'cancelado'
   `
 
+  // Cupons: quantos foram usados (pedido pago) de quantos existem.
+  const [cupons] = await sql<{ total: number; usados: number; descontoCentavos: number }[]>`
+    select count(*)::int as total,
+           count(*) filter (where p.status = 'pago')::int as usados,
+           coalesce(sum(p.desconto_centavos) filter (where p.status = 'pago'), 0)::int as "descontoCentavos"
+      from cupons c
+      left join pedidos p on p.id = c.pedido_id
+     where c.evento_id = ${sessao.eventoId}
+  `
+
   const porMinuto = await sql<{ minuto: Date; n: number }[]>`
     select date_trunc('minute', usado_em) as minuto, count(*)::int as n
       from ingressos
@@ -125,6 +135,7 @@ export async function GET(req: Request) {
       receitaCentavos: receita.total,
       doacaoCentavos: doacao.total,
       ingressosSolidarios: doacao.ingressos,
+      cupons,
       porMinuto,
       ultimos,
     },

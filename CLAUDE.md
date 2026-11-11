@@ -15,6 +15,7 @@ npm run db:setup   # roda schema.sql (idempotente: create/alter if not exists)
 npm run db:seed    # grava eventos/lotes do config/site.ts e pede operadores da portaria
 npm run mp:check   # diagnóstico real da conta Mercado Pago (cria e cancela PIX de R$ 0,01)
 npx tsx scripts/convites.mts --para <email> "Nome:2"   # emite convites (cortesia) e manda o PDF
+npx tsx scripts/cupons.mts --quantidade 50 --percentual 25 --origem "Texas Bar 14/11"   # cupons + PDF dos cartões
 ```
 
 Não há testes automatizados. Valide com `tsc`/`build` e com o checklist de
@@ -30,6 +31,11 @@ sandbox do README.
 - `lib/mercadopago.ts` — criação do PIX, consulta, estorno, assinatura do webhook.
 - `lib/whatsapp.ts` — Cloud API da Meta: QR do ingresso e lembretes, só por modelo aprovado.
 - `lib/lembretes.ts` — véspera e dia do show; roda dentro do `/api/cron/expirar`.
+- `lib/cupons.ts` — formato do código e cálculo do desconto (servidor e tela usam o mesmo).
+  O cupom é de uso único e fica preso ao pedido (`cupons.pedido_id`); volta a
+  valer se o pedido expirar ou for cancelado. Desconto em 1 ingresso, o mais
+  caro, sem tocar na doação da entrada solidária. Travado no checkout com
+  `for update` junto do estoque.
 - `app/api/checkout` → cria pedido pendente e reserva estoque.
 - `app/api/webhook/mercadopago` → aviso do MP; sempre reconsulta a API.
 - `app/api/pedidos/[id]/status` → polling da tela do PIX; consulta o MP se o webhook atrasar.

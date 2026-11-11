@@ -42,3 +42,6 @@ arquivosbandas/delirioparabolico/tropicaliasessions novas/
 
 # Arquivo solto que algum comando local cria
 time.txt
+
+# Cupons gerados (PDF para imprimir e CSV com os códigos)
+/cupons/

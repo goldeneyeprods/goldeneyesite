@@ -4,6 +4,7 @@ import { schemaCheckout, formatarBRL } from '@/lib/validacao'
 import { permitir, ipDaRequisicao } from '@/lib/ratelimit'
 import { criarPagamentoPix } from '@/lib/mercadopago'
 import { lerEstoque } from '@/lib/lotes'
+import { descontoDoCupom } from '@/lib/cupons'
 import { MAX_INGRESSOS_POR_CPF, MINUTOS_EXPIRACAO_PIX } from '@/config/site'
 
 export const runtime = 'nodejs'
@@ -105,6 +106,7 @@ export async function POST(req: Request) {
         loteId: number
         quantidade: number
         precoUnitario: number
+        doacao: number
         tipo: 'inteira' | 'meia'
       }[] = []
 
@@ -141,6 +143,7 @@ export async function POST(req: Request) {
           loteId: lote.id,
           quantidade: item.quantidade,
           precoUnitario: lote.precoCentavos,
+          doacao: lote.doacaoCentavos,
           tipo: lote.tipo,
         })
 
@@ -151,18 +154,67 @@ export async function POST(req: Request) {
         `
       }
 
+      // ---- Cupom: travado junto, para dois pedidos não usarem o mesmo --
+      // Fica livre de novo se o pedido que o usou expirar ou for cancelado.
+      // Pedido pendente do MESMO CPF não bloqueia: é a pessoa tentando de
+      // novo depois de fechar a tela do PIX.
+      let desconto = 0
+      let cupomId: number | null = null
+      if (dados.cupom) {
+        const [cupom] = await tx<
+          {
+            id: number
+            percentual: number
+            valido_ate: Date | null
+            status_pedido: string | null
+            cpf_pedido: string | null
+          }[]
+        >`
+          select c.id::int as id, c.percentual, c.valido_ate,
+                 p.status as status_pedido, p.comprador_cpf as cpf_pedido
+            from cupons c
+            left join pedidos p on p.id = c.pedido_id
+           where c.codigo = ${dados.cupom} and c.evento_id = ${evento.id}
+             for update of c
+        `
+        if (!cupom) throw new Error('CUPOM:Cupom não encontrado para este evento.')
+        if (cupom.valido_ate && new Date(cupom.valido_ate) < new Date()) {
+          throw new Error('CUPOM:Este cupom expirou.')
+        }
+        const preso =
+          cupom.status_pedido === 'pago' ||
+          cupom.status_pedido === 'reembolsado' ||
+          (cupom.status_pedido === 'pendente' && cupom.cpf_pedido !== dados.cpf)
+        if (preso) throw new Error('CUPOM:Este cupom já foi usado.')
+
+        desconto = descontoDoCupom(
+          itensValidados.map((i) => ({
+            precoCentavos: i.precoUnitario,
+            doacaoCentavos: i.doacao,
+            quantidade: i.quantidade,
+          })),
+          cupom.percentual
+        )
+        cupomId = cupom.id
+        valorTotal -= desconto
+      }
+
       const [pedido] = await tx<{ id: string }[]>`
         insert into pedidos (
           evento_id, comprador_nome, comprador_email, comprador_cpf,
-          comprador_telefone, valor_total_centavos, status,
+          comprador_telefone, valor_total_centavos, desconto_centavos, status,
           pix_expira_em, ip_origem, aceite_termos_em, whatsapp_optin
         ) values (
           ${evento.id}, ${dados.nome}, ${dados.email}, ${dados.cpf},
-          ${dados.telefone}, ${valorTotal}, 'pendente',
+          ${dados.telefone}, ${valorTotal}, ${desconto}, 'pendente',
           ${expiraEm}, ${ip}, now(), ${dados.receberWhatsapp}
         )
         returning id
       `
+
+      if (cupomId) {
+        await tx`update cupons set pedido_id = ${pedido.id}, usado_em = null where id = ${cupomId}`
+      }
 
       for (const it of itensValidados) {
         await tx`
@@ -171,7 +223,7 @@ export async function POST(req: Request) {
         `
       }
 
-      return { pedidoId: pedido.id, valorTotal, eventoNome: evento.nome }
+      return { pedidoId: pedido.id, valorTotal, desconto, eventoNome: evento.nome }
     })
 
     // ---- 5. Cobrança PIX (fora da transação) ----------------------------
@@ -203,6 +255,7 @@ export async function POST(req: Request) {
         expiraEm: pix.expiraEm,
         valorTotal: resultado.valorTotal,
         valorFormatado: formatarBRL(resultado.valorTotal),
+        descontoCentavos: resultado.desconto,
       })
     } catch (erroPix) {
       // O PIX falhou: devolve o estoque na hora, senão os ingressos ficariam
@@ -231,7 +284,7 @@ export async function POST(req: Request) {
     const msg = erro instanceof Error ? erro.message : ''
 
     // Erros de negócio viram mensagem clara; o resto vira 500 genérico.
-    if (msg.startsWith('LIMITE:') || msg.startsWith('LOTE:') || msg.startsWith('ESTOQUE:')) {
+    if (/^(LIMITE|LOTE|ESTOQUE|CUPOM):/.test(msg)) {
       return NextResponse.json({ erro: msg.split(':').slice(1).join(':') }, { status: 409 })
     }
 

@@ -29,6 +29,8 @@ export interface LoteVigente {
   nome: string
   tipo: 'inteira' | 'meia'
   precoCentavos: number
+  /** parte do preço que vai para doação (entrada solidária) */
+  doacaoCentavos: number
   fase: number
   validoAte: Date | null
   /** já descontados a fase, o teto do evento e a cota de meia */
@@ -59,6 +61,7 @@ interface Linha {
   nome: string
   tipo: 'inteira' | 'meia'
   preco_centavos: number
+  doacao_centavos: number
   fase: number
   ordem: number
   valido_ate: Date | null
@@ -86,7 +89,7 @@ export async function lerEstoque(
   // Ordenar por id antes de travar evita deadlock entre duas compras.
   const linhas = travar
     ? await q<Linha[]>`
-        select id::int as id, nome, tipo, preco_centavos, fase, ordem, valido_ate, quantidade_total,
+        select id::int as id, nome, tipo, preco_centavos, doacao_centavos, fase, ordem, valido_ate, quantidade_total,
                (quantidade_vendida + quantidade_reservada) as ocupado, quantidade_vendida as vendido
           from lotes
          where evento_id = ${eventoId} and ativo = true and not cortesia
@@ -94,7 +97,7 @@ export async function lerEstoque(
            for update
       `
     : await q<Linha[]>`
-        select id::int as id, nome, tipo, preco_centavos, fase, ordem, valido_ate, quantidade_total,
+        select id::int as id, nome, tipo, preco_centavos, doacao_centavos, fase, ordem, valido_ate, quantidade_total,
                (quantidade_vendida + quantidade_reservada) as ocupado, quantidade_vendida as vendido
           from lotes
          where evento_id = ${eventoId} and ativo = true and not cortesia
@@ -163,6 +166,7 @@ export async function lerEstoque(
             nome: l.nome,
             tipo: l.tipo,
             precoCentavos: l.preco_centavos,
+            doacaoCentavos: l.doacao_centavos,
             fase: l.fase,
             validoAte: l.valido_ate,
             disponivel,

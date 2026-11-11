@@ -110,6 +110,20 @@ os portões) aparece também a lista **Lembrete**, do mesmo jeito. O lembrete
 por e-mail sai sozinho para todo mundo. Mandou por engano ou não mandou?
 Toque em "✓ enviado" e o pedido volta para a lista.
 
+### 4d. Cupons de desconto
+
+```bash
+npx tsx scripts/cupons.mts --quantidade 50 --percentual 25 --origem "Texas Bar 14/11"
+```
+
+Gera códigos de 6 caracteres (tipo `Y87TJ5`), cada um de uso único, e salva
+em `cupons/` um PDF para imprimir e recortar (10 cartões por folha, versão
+escura e clara) e um CSV com a lista. O QR de cada cartão abre a página do
+evento com o cupom já aplicado; quem digitar o código usa o campo "Cupom de
+desconto" na compra. O desconto vale para 1 ingresso do pedido (o mais caro)
+e não mexe nos R$ 10 da entrada solidária. Se o PIX expirar sem pagamento, o
+cupom volta a valer. O painel da portaria mostra quantos já foram usados.
+
 ### 4c. Convites especiais (cortesia)
 
 ```bash

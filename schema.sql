@@ -141,6 +141,28 @@ create index if not exists idx_ingressos_evento on ingressos (evento_id, status)
 create index if not exists idx_ingressos_token  on ingressos (token_qr);
 
 -- ----------------------------------------------------------------------------
+-- CUPONS DE DESCONTO
+-- Código de uso único, de um evento. O cupom fica preso ao pedido que o usou;
+-- se esse pedido expirar ou for cancelado sem pagar, o cupom volta a valer.
+-- O desconto vale para UM ingresso do pedido (o mais caro) e nunca mexe na
+-- parte de doação da entrada solidária.
+-- ----------------------------------------------------------------------------
+create table if not exists cupons (
+  id          bigserial primary key,
+  codigo      text not null unique,
+  evento_id   bigint not null references eventos(id),
+  percentual  integer not null check (percentual between 1 and 100),
+  origem      text,                       -- ex.: "Texas Bar 14/11"
+  valido_ate  timestamptz,
+  pedido_id   uuid references pedidos(id),
+  usado_em    timestamptz,                -- quando o pedido foi pago
+  criado_em   timestamptz not null default now()
+);
+create index if not exists idx_cupons_evento on cupons (evento_id);
+
+alter table pedidos add column if not exists desconto_centavos integer not null default 0;
+
+-- ----------------------------------------------------------------------------
 -- OPERADORES DE PORTARIA
 -- ----------------------------------------------------------------------------
 create table if not exists operadores (

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { normalizarCupom, formatoDeCupom } from './cupons'
 import { MAX_INGRESSOS_POR_CPF } from '@/config/site'
 
 // ============================================================================
@@ -109,6 +110,12 @@ export const schemaCheckout = z.object({
     )
     .min(1, 'Escolha pelo menos um ingresso')
     .max(4, 'Muitos tipos de ingresso em um pedido só'),
+
+  // Cupom de desconto (opcional). Vazio vira "sem cupom".
+  cupom: z.preprocess(
+    (v) => (typeof v === 'string' && normalizarCupom(v) ? normalizarCupom(v) : undefined),
+    z.string().refine(formatoDeCupom, 'Cupom inválido').optional()
+  ),
 })
 
 export type DadosCheckout = z.infer<typeof schemaCheckout>

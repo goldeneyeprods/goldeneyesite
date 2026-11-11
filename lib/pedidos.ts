@@ -111,6 +111,8 @@ export async function aprovarPedido(pedidoId: string, mpPaymentId: string) {
              cancelado_em = null
        where id = ${pedidoId}
     `
+    // Cupom usado de vez: registra quando.
+    await tx`update cupons set usado_em = now() where pedido_id = ${pedidoId}`
 
     const ingressos: (IngressoParaEmail & { loteNome: string })[] = []
 
