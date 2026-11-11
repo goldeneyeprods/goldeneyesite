@@ -284,8 +284,10 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
 
         <Ornamento className="my-12" />
 
-        {/* --- Quanto do lote vigente já saiu --- */}
-        {!carregandoLotes && progresso !== null && lotes.length > 0 && !esgotadoTudo && (
+        {/* --- Quanto do lote vigente já saiu ---
+            Só aparece da metade em diante: lote vazio na barra afasta mais
+            do que convence. */}
+        {!carregandoLotes && progresso !== null && progresso >= 50 && lotes.length > 0 && !esgotadoTudo && (
           <div className="mb-8">
             <div className="flex items-baseline justify-between gap-3 text-xs">
               <span className="uppercase tracking-widest text-texto-fraco">
