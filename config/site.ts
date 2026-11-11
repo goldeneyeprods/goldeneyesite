@@ -655,7 +655,7 @@ export interface BandaConfig {
   resumo: string
   /** o gênero, curto — vira etiqueta */
   genero: string
-  /** palavra do carimbo no dossiê da home (ex.: "Autoral") */
+  /** carimbo no dossiê da home: o gênero como a banda se define no release */
   carimbo?: string
   /** cidade de origem */
   cidade: string
@@ -691,7 +691,7 @@ export const bandas: BandaConfig[] = [
     nome: 'Nada Basta',
     resumo: 'Uma viagem aos anos 70, entre psicodelia e brasilidades',
     genero: 'Rock setentista, brasilidades e psicodelia',
-    carimbo: 'Anos 70',
+    carimbo: 'Rock clássico',
     cidade: 'Blumenau/SC',
 
     conceito:
@@ -773,7 +773,7 @@ export const bandas: BandaConfig[] = [
     nome: 'Delírio Parabólico',
     resumo: 'Rock psicodélico autoral e a contracultura dos anos 60 e 70',
     genero: 'Rock psicodélico',
-    carimbo: 'Autoral',
+    carimbo: 'Rock psicodélico',
     cidade: 'Joinville/SC',
 
     conceito:
