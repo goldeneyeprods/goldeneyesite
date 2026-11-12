@@ -124,6 +124,18 @@ desconto" na compra. O desconto vale para 1 ingresso do pedido (o mais caro)
 e não mexe nos R$ 10 da entrada solidária. Se o PIX expirar sem pagamento, o
 cupom volta a valer. O painel da portaria mostra quantos já foram usados.
 
+Para distribuir em **cartão de visita** (9 x 5 cm, cara de convite secreto,
+numerado "Nº 07 / 50", com os olhos da coruja no verso):
+
+```bash
+npx tsx scripts/cartoes-cupom.mts
+```
+
+Usa os cupons que já existem e gera em `cupons/` o `cartoes-grafica.pdf`
+(com 3 mm de sangria, frente e verso de cada cartão em sequência, para mandar
+à gráfica) e o `cartoes-a4.pdf` (10 por folha com marca de corte, verso
+espelhado para imprimir frente e verso virando pela borda maior).
+
 ### 4c. Convites especiais (cortesia)
 
 ```bash
