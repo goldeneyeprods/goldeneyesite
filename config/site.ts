@@ -26,7 +26,7 @@ export const produtora = {
   tagline: 'Rock psicodélico, ritual e reverberação',
 
   manifesto:
-    'Banda ao vivo, luz líquida, projeção e vinil até a madrugada. Cada ' +
+    'Banda ao vivo, luz, projeção e discotecagem até a madrugada. Cada ' +
     'noite da Golden Eye é uma experiência para todos os sentidos: música, ' +
     'arte e cultura no mesmo ritual, em Joinville.',
 
@@ -105,8 +105,8 @@ export const universos: {
     nome: 'Corujão Ácido',
     tipo: 'Noites',
     texto:
-      'Madrugada de rock psicodélico com banda ao vivo, luz líquida, ' +
-      'projeção e vinil. Uma noite para ouvir, ver e sentir.',
+      'Madrugada de rock psicodélico com banda ao vivo, luz, projeção e ' +
+      'discotecagem. Uma noite para ouvir, ver e sentir.',
     aviso: 'Quero saber da próxima',
     status: 'no caldeirão',
   },

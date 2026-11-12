@@ -38,9 +38,9 @@ export default function Home() {
       .map((s) => bandas.find((b) => b.slug === s)?.nome)
       .filter((n): n is string => !!n),
     'Fuzz',
-    'Luz líquida',
+    'Luz',
     'Projeção',
-    'Vinil até a madrugada',
+    'Discotecagem até a madrugada',
   ]
   const compra = destaque ? linkDeCompra(destaque) : null
   const quandoDestaque = destaque
