@@ -6,7 +6,15 @@ import type { BandaConfig } from '@/config/site'
 //  CARD DE BANDA — usado em /bandas e na home
 // ============================================================================
 
-export function CardBanda({ banda }: { banda: BandaConfig }) {
+export function CardBanda({
+  banda,
+  nivel = 'h3',
+}: {
+  banda: BandaConfig
+  /** h2 quando o card vem logo abaixo do h1 da página (/bandas) */
+  nivel?: 'h2' | 'h3'
+}) {
+  const Titulo = nivel
   return (
     <Link
       href={`/bandas/${banda.slug}`}
@@ -23,14 +31,14 @@ export function CardBanda({ banda }: { banda: BandaConfig }) {
         <div className="absolute inset-0 bg-gradient-to-t from-noite via-noite/45 to-transparent" />
 
         <span className="absolute left-4 top-4 rounded-full border border-ouro/30 bg-noite/85 px-3 py-1 text-[9px] font-semibold tracking-[0.16em] text-ouro backdrop-blur-sm">
-          {banda.genero.toUpperCase()}
+          {(banda.carimbo ?? banda.genero).toUpperCase()}
         </span>
       </div>
 
       <div className="p-6">
-        <h3 className="font-display text-2xl font-bold leading-tight text-texto transition-colors group-hover:text-ouro-claro">
+        <Titulo className="font-display text-2xl font-bold leading-tight text-texto transition-colors group-hover:text-ouro-claro">
           {banda.nome}
-        </h3>
+        </Titulo>
         <p className="mt-2 text-sm leading-relaxed text-texto-suave">
           {banda.resumo}
         </p>

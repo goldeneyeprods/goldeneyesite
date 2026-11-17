@@ -99,7 +99,7 @@ export default function PainelPortaria() {
   const picoMinuto = Math.max(...dados.porMinuto.map((p) => p.n), 1)
 
   return (
-    <div id="conteudo" className="min-h-svh px-4 py-5">
+    <main id="conteudo" className="min-h-svh px-4 py-5">
       <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="font-display text-xl font-bold texto-ouro">Painel ao vivo</h1>
@@ -218,7 +218,7 @@ export default function PainelPortaria() {
         Imprima esta lista antes do evento. É o seu plano B se a internet e a
         bateria falharem ao mesmo tempo.
       </p>
-    </div>
+    </main>
   )
 }
 

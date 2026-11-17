@@ -70,7 +70,7 @@ export default function PaginaBandas() {
 
           <div className="grid gap-6 sm:grid-cols-2">
             {bandas.map((b) => (
-              <CardBanda key={b.slug} banda={b} />
+              <CardBanda key={b.slug} banda={b} nivel="h2" />
             ))}
           </div>
 

@@ -347,7 +347,7 @@ export default function Portaria() {
   // ==========================================================================
   if (!token || !operador) {
     return (
-      <div className="flex min-h-svh flex-col items-center justify-center px-6">
+      <main id="conteudo" className="flex min-h-svh flex-col items-center justify-center px-6">
         <OlhoDeHorus tamanho={72} />
         <h1 className="mt-6 font-display text-2xl font-bold texto-ouro">PORTARIA</h1>
         <p className="mt-2 text-xs tracking-widest text-texto-fraco">CONTROLE DE ENTRADA</p>
@@ -385,7 +385,7 @@ export default function Portaria() {
           </button>
 
         </form>
-      </div>
+      </main>
     )
   }
 
@@ -490,7 +490,7 @@ export default function Portaria() {
   //  SCANNER / BUSCA
   // ==========================================================================
   return (
-    <div id="conteudo" className="min-h-svh">
+    <main id="conteudo" className="min-h-svh">
       <header className="flex items-center justify-between border-b border-borda px-4 py-3">
         <div>
           <p className="text-sm font-medium text-texto">{operador.nome}</p>
@@ -611,7 +611,7 @@ export default function Portaria() {
           </p>
         </div>
       )}
-    </div>
+    </main>
   )
 }
 
