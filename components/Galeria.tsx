@@ -94,7 +94,7 @@ export function Galeria({
       <section id={id} className="relative px-5 py-24 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
-            <p className="rotulo">{rotulo}</p>
+            <p className="fala">{rotulo}</p>
             <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">{titulo}</h2>
           </div>
 
@@ -144,7 +144,7 @@ export function Galeria({
     <section id={id} className="relative px-5 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl">
         <div className="text-center">
-          <p className="rotulo">{rotulo}</p>
+          <p className="fala">{rotulo}</p>
           <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">{titulo}</h2>
           {subtitulo && (
             <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-texto-suave">
@@ -160,7 +160,7 @@ export function Galeria({
             <button
               key={foto.src}
               onClick={() => setAberta(i)}
-              className="group relative aspect-square overflow-hidden rounded-xl border border-borda transition-all duration-300 hover:border-ouro/50"
+              className="group relative aspect-square overflow-hidden rounded-xl border border-borda transition-[border-color,box-shadow] duration-300 hover:border-ouro/50"
               aria-label={`Ampliar foto${foto.evento ? ` de ${foto.evento}` : ''}`}
             >
               {/* next/image converte para WebP e entrega o tamanho certo

@@ -12,7 +12,7 @@ export function FAQ() {
     <section id="faq" className="relative px-5 py-24 sm:py-32">
       <div className="mx-auto max-w-2xl">
         <div className="text-center">
-          <p className="rotulo">Antes de perguntar</p>
+          <p className="fala">Antes de perguntar</p>
           <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
             Dúvidas frequentes
           </h2>

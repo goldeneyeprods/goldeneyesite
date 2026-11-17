@@ -69,7 +69,7 @@ export function CardEvento({
               </p>
             )}
 
-            <p className="mt-3 text-xs capitalize text-texto-fraco">
+            <p className="mt-3 text-xs text-texto-fraco first-letter:uppercase">
               {dataLonga(evento.dataInicio)} ·{' '}
               {evento.dataFim
                 ? `${hora(evento.dataInicio)} às ${hora(evento.dataFim)}`
@@ -96,7 +96,7 @@ export function CardEvento({
   return (
     <Link
       href={`/eventos/${evento.slug}`}
-      className="cartao group relative block overflow-hidden transition-all duration-300 hover:border-ouro/45"
+      className="cartao group relative block overflow-hidden transition-[border-color,box-shadow] duration-300 hover:border-ouro/45"
     >
       <div className="relative aspect-[16/10] overflow-hidden">
         {capa ? (
@@ -140,7 +140,7 @@ export function CardEvento({
         <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-texto-suave">
           {evento.subtitulo}
         </p>
-        <p className="mt-3 text-[11px] capitalize text-texto-fraco">
+        <p className="mt-3 text-[11px] text-texto-fraco first-letter:uppercase">
           {mesAno(evento.dataInicio)} · {evento.local}
         </p>
       </div>

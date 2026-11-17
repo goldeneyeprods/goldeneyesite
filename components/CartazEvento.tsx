@@ -41,7 +41,7 @@ export function CartazEvento({
     <section id="cartaz" className="relative px-5 py-24 sm:py-32">
       <div className="mx-auto max-w-3xl">
         <div className="text-center">
-          <p className="rotulo">Cola na parede</p>
+          <p className="fala">Cola na parede</p>
           <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">Cartaz</h2>
         </div>
 
@@ -49,7 +49,7 @@ export function CartazEvento({
 
         <button
           onClick={() => setAberto(true)}
-          className="group relative mx-auto block w-full max-w-[460px] overflow-hidden rounded-2xl border border-borda transition-all duration-300 hover:border-ouro/60"
+          className="group relative mx-auto block w-full max-w-[460px] overflow-hidden rounded-2xl border border-borda transition-[border-color,box-shadow] duration-300 hover:border-ouro/60"
           aria-label="Ampliar o cartaz"
         >
           <Image

@@ -55,7 +55,7 @@ export default function PaginaBandas() {
       <main id="conteudo" className="px-5 pb-24 pt-32">
         <div className="mx-auto max-w-5xl">
           <div className="text-center">
-            <p className="rotulo">Quem toca com a gente</p>
+            <p className="fala">Quem toca com a gente</p>
             <h1 className="mt-4 font-display text-4xl font-black sm:text-6xl">
               <span className="texto-ouro">Bandas</span>
             </h1>
@@ -76,7 +76,7 @@ export default function PaginaBandas() {
 
           {/* --- Chamada para quem contrata --- */}
           <div className="cartao cartao-ouro mt-14 p-8 text-center sm:p-10">
-            <p className="rotulo">Quer uma delas na sua casa?</p>
+            <p className="fala">Quer uma delas na sua casa?</p>
             <h2 className="mt-4 font-display text-2xl font-bold text-texto sm:text-3xl">
               Chama a gente
             </h2>

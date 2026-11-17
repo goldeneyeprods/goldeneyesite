@@ -272,7 +272,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
 
       <div className="relative z-10 mx-auto max-w-3xl">
         <div className="text-center">
-          <p className="rotulo">Garanta o seu</p>
+          <p className="fala">Garanta o seu</p>
           <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
             <span className="texto-ouro">Ingressos</span>
           </h2>
@@ -357,7 +357,7 @@ export function Ingressos({ evento }: { evento: EventoConfig }) {
               return (
                 <div
                   key={lote.id}
-                  className={`cartao flex items-center gap-4 p-5 transition-all ${
+                  className={`cartao flex items-center gap-4 p-5 transition-[border-color,background-color,box-shadow] ${
                     qtd > 0 ? 'cartao-ouro' : ''
                   } ${lote.esgotado ? 'opacity-45' : ''}`}
                 >

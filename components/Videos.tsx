@@ -78,12 +78,12 @@ export function Videos({
                       alt=""
                       aria-hidden="true"
                       loading="lazy"
-                      className="h-full w-full object-cover opacity-75 transition-all duration-500 group-hover:scale-105 group-hover:opacity-90"
+                      className="h-full w-full object-cover opacity-75 transition-[transform,opacity] duration-500 group-hover:scale-105 group-hover:opacity-90"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-noite/80 via-transparent to-transparent" />
 
                     {/* Botão de play com a cara do site, não o vermelho do YouTube */}
-                    <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-ouro/50 bg-noite/70 backdrop-blur-sm transition-all duration-300 group-hover:scale-110 group-hover:border-ouro group-hover:bg-noite/90">
+                    <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-ouro/50 bg-noite/70 backdrop-blur-sm transition-[transform,border-color,background-color] duration-300 group-hover:scale-110 group-hover:border-ouro group-hover:bg-noite/90">
                       <svg width="22" height="24" viewBox="0 0 22 24" fill="#d4a64a" aria-hidden="true">
                         <path d="M21 12 0 24V0z" />
                       </svg>

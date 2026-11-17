@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: 'Termos de Compra' }
 
 export default function Termos() {
   return (
-    <div id="conteudo" className="min-h-screen px-5 py-10">
+    <main id="conteudo" className="min-h-screen px-5 py-10">
       <div className="mx-auto max-w-2xl">
         <Link href="/">
           <Marca compacta />
@@ -138,7 +138,7 @@ export default function Termos() {
               </Link>
               , com estorno automático pela mesma forma de pagamento.
               Alternativamente, envie um e-mail para{' '}
-              <a href={`mailto:${produtora.emailIngressos}`} className="text-ouro">
+              <a href={`mailto:${produtora.emailIngressos}`} className="text-ouro underline underline-offset-2">
                 {produtora.emailIngressos}
               </a>{' '}
               a partir do e-mail cadastrado na compra.
@@ -197,7 +197,7 @@ export default function Termos() {
           <Secao titulo="9. Contato e foro">
             <p>
               Dúvidas, reclamações e solicitações:{' '}
-              <a href={`mailto:${produtora.email}`} className="text-ouro">
+              <a href={`mailto:${produtora.email}`} className="text-ouro underline underline-offset-2">
                 {produtora.email}
               </a>{' '}
               ou WhatsApp {produtora.whatsappLabel}.
@@ -213,7 +213,7 @@ export default function Termos() {
           Voltar ao site
         </Link>
       </div>
-    </div>
+    </main>
   )
 }
 

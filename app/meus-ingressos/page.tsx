@@ -196,7 +196,7 @@ export default function MeusIngressos() {
   }
 
   return (
-    <div id="conteudo" className="min-h-screen px-5 py-10">
+    <main id="conteudo" className="min-h-screen px-5 py-10">
       <div className="mx-auto max-w-3xl">
         <Link href="/" className="inline-block">
           <Marca compacta />
@@ -562,6 +562,6 @@ export default function MeusIngressos() {
           WhatsApp
         </a>
       </footer>
-    </div>
+    </main>
   )
 }

@@ -10,7 +10,7 @@ export function CardBanda({ banda }: { banda: BandaConfig }) {
   return (
     <Link
       href={`/bandas/${banda.slug}`}
-      className="cartao group relative block overflow-hidden transition-all duration-300 hover:border-ouro/45"
+      className="cartao group relative block overflow-hidden transition-[border-color,box-shadow] duration-300 hover:border-ouro/45"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <Image

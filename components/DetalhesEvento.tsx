@@ -14,7 +14,7 @@ export function DetalhesEvento({ evento }: { evento: EventoConfig }) {
     <section id="lineup" className="relative px-5 py-24 sm:py-32">
       <div className="mx-auto max-w-5xl">
         <div className="text-center">
-          <p className="rotulo">
+          <p className="fala">
             {ehFuturo(evento) ? 'O que vai rolar' : 'O que aconteceu ali'}
           </p>
           <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
@@ -49,7 +49,7 @@ export function DetalhesEvento({ evento }: { evento: EventoConfig }) {
           {evento.lineup.map((ato, i) => (
             <article
               key={`${ato.horario}-${ato.titulo}`}
-              className={`cartao group relative overflow-hidden p-6 transition-all duration-300 hover:border-ouro/45 sm:p-8 ${
+              className={`cartao group relative overflow-hidden p-6 transition-[border-color,box-shadow] duration-300 hover:border-ouro/45 sm:p-8 ${
                 ato.destaque ? 'cartao-ouro' : ''
               }`}
             >

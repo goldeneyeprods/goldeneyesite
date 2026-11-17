@@ -41,7 +41,7 @@ export function Hero({ destaque }: { destaque?: EventoConfig }) {
 
       <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-12">
         <div>
-          <p className="rotulo surgir">Rock psicodélico · {produtora.cidade}</p>
+          <p className="fala surgir">Rock psicodélico · {produtora.cidade}</p>
           <h1
             className="surgir mt-5 font-display text-[2.15rem] font-bold leading-[1.08] text-texto sm:text-6xl lg:text-[3.5rem] xl:text-[3.9rem]"
             style={{ animationDelay: '80ms' }}
@@ -147,7 +147,7 @@ function IngressoDeCinema({ evento }: { evento: EventoConfig }) {
             <SimboloMarca marca={marca} className="relative h-24 w-24 sm:h-28 sm:w-28" />
           </>
         )}
-        <span className="absolute left-4 top-4 rounded-full bg-noite/85 px-3.5 py-1.5 text-[10px] uppercase tracking-[0.26em] text-texto-suave">
+        <span className="absolute bottom-3 left-4 rounded-full bg-noite/85 px-3.5 py-1.5 text-[10px] uppercase tracking-[0.26em] text-texto-suave">
           Próximo evento
         </span>
       </Link>

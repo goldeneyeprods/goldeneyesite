@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: 'Política de Privacidade' }
 
 export default function Privacidade() {
   return (
-    <div id="conteudo" className="min-h-screen px-5 py-10">
+    <main id="conteudo" className="min-h-screen px-5 py-10">
       <div className="mx-auto max-w-2xl">
         <Link href="/">
           <Marca compacta />
@@ -27,7 +27,7 @@ export default function Privacidade() {
               <strong className="text-texto">{produtora.razaoSocial}</strong>,
               CNPJ {produtora.cnpj}, é a controladora dos dados pessoais
               coletados neste site. Contato para assuntos de privacidade:{' '}
-              <a href={`mailto:${produtora.email}`} className="text-ouro">
+              <a href={`mailto:${produtora.email}`} className="text-ouro underline underline-offset-2">
                 {produtora.email}
               </a>
               .
@@ -115,7 +115,7 @@ export default function Privacidade() {
             </p>
             <p>
               Para exercer qualquer desses direitos, escreva para{' '}
-              <a href={`mailto:${produtora.email}`} className="text-ouro">
+              <a href={`mailto:${produtora.email}`} className="text-ouro underline underline-offset-2">
                 {produtora.email}
               </a>{' '}
               a partir do e-mail cadastrado. Respondemos em até 15 dias.
@@ -152,7 +152,7 @@ export default function Privacidade() {
           Voltar ao site
         </Link>
       </div>
-    </div>
+    </main>
   )
 }
 

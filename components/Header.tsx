@@ -21,12 +21,14 @@ const MENU = [
 ]
 
 /** Símbolo pequeno + o nome: a logo completa fica para usos grandes. */
-function Assinatura() {
+// Com o botão dourado ao lado, no celular estreito o "Prods." sai para o
+// nome não quebrar em duas linhas.
+function Assinatura({ compacta = false }: { compacta?: boolean }) {
   return (
     <span className="flex items-center gap-3">
       <OlhoDeHorus tamanho={46} brilho={false} prioridade />
-      <span className="font-display text-[15px] font-bold tracking-[0.04em] text-texto sm:text-base">
-        Golden Eye <span className="text-ouro">Prods.</span>
+      <span className="whitespace-nowrap font-display text-[15px] font-bold tracking-[0.04em] text-texto sm:text-base">
+        Golden Eye <span className={`text-ouro ${compacta ? 'max-[440px]:hidden' : ''}`}>Prods.</span>
       </span>
     </span>
   )
@@ -71,7 +73,7 @@ export function Header({
           {/* A marca SEMPRE leva para a home da produtora */}
           <div className="flex items-center gap-3">
             <Link href="/" aria-label="Golden Eye Prods. — início">
-              <Assinatura />
+              <Assinatura compacta={!!cta} />
             </Link>
           </div>
 
@@ -122,7 +124,7 @@ export function Header({
       {aberto && (
         <div className="fixed inset-0 z-[70] bg-noite/98 backdrop-blur-2xl lg:hidden">
           <div className="flex items-center justify-between px-5 py-4">
-            <Assinatura />
+            <Assinatura compacta={!!cta} />
             <button onClick={() => setAberto(false)} className="p-2 text-texto" aria-label="Fechar menu">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />

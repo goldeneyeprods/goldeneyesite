@@ -24,7 +24,7 @@ export function Universos({ proximos }: { proximos: EventoConfig[] }) {
     <section id="universos" className="px-5 py-16 sm:py-20">
       <div className="mx-auto max-w-6xl">
         <div className="sm:text-center">
-          <p className="rotulo">Três portais</p>
+          <p className="fala">Três portais</p>
           <h2 className="mt-4 font-display text-4xl font-bold text-texto sm:text-5xl">
             Os universos Golden Eye
           </h2>

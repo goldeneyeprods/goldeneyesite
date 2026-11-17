@@ -23,7 +23,7 @@ export function Arquivo({ passados, totalFotos }: { passados: EventoConfig[]; to
   return (
     <section id="arquivo" className="px-5 py-16 sm:py-20">
       <div className="mx-auto max-w-6xl">
-        <p className="rotulo">Cada noite deixa um rastro</p>
+        <p className="fala">Cada noite deixa um rastro</p>
         <h2 className="mt-4 font-display text-4xl font-bold text-texto sm:text-5xl">Arquivo</h2>
 
         <div className="fita mt-12 px-4 py-9 sm:px-5">

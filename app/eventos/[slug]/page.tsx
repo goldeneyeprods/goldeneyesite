@@ -181,7 +181,7 @@ export default async function PaginaEvento({
           <section id="bandas" className="px-5 pb-24 sm:pb-32">
             <div className="mx-auto max-w-5xl">
               <div className="text-center">
-                <p className="rotulo">{futuro ? 'Quem toca' : 'Quem tocou'}</p>
+                <p className="fala">{futuro ? 'Quem toca' : 'Quem tocou'}</p>
                 <h2 className="mt-4 font-display text-4xl font-bold sm:text-5xl">
                   {atracoes.length > 1 ? 'As bandas' : 'A banda'}
                 </h2>

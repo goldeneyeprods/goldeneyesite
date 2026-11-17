@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { produtora, bandas } from '@/config/site'
+import { OlhoDeHorus } from '@/components/OlhoDeHorus'
 
 // ============================================================================
 //  DOSSIÊS DAS BANDAS — a ficha de papiro com a foto da banda presa nela
@@ -37,7 +38,7 @@ export function Dossies() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="rotulo">Quem toca com a gente</p>
+            <p className="fala">Quem toca com a gente</p>
             <h2 className="mt-4 font-display text-4xl font-bold text-texto sm:text-5xl">
               Dossiês das bandas
             </h2>
@@ -69,10 +70,10 @@ export function Dossies() {
 
               <div className="flex flex-1 flex-col px-2.5 pb-2 pt-5">
                 <div className="flex items-baseline justify-between gap-3">
-                  <p className="text-[11px] uppercase tracking-[0.24em] text-tinta/55">
+                  <p className="text-[11px] uppercase tracking-[0.24em] text-tinta/70">
                     Arquivo nº {String(i + 1).padStart(2, '0')}
                   </p>
-                  <p className="text-[11px] text-tinta/55">{b.cidade}</p>
+                  <p className="text-[11px] text-tinta/70">{b.cidade}</p>
                 </div>
                 <h3 className="mt-2 font-display text-[1.7rem] font-bold leading-tight">
                   <Link href={`/bandas/${b.slug}`} className="after:absolute after:inset-0">
@@ -93,8 +94,10 @@ export function Dossies() {
           ))}
 
           <article className="relative flex flex-col rounded-lg border border-dashed border-ouro/35 p-3.5">
-            <div className="flex aspect-[4/3] items-center justify-center rounded-sm border border-dashed border-ouro/25">
-              <p className="cinema text-lg text-texto-fraco">sua foto aqui</p>
+            {/* No lugar da foto, o olho da casa: a vaga é um convite, não um buraco. */}
+            <div className="relative flex aspect-[16/7] items-center justify-center overflow-hidden rounded-sm border border-ouro/20 bg-noite-2/60 sm:aspect-[4/3]">
+              <div className="aneis h-[22rem] w-[22rem]" style={{ ['--cor-anel' as string]: '#c9a24a40' }} />
+              <OlhoDeHorus tamanho={88} className="relative opacity-90" />
             </div>
             <div className="flex flex-1 flex-col px-2.5 pb-2 pt-5">
               <p className="text-[11px] uppercase tracking-[0.24em] text-texto-suave">

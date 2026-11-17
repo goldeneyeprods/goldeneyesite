@@ -93,7 +93,7 @@ export function HeroEvento({ evento }: { evento: EventoConfig }) {
           className="surgir mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm"
           style={{ animationDelay: '260ms' }}
         >
-          <span className="font-medium capitalize text-texto">
+          <span className="inline-block font-medium text-texto first-letter:uppercase">
             {dataLonga(evento.dataInicio)}
           </span>
           <span className="text-ouro/40">◆</span>
