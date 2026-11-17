@@ -45,3 +45,4 @@ time.txt
 
 # Cupons gerados (PDF para imprimir e CSV com os códigos)
 /cupons/
+/impressos/
