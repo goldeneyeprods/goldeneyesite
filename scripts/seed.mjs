@@ -212,8 +212,7 @@ for (const ev of futuros) {
       nome.toLowerCase().split(/\s+/)[0]
     const pin = (await rl.question('Senha (mínimo 8 caracteres): ')).trim()
     if (pin.length < 8 || pin.length > 72) {
-      console.log('  ⚠ Senha curta demais, tente de novo.
-')
+      console.log('  ⚠ Senha curta demais, tente de novo.\n')
       continue
     }
 

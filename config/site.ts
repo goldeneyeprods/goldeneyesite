@@ -408,7 +408,7 @@ export const eventos: EventoConfig[] = [
   // ==========================================================================
   //  CORUJÃO ÁCIDO — sexta, 20/11, 19h
   //  Nada Basta + Delírio Parabólico, no Hangar7.
-  //  Inteira de R$ 20 a R$ 35 conforme o lote; meia-entrada pela metade,
+  //  Inteira de R$ 20 a R$ 30 conforme o lote; meia-entrada pela metade,
   //  com comprovante, até 40% de cada lote; entrada solidária = inteira +
   //  R$ 10 para o Lar Betânia (o painel da portaria soma o total a repassar). A inteira fica à venda para quem quiser.
   //  >>> FALTA: o cartaz.
@@ -511,7 +511,7 @@ export const eventos: EventoConfig[] = [
       ...lote(1, '1º lote', 2000, 40, '2026-11-10T23:59:59-03:00'),
       ...lote(2, '2º lote', 2500, 50, '2026-11-15T23:59:59-03:00'),
       ...lote(3, '3º lote', 3000, 60, '2026-11-19T23:59:59-03:00'),
-      ...lote(4, '4º lote', 3500, 190),
+      ...lote(4, '4º lote', 3000, 190),
     ],
   },
 
