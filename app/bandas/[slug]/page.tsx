@@ -58,6 +58,7 @@ export default async function PaginaBanda({
 
   const outras = bandas.filter((b) => b.slug !== banda.slug)
   const fotos = banda.fotos.map((src) => ({ src, evento: banda.nome }))
+  const dj = banda.tipo === 'dj'
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -72,7 +73,7 @@ export default async function PaginaBanda({
   }
 
   const whatsapp = `https://wa.me/${produtora.whatsapp}?text=${encodeURIComponent(
-    `Oi! Queria falar sobre um show do ${banda.nome}.`
+    `Oi! Queria falar sobre ${dj ? 'uma noite com o' : 'um show do'} ${banda.nome}.`
   )}`
 
   return (
@@ -208,7 +209,7 @@ export default async function PaginaBanda({
                 { t: 'A sonoridade', c: banda.sonoridade },
                 { t: 'Ao vivo', c: banda.aoVivo },
                 ...(banda.discografia
-                  ? [{ t: 'Discografia', c: banda.discografia }]
+                  ? [{ t: dj ? 'A noite' : 'Discografia', c: banda.discografia }]
                   : []),
               ].map((bloco) => (
                 <div key={bloco.t}>
@@ -225,7 +226,7 @@ export default async function PaginaBanda({
             {/* --- Ficha técnica: o que o contratante precisa saber --- */}
             <div className="mt-14 grid gap-5 sm:grid-cols-2">
               <div className="cartao p-6">
-                <p className="rotulo">No palco</p>
+                <p className="rotulo">{dj ? 'Na cabine' : 'No palco'}</p>
                 <ul className="mt-4 space-y-2">
                   {banda.formacao.map((f) => (
                     <li key={f} className="flex gap-3 text-sm text-texto-suave">
@@ -302,7 +303,7 @@ export default async function PaginaBanda({
               </a>
               <a
                 href={`mailto:${produtora.email}?subject=${encodeURIComponent(
-                  `Show — ${banda.nome}`
+                  `${dj ? 'Noite' : 'Show'} — ${banda.nome}`
                 )}`}
                 className="botao-fantasma w-full sm:w-auto"
               >
@@ -319,7 +320,7 @@ export default async function PaginaBanda({
             <div className="mx-auto mt-20 max-w-5xl">
               <Ornamento className="mb-12" />
               <h2 className="mb-6 text-center font-display text-2xl font-bold text-texto">
-                Outras bandas do casting
+                Outros nomes do casting
               </h2>
               <div className="grid gap-6 sm:grid-cols-2">
                 {outras.map((b) => (

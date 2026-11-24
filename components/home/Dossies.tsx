@@ -44,12 +44,12 @@ export function Dossies() {
             </h2>
           </div>
           <p className="max-w-sm text-base leading-relaxed text-texto-suave">
-            Tem um bar, uma casa ou uma data em aberto? Estas são as bandas do
-            nosso casting.
+            Tem um bar, uma casa ou uma data em aberto? Estas são as bandas e
+            o DJ do nosso casting.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-8 md:grid-cols-3 md:gap-6">
+        <div className="mt-14 grid gap-8 md:grid-cols-2 md:gap-6 lg:grid-cols-4">
           {bandas.map((b, i) => (
             <article key={b.slug} className="dossie group relative flex flex-col p-3.5">
               <Clipe />

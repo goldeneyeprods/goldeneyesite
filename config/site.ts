@@ -663,6 +663,8 @@ export function todasAsFotos(): { src: string; evento: string; slug: string }[] 
 export interface BandaConfig {
   slug: string
   nome: string
+  /** 'dj' troca os rótulos da página ("Na cabine", "A noite"); padrão: banda */
+  tipo?: 'banda' | 'dj'
   /** uma linha, aparece no card */
   resumo: string
   /** o gênero, curto — vira etiqueta */
@@ -858,6 +860,80 @@ export const bandas: BandaConfig[] = [
     ],
 
     redes: { youtube: 'https://www.youtube.com/@DelírioParabólico' },
+  },
+
+  // ==========================================================================
+  //  DJ SEBASTIAN K
+  //  O Johann na cabine. Texto e fotos do media kit dele
+  //  (dj-sebastian-k/media-kit-dj-sebastian-k.html). O cachê fica fora do
+  //  site: vai no media kit, para quem pede.
+  // ==========================================================================
+  {
+    slug: 'dj-sebastian-k',
+    nome: 'DJ Sebastian K',
+    tipo: 'dj',
+    resumo: 'Rock psicodélico para ouvir de perto, numa noite montada como um disco',
+    genero: 'Discotecagem de rock psicodélico',
+    carimbo: 'DJ da festa',
+    cidade: 'Joinville/SC',
+
+    conceito:
+      'Uma noite para ouvir, não para pular. O DJ Sebastian K monta a noite ' +
+      'como quem monta um disco: começa em 1966, atravessa o Sgt. Pepper\'s, ' +
+      'o Pink Floyd de Syd Barrett, Os Mutantes e a viagem espacial de ' +
+      'Echoes, e fecha com o Dark Side of the Moon inteiro. É som para ' +
+      'conversar, beber devagar e, de vez em quando, parar tudo para ouvir.',
+
+    sonoridade:
+      'Curadoria por época: cada bloco é uma fase da psicodelia, e a música ' +
+      'conta uma história do começo ao fim da noite. São dois discos à ' +
+      'escolha da casa. O Lado A é a versão internacional, para bares de ' +
+      'coquetel, vinho e conversa longa: Beatles psicodélico, o Pink Floyd de ' +
+      '1967 conversando com Os Mutantes e a viagem até Echoes. O Lado B é a ' +
+      'versão brasileira, para cafés, bares de rock nacional e quintais: ' +
+      'Beatles e Tropicália, o mergulho nos Mutantes e os anos 70 de Secos & ' +
+      'Molhados, Raul e Novos Baianos.',
+
+    aoVivo:
+      'Notebook e controladora, mixando ao vivo, com as transições feitas à ' +
+      'mão: nada de playlist no automático durante o set. Atrás da cabine ' +
+      'está Johann Sebastian K., tecladista e baixista do Delírio Parabólico ' +
+      'e diretor artístico da Golden Eye. No formato híbrido, ele toca ' +
+      'teclado ou baixo por cima das faixas em momentos escolhidos.',
+
+    // Na página de DJ, este bloco aparece como "A noite".
+    discografia:
+      'Cerca de 6h30 de música. Abre com 1h30 de curadoria dos anos 60 ' +
+      'enquanto a casa enche, de Jefferson Airplane a The Byrds, terminando ' +
+      'em White Rabbit. Depois vem o set ao vivo de 4h, em quatro blocos com ' +
+      'três pausas curtas, e o grande final é o Dark Side of the Moon ' +
+      'inteiro. Para descer da viagem, 1h de anos 70, lento e hipnótico. O ' +
+      'formato se ajusta ao horário da casa.',
+
+    formacao: [
+      'Johann Sebastian K. — discotecagem',
+      'Notebook e controladora, mixando ao vivo',
+      'Formato híbrido: teclado ou baixo ao vivo',
+      'Liga no som da casa (RCA ou P10)',
+    ],
+    referencias: [
+      'The Beatles',
+      'Pink Floyd',
+      'Os Mutantes',
+      'The Doors',
+      'Raul Seixas',
+      'Secos & Molhados',
+      'Jefferson Airplane',
+    ],
+
+    // Fotos do media kit (já com o tom sépia dele), entre 450 e 820px de
+    // origem. >>> SUBSTITUIR pelos originais quando der.
+    fotos: [
+      '/imagens/bandas/djsebastiank/capa-teclado.jpg',
+      '/imagens/bandas/djsebastiank/baixo-ao-vivo.jpg',
+      '/imagens/bandas/djsebastiank/voz-e-violao.jpg',
+      '/imagens/bandas/djsebastiank/corujao-baixo.jpg',
+    ],
   },
 ]
 

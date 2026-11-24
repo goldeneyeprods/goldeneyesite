@@ -60,7 +60,7 @@ export default function PaginaBandas() {
               <span className="texto-ouro">Bandas</span>
             </h1>
             <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-texto-suave sm:text-base">
-              As bandas que sobem no palco com a gente. Se você tem uma casa,
+              As bandas e o DJ que tocam com a gente. Se você tem uma casa,
               um bar, um festival ou uma data em aberto em {produtora.cidade},
               chama.
             </p>
