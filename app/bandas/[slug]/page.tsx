@@ -7,6 +7,7 @@ import { Footer } from '@/components/Footer'
 import { Galeria } from '@/components/Galeria'
 import { Videos } from '@/components/Videos'
 import { CardBanda } from '@/components/CardBanda'
+import { LpDj } from '@/components/LpDj'
 import { Ornamento } from '@/components/OlhoDeHorus'
 import { bandas, bandaPorSlug, produtora } from '@/config/site'
 import { urlDoSite } from '@/lib/url'
@@ -75,6 +76,21 @@ export default async function PaginaBanda({
   const whatsapp = `https://wa.me/${produtora.whatsapp}?text=${encodeURIComponent(
     `Oi! Queria falar sobre ${dj ? 'uma noite com o' : 'um show do'} ${banda.nome}.`
   )}`
+
+  // Com página de venda, o release dá lugar à LP (hoje, só o DJ).
+  if (banda.lp) {
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <Header cta={{ href: '#contratar', rotulo: 'Contratar' }} />
+        <LpDj banda={banda} />
+        <Footer />
+      </>
+    )
+  }
 
   return (
     <>

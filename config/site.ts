@@ -692,6 +692,29 @@ export interface BandaConfig {
   videos?: { id: string; titulo: string; descricao?: string }[]
 
   redes?: { instagram?: string; youtube?: string; spotify?: string }
+
+  /**
+   * Página de venda (só DJ, por enquanto). Com ela preenchida, /bandas/<slug>
+   * vira uma LP para o dono de bar contratar a noite, no lugar do release.
+   */
+  lp?: {
+    chamada: string
+    subchamada: string
+    pilares: { titulo: string; texto: string }[]
+    noite: { duracao: string; titulo: string; texto: string }[]
+    noiteNota: string
+    lados: {
+      lado: string
+      nome: string
+      paraQuem: string
+      blocos: { titulo: string; duracao: string; texto: string; faixas: string }[]
+    }[]
+    quem: { nome: string; papel: string; texto: string; datas: { data: string; texto: string }[] }
+    rider: { leva: string[]; bar: string[]; clima: string[] }
+    cache: { valor: string; unidade: string; inclui: string; extras: string[] }
+    /** PDF em public/, para baixar */
+    mediaKit?: string
+  }
 }
 
 export const bandas: BandaConfig[] = [
@@ -865,8 +888,8 @@ export const bandas: BandaConfig[] = [
   // ==========================================================================
   //  DJ SEBASTIAN K
   //  O Johann na cabine. Texto e fotos do media kit dele
-  //  (dj-sebastian-k/media-kit-dj-sebastian-k.html). O cachê fica fora do
-  //  site: vai no media kit, para quem pede.
+  //  (dj-sebastian-k/media-kit-dj-sebastian-k.html). Com `lp`, a página dele
+  //  é uma LP de venda para dono de bar, com o cachê à mostra.
   // ==========================================================================
   {
     slug: 'dj-sebastian-k',
@@ -934,6 +957,176 @@ export const bandas: BandaConfig[] = [
       '/imagens/bandas/djsebastiank/voz-e-violao.jpg',
       '/imagens/bandas/djsebastiank/corujao-baixo.jpg',
     ],
+
+    lp: {
+      chamada: 'Uma noite para ouvir, não para pular.',
+      subchamada:
+        'Rock psicodélico para ouvir de perto. Seis horas e meia de música ' +
+        'montadas como um disco, de 1966 ao Dark Side of the Moon inteiro, ' +
+        'no volume de quem quer conversar.',
+      pilares: [
+        {
+          titulo: 'Curadoria por época',
+          texto:
+            'Cada bloco é uma fase da psicodelia. A música conta uma história ' +
+            'do começo ao fim da noite.',
+        },
+        {
+          titulo: 'Transições feitas à mão',
+          texto:
+            'Notebook e controladora, mixando ao vivo. Nada de playlist no ' +
+            'automático durante o set.',
+        },
+        {
+          titulo: 'Um músico na cabine',
+          texto:
+            'Johann toca teclado e baixo. No formato híbrido, ele toca por ' +
+            'cima das faixas em momentos escolhidos.',
+        },
+      ],
+      noite: [
+        {
+          duracao: '1h30',
+          titulo: 'Curadoria de abertura',
+          texto:
+            'Anos 60 enquanto a casa enche: Jefferson Airplane, Donovan, The ' +
+            'Doors, Love, The Byrds. Termina em White Rabbit, que chama o DJ.',
+        },
+        {
+          duracao: '4h',
+          titulo: 'Set ao vivo, em quatro blocos',
+          texto:
+            'O DJ assume a cabine. Três pausas curtas dividem a viagem em ' +
+            'capítulos.',
+        },
+        {
+          duracao: '1h',
+          titulo: 'Curadoria de saída',
+          texto:
+            'Anos 70, lento e hipnótico, para descer da viagem: Black ' +
+            'Sabbath, Led Zeppelin, Raul Seixas, The Doors.',
+        },
+      ],
+      noiteNota:
+        'Cerca de 6h30 de música. Nas pausas, uma seleção curada mantém o ' +
+        'clima. O formato se ajusta ao horário da casa.',
+      lados: [
+        {
+          lado: 'Lado A',
+          nome: 'Versão internacional',
+          paraQuem: 'Para bares de coquetel, vinho e conversa longa.',
+          blocos: [
+            {
+              titulo: 'Beatles psicodélico',
+              duracao: 'cerca de 1h',
+              texto:
+                'De Tomorrow Never Knows a All You Need Is Love, com o Sgt. ' +
+                'Pepper\'s quase na ordem do disco.',
+              faixas: 'Strawberry Fields Forever · Lucy in the Sky with Diamonds · A Day in the Life',
+            },
+            {
+              titulo: 'Floyd 1967 e Mutantes',
+              duracao: 'cerca de 56 min',
+              texto: 'O Pink Floyd de 1967 conversando com Os Mutantes de 68 a 70.',
+              faixas: 'Astronomy Domine · Bike · A Minha Menina · Ando Meio Desligado',
+            },
+            {
+              titulo: 'Floyd 1968–72',
+              duracao: 'cerca de 56 min',
+              texto: 'A viagem espacial, até Echoes, o ponto mais fundo da noite.',
+              faixas: 'A Saucerful of Secrets · Fat Old Sun · One of These Days · Echoes',
+            },
+            {
+              titulo: 'O grande final',
+              duracao: 'cerca de 1h10',
+              texto: 'The Dark Side of the Moon inteiro, sem cortes. Depois, o adeus.',
+              faixas: 'Shine On You Crazy Diamond · Wish You Were Here · High Hopes',
+            },
+          ],
+        },
+        {
+          lado: 'Lado B',
+          nome: 'Versão brasileira',
+          paraQuem: 'Para casas de alma brasileira: cafés, bares de rock nacional, quintais.',
+          blocos: [
+            {
+              titulo: 'Beatles e Tropicália',
+              duracao: 'cerca de 1h',
+              texto:
+                'Londres e Bahia conversando. Cada pedaço do Sgt. Pepper\'s ' +
+                'ganha uma resposta brasileira.',
+              faixas: 'Alegria, Alegria · Panis et Circenses · Divino Maravilhoso · Aquele Abraço',
+            },
+            {
+              titulo: 'Mutantes 1968–70',
+              duracao: 'cerca de 56 min',
+              texto: 'O mergulho nos Mutantes, de A Minha Menina a Meu Refrigerador Não Funciona.',
+              faixas: 'Ando Meio Desligado · Mágica · Banho de Lua · 2001',
+            },
+            {
+              titulo: 'Anos 70 brasileiros',
+              duracao: 'cerca de 1h',
+              texto:
+                'A fase mais teatral: Secos & Molhados, Raul, os Mutantes de ' +
+                '72 e os Novos Baianos.',
+              faixas: 'Sangue Latino · Sociedade Alternativa · Preta Pretinha · Primavera nos Dentes',
+            },
+            {
+              titulo: 'O grande final',
+              duracao: 'cerca de 1h10',
+              texto: 'O mesmo fecho do Lado A: o Dark Side of the Moon inteiro e o adeus do Pink Floyd.',
+              faixas: 'Wish You Were Here · High Hopes',
+            },
+          ],
+        },
+      ],
+      quem: {
+        nome: 'Johann Sebastian K.',
+        papel: 'Músico, produtor e o ouvido por trás da Golden Eye.',
+        texto:
+          'Tecladista e baixista de Joinville, fundador e diretor artístico ' +
+          'da Golden Eye Prods. Toca no Delírio Parabólico, banda de rock ' +
+          'psicodélico autoral com raízes nos Mutantes, nos Beatles, no Pink ' +
+          'Floyd e em Raul Seixas. Também fala de rock no Surreal Rock e no ' +
+          'vlog Johann Sebastian K.',
+        datas: [
+          { data: '14/08/26', texto: 'O Sebo · Concerto Solidário de Rock Psicodélico, com o Delírio Parabólico' },
+          { data: '12/09/26', texto: 'Salvador Vegan Café · Tropicália & Rock Nacional: voz, violão e discotecagem' },
+          { data: '20/11/26', texto: 'Hangar7 · Corujão Ácido, com Nada Basta e Delírio Parabólico' },
+        ],
+      },
+      rider: {
+        leva: [
+          'Notebook com os sets e as curadorias',
+          'Controladora de DJ e fone',
+          'Cabos para ligar no som da casa',
+          'No formato híbrido, teclado ou baixo',
+        ],
+        bar: [
+          'Mesa ou bancada de cerca de 1,20 m',
+          'Tomada perto da mesa',
+          'Entrada no som da casa (RCA ou P10)',
+          'Luz baixa, se possível',
+        ],
+        clima: [
+          'Volume de conversa: ninguém precisa gritar',
+          'Montagem antes da casa abrir',
+          'Arte de divulgação no padrão Golden Eye para o Instagram do bar',
+        ],
+      },
+      cache: {
+        valor: 'R$ 250',
+        unidade: 'a noite',
+        inclui:
+          'Noite completa: curadoria de abertura, set ao vivo de 4h e ' +
+          'curadoria de saída. Lado A ou Lado B, à escolha da casa.',
+        extras: [
+          'Formato híbrido, com teclado ou baixo ao vivo: sob consulta.',
+          'Noites fixas no mês e datas especiais: vamos conversar.',
+        ],
+      },
+      mediaKit: '/midia/media-kit-dj-sebastian-k.pdf',
+    },
   },
 ]
 
