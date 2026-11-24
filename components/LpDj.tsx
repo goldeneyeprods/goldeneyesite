@@ -193,14 +193,14 @@ export function LpDj({ banda }: { banda: BandaConfig }) {
                 className={`py-3 text-center text-xs uppercase tracking-[0.2em] ${
                   i === 1 ? 'bg-ouro/25 text-ouro-claro' : 'bg-noite-2 text-texto-suave'
                 }`}
-                style={{ flexGrow: i === 1 ? 4 : i === 0 ? 1.5 : 1 }}
+                style={{ flexGrow: i === 1 ? 4 : 1.5 }}
               >
                 {n.duracao}
               </div>
             ))}
           </div>
 
-          <ol className="mt-8 grid gap-5 md:grid-cols-[1.5fr_4fr_1fr] md:gap-4">
+          <ol className="mt-8 grid gap-5 md:grid-cols-[1.5fr_4fr_1.5fr] md:gap-4">
             {lp.noite.map((n, i) => (
               <li
                 key={n.titulo}

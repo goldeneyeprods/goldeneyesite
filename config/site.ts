@@ -935,10 +935,10 @@ export const bandas: BandaConfig[] = [
 
     // Na página de DJ, este bloco aparece como "A noite".
     discografia:
-      'Cerca de 6h30 de música, nos três shows: 1h30 de curadoria de ' +
-      'abertura enquanto a casa enche, o set ao vivo de 4h em quatro blocos ' +
-      'com três pausas curtas e 1h de curadoria de saída. Na festa, a ' +
-      'abertura é um esquenta de 1h. O formato se ajusta ao horário da casa.',
+      '7 horas de música, nos três shows: 1h30 de curadoria de abertura ' +
+      'enquanto a casa enche, o set ao vivo de 4h em quatro blocos com três ' +
+      'pausas curtas e 1h30 de curadoria de saída. O formato se ajusta ao ' +
+      'horário da casa.',
 
     formacao: [
       'Johann Sebastian K. — discotecagem',
@@ -1007,15 +1007,14 @@ export const bandas: BandaConfig[] = [
             'capítulos.',
         },
         {
-          duracao: '1h',
+          duracao: '1h30',
           titulo: 'Curadoria de saída',
           texto: 'Lenta e hipnótica, para descer da viagem enquanto a casa esvazia.',
         },
       ],
       noiteNota:
-        'Cerca de 6h30 de música, nos três shows. Na festa, a abertura é um ' +
-        'esquenta de 1h. Nas pausas, uma seleção curada mantém o clima. O ' +
-        'formato se ajusta ao horário da casa.',
+        '7 horas de música, nos três shows. Nas pausas, uma seleção curada ' +
+        'mantém o clima. O formato se ajusta ao horário da casa.',
       lados: [
         {
           lado: 'Lado A',
@@ -1054,7 +1053,7 @@ export const bandas: BandaConfig[] = [
               faixas: 'Shine On You Crazy Diamond · Wish You Were Here · High Hopes',
             },
           ],
-          nota: 'Antes do set, 1h30 de curadoria dos anos 60. Depois, 1h de anos 70 para descer da viagem.',
+          nota: 'Antes do set, 1h30 de curadoria dos anos 60. Depois, 1h30 de anos 70 para descer da viagem.',
         },
         {
           lado: 'Lado B',
@@ -1147,7 +1146,7 @@ export const bandas: BandaConfig[] = [
             },
           ],
           nota:
-            'Esquenta de 1h com um pouco de cada artista. Final de 1h no clima ' +
+            'Esquenta de 1h30 com um pouco de cada artista. Final de 1h30 no clima ' +
             'lounge do Tranquility Base, com Lana e The Voidz.',
         },
       ],
