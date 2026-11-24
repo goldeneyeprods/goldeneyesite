@@ -15,6 +15,13 @@ const nextConfig = {
         destination: '/eventos/corujao-acido',
         permanent: true,
       },
+      // Link curto do QR impresso no cartão do DJ. Temporário (307) de
+      // propósito: se a página mudar de endereço, o cartão continua valendo.
+      {
+        source: '/dj',
+        destination: '/bandas/dj-sebastian-k',
+        permanent: false,
+      },
     ]
   },
 
