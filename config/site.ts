@@ -406,12 +406,13 @@ export const eventos: EventoConfig[] = [
   },
 
   // ==========================================================================
-  //  CORUJÃO ÁCIDO — sexta, 20/11, 19h
+  //  CORUJÃO ÁCIDO — sexta, 20/11, 19h — ENCERRADO
   //  Nada Basta + Delírio Parabólico, no Hangar7.
   //  Inteira de R$ 20 a R$ 30 conforme o lote; meia-entrada pela metade,
   //  com comprovante, até 40% de cada lote; entrada solidária = inteira +
-  //  R$ 10 para o Lar Betânia (o painel da portaria soma o total a repassar). A inteira fica à venda para quem quiser.
-  //  >>> FALTA: o cartaz.
+  //  R$ 10 para o Lar Betânia (o painel da portaria soma o total a repassar).
+  //  Os lotes ficam aqui como registro (o seed e a portaria leem daqui);
+  //  `vendaAberta: false` tira os botões de compra.
   // ==========================================================================
   {
     // Slug novo junto com o nome; os antigos (/eventos/totheotherside e
@@ -434,10 +435,10 @@ export const eventos: EventoConfig[] = [
     capacidade: 200,
 
     descricao:
-      'Uma noite inteira de psicodelia no Hangar7. O Delírio Parabólico abre ' +
+      'Uma noite inteira de psicodelia no Hangar7. O Delírio Parabólico abriu ' +
       'com um set de Pink Floyd: atmosfera, delay e viagem longa. Depois, a ' +
-      'Nada Basta sobe de Blumenau com a psicodelia brasileira de Mutantes, ' +
-      'Rita Lee e Casa das Máquinas, groove e calor. E a discotecagem segue ' +
+      'Nada Basta subiu de Blumenau com a psicodelia brasileira de Mutantes, ' +
+      'Rita Lee e Casa das Máquinas, groove e calor. E a discotecagem seguiu ' +
       'até a coruja cansar.',
 
     // Capa: a coruja do cartaz, sem os nomes das bandas (não briga com o título).
@@ -493,7 +494,15 @@ export const eventos: EventoConfig[] = [
       { rotulo: 'Espaço', valor: 'Hangar7' },
     ],
 
-    vendaAberta: true,
+    vendaAberta: false,
+
+    // Fotos da noite. Originais em arquivosbandas/corujaoacido/ (fora do git).
+    // >>> SUBSTITUIR: a foto-01 veio em baixa resolução (447px); troque pelo
+    // original quando chegar, com o mesmo nome.
+    galeria: [
+      // Johann no baixo, na luz violeta
+      '/imagens/eventos/2026-11-corujao-acido/foto-01.jpg',
+    ],
 
     // Ingressos à venda no total, somando todos os lotes. O último lote fica
     // com o que sobrar dos anteriores; o que não for vendido online até a
