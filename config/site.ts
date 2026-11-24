@@ -1087,8 +1087,7 @@ export const bandas: BandaConfig[] = [
           'Tecladista e baixista de Joinville, fundador e diretor artístico ' +
           'da Golden Eye Prods. Toca no Delírio Parabólico, banda de rock ' +
           'psicodélico autoral com raízes nos Mutantes, nos Beatles, no Pink ' +
-          'Floyd e em Raul Seixas. Também fala de rock no Surreal Rock e no ' +
-          'vlog Johann Sebastian K.',
+          'Floyd e em Raul Seixas.',
         datas: [
           { data: '14/08/26', texto: 'O Sebo · Concerto Solidário de Rock Psicodélico, com o Delírio Parabólico' },
           { data: '12/09/26', texto: 'Salvador Vegan Café · Tropicália & Rock Nacional: voz, violão e discotecagem' },
