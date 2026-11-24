@@ -5,7 +5,7 @@ import { SimboloMarca, corDaMarca } from '../Marcas'
 import { ContagemCurta } from './ContagemCurta'
 
 // ============================================================================
-//  HERO DA HOME — "Fazemos da noite um ritual."
+//  HERO DA HOME — "Fazemos da noite uma experiência visual-sonora."
 //  À esquerda, a produtora em uma frase; à direita, o próximo evento em forma
 //  de ingresso de cinema. No celular o ingresso vem logo abaixo do título,
 //  ainda na primeira tela: data, local e compra em 3 segundos.
@@ -46,7 +46,7 @@ export function Hero({ destaque }: { destaque?: EventoConfig }) {
             className="surgir mt-5 font-display text-[2.15rem] font-bold leading-[1.08] text-texto sm:text-6xl lg:text-[3.5rem] xl:text-[3.9rem]"
             style={{ animationDelay: '80ms' }}
           >
-            Fazemos da noite um ritual.
+            Fazemos da noite uma experiência visual-sonora.
           </h1>
           <p
             className="surgir mt-7 hidden max-w-lg text-lg leading-relaxed text-texto-suave lg:block"

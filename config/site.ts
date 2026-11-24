@@ -23,15 +23,15 @@
 export const produtora = {
   nome: 'Golden Eye Prods.',
   nomeCurto: 'Golden Eye',
-  tagline: 'Rock psicodélico, ritual e reverberação',
+  tagline: 'Rock psicodélico, experiência visual-sonora',
 
   manifesto:
     'Banda ao vivo, luz, projeção e discotecagem até a madrugada. Cada ' +
-    'noite da Golden Eye é uma experiência para todos os sentidos: música, ' +
-    'arte e cultura no mesmo ritual, em Joinville.',
+    'noite da Golden Eye é uma experiência visual-sonora: música, arte e ' +
+    'cultura para todos os sentidos, em Joinville.',
 
   descricao:
-    'A Golden Eye Prods. nasceu da vontade de transformar a noite em ritual. ' +
+    'A Golden Eye Prods. nasceu da vontade de transformar a noite numa experiência visual-sonora. ' +
     'Produzimos eventos de rock psicodélico onde luz, som e imagem se dissolvem ' +
     'numa mesma viagem — do fuzz saturado à discotecagem que atravessa a ' +
     'madrugada. Começamos em Joinville, entre as estantes de um sebo, ' +
@@ -75,7 +75,7 @@ export const produtora = {
   // Os pilares mostrados na home
   pilares: [
     { titulo: 'Rock', texto: 'Psicodélico, garage e o que vier junto.' },
-    { titulo: 'Ritual', texto: 'Luz, projeção e som como uma coisa só.' },
+    { titulo: 'Experiência', texto: 'Luz, projeção e som como uma coisa só.' },
     { titulo: 'Causa', texto: 'Toda edição devolve algo para a cidade.' },
   ],
 }
@@ -123,7 +123,7 @@ export const universos: {
   {
     marca: 'horus',
     nome: 'Hórus Festival',
-    tipo: 'O grande ritual',
+    tipo: 'A grande experiência',
     texto:
       'Dois dias seguindo o sol: palco no poente, camping, cinema, circo e ' +
       'vinil até o nascer do dia.',

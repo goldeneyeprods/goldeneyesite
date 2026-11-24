@@ -20,7 +20,7 @@ import { urlDoSite } from '@/lib/url'
 
 // ============================================================================
 //  HOME — A PRODUTORA
-//  Direção "a noite como ritual" (noir · 007 · Egito). A primeira tela diz
+//  Direção "a noite como experiência visual-sonora" (noir · 007 · Egito). A primeira tela diz
 //  quem é a Golden Eye e já mostra o próximo evento como ingresso de cinema,
 //  com o único botão dourado da tela. Depois: créditos, os três universos,
 //  os dossiês das bandas, o arquivo em tira de filme e o manifesto.
