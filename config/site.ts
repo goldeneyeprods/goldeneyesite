@@ -497,11 +497,14 @@ export const eventos: EventoConfig[] = [
     vendaAberta: false,
 
     // Fotos da noite. Originais em arquivosbandas/corujaoacido/ (fora do git).
-    // >>> SUBSTITUIR: a foto-01 veio em baixa resolução (447px); troque pelo
-    // original quando chegar, com o mesmo nome.
+    // >>> SUBSTITUIR: as duas vieram em baixa resolução (447px e um print de
+    // celular) e foram ampliadas com sharp; troque pelos originais quando
+    // chegarem, com o mesmo nome.
     galeria: [
       // Johann no baixo, na luz violeta
       '/imagens/eventos/2026-11-corujao-acido/foto-01.jpg',
+      // Nada Basta no palco, luz verde e magenta
+      '/imagens/eventos/2026-11-corujao-acido/foto-02.jpg',
     ],
 
     // Ingressos à venda no total, somando todos os lotes. O último lote fica
