@@ -966,7 +966,7 @@ export const bandas: BandaConfig[] = [
     ],
 
     lp: {
-      chamada: 'Três noites, o mesmo ritual.',
+      chamada: 'Três noites, uma experiência visual-sonora.',
       subchamada:
         'Rock psicodélico montado como um disco: abertura, quatro capítulos ' +
         'e um fim. Dois shows para ouvir de perto e uma festa para dançar a ' +

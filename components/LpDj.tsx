@@ -387,7 +387,7 @@ export function LpDj({ banda }: { banda: BandaConfig }) {
           </p>
         </div>
         <Ornamento className="mt-16" />
-        <p className="cinema mt-6 text-center text-xl text-texto-suave">A noite como ritual.</p>
+        <p className="cinema mt-6 text-center text-xl text-texto-suave">Uma experiência visual-sonora.</p>
       </section>
 
       <BarraCompra
