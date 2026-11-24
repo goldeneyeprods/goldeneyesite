@@ -15,7 +15,7 @@ import { OlhoDeHorus } from './OlhoDeHorus'
 const MENU = [
   { href: '/#agenda', rotulo: 'Agenda' },
   { href: '/#universos', rotulo: 'Festivais' },
-  { href: '/bandas', rotulo: 'Bandas' },
+  { href: '/bandas', rotulo: 'Bandas & DJ' },
   { href: '/#arquivo', rotulo: 'Arquivo' },
   { href: '/#quem-faz', rotulo: 'Quem faz' },
 ]

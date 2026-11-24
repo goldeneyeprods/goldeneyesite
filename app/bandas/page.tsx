@@ -7,7 +7,7 @@ import { bandas, produtora } from '@/config/site'
 import { urlDoSite } from '@/lib/url'
 
 export const metadata: Metadata = {
-  title: 'Bandas',
+  title: 'Bandas & DJ',
   description:
     `As bandas que tocam com a ${produtora.nome} em ${produtora.cidade}. ` +
     'Release, fotos e contato para contratação.',
@@ -28,7 +28,7 @@ export default function PaginaBandas() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: `Bandas — ${produtora.nome}`,
+    name: `Bandas & DJ — ${produtora.nome}`,
     itemListElement: bandas.map((b, i) => ({
       '@type': 'ListItem',
       position: i + 1,
@@ -57,7 +57,7 @@ export default function PaginaBandas() {
           <div className="text-center">
             <p className="fala">Quem toca com a gente</p>
             <h1 className="mt-4 font-display text-4xl font-black sm:text-6xl">
-              <span className="texto-ouro">Bandas</span>
+              <span className="texto-ouro">Bandas &amp; DJ</span>
             </h1>
             <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-texto-suave sm:text-base">
               As bandas e o DJ que tocam com a gente. Se você tem uma casa,

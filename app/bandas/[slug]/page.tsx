@@ -124,7 +124,7 @@ export default async function PaginaBanda({
             >
               GOLDEN EYE PRODS.
               <span className="text-ouro/40">/</span>
-              <span className="text-ouro">BANDAS</span>
+              <span className="text-ouro">BANDAS &amp; DJ</span>
             </Link>
 
             {banda.logo ? (
