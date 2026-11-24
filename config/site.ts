@@ -703,17 +703,23 @@ export interface BandaConfig {
     pilares: { titulo: string; texto: string }[]
     noite: { duracao: string; titulo: string; texto: string }[]
     noiteNota: string
+    /** os shows à escolha da casa */
     lados: {
       lado: string
+      /** A, B, C: a letra grande do card */
+      letra: string
       nome: string
+      resumo: string
       paraQuem: string
+      clima: string
       blocos: { titulo: string; duracao: string; texto: string; faixas: string }[]
+      /** abertura e saída daquele show */
+      nota?: string
     }[]
     quem: { nome: string; papel: string; texto: string; datas: { data: string; texto: string }[] }
     rider: { leva: string[]; bar: string[]; clima: string[] }
-    cache: { valor: string; unidade: string; inclui: string; extras: string[] }
-    /** PDF em public/, para baixar */
-    mediaKit?: string
+    /** o bloco final; sem preço no site */
+    contratar: { titulo: string; texto: string; extras: string[] }
   }
 }
 
@@ -888,34 +894,37 @@ export const bandas: BandaConfig[] = [
   // ==========================================================================
   //  DJ SEBASTIAN K
   //  O Johann na cabine. Texto e fotos do media kit dele
-  //  (dj-sebastian-k/media-kit-dj-sebastian-k.html). Com `lp`, a página dele
-  //  é uma LP de venda para dono de bar, com o cachê à mostra.
+  //  (dj-sebastian-k/media-kit-dj-sebastian-k.html, versão de 24/11 com os
+  //  três shows). Com `lp`, a página dele é uma LP de venda para dono de bar.
+  //  O cachê NÃO vai para o site (fica no media kit, para quem pede).
   // ==========================================================================
   {
     slug: 'dj-sebastian-k',
     nome: 'DJ Sebastian K',
     tipo: 'dj',
-    resumo: 'Rock psicodélico para ouvir de perto, numa noite montada como um disco',
+    resumo:
+      'Rock psicodélico em três shows: Lado A internacional, Lado B ' +
+      'brasileiro e a festa Indie Psicodélico',
     genero: 'Discotecagem de rock psicodélico',
     carimbo: 'DJ da festa',
     cidade: 'Joinville/SC',
 
     conceito:
-      'Uma noite para ouvir, não para pular. O DJ Sebastian K monta a noite ' +
-      'como quem monta um disco: começa em 1966, atravessa o Sgt. Pepper\'s, ' +
-      'o Pink Floyd de Syd Barrett, Os Mutantes e a viagem espacial de ' +
-      'Echoes, e fecha com o Dark Side of the Moon inteiro. É som para ' +
-      'conversar, beber devagar e, de vez em quando, parar tudo para ouvir.',
+      'O DJ Sebastian K monta a noite como quem monta um disco: abertura, ' +
+      'quatro capítulos e um fim. São três shows. Dois são para ouvir de ' +
+      'perto, com som para conversar, beber devagar e, de vez em quando, ' +
+      'parar tudo para ouvir. O terceiro é festa, para dançar a psicodelia ' +
+      'de agora.',
 
     sonoridade:
       'Curadoria por época: cada bloco é uma fase da psicodelia, e a música ' +
-      'conta uma história do começo ao fim da noite. São dois discos à ' +
-      'escolha da casa. O Lado A é a versão internacional, para bares de ' +
-      'coquetel, vinho e conversa longa: Beatles psicodélico, o Pink Floyd de ' +
-      '1967 conversando com Os Mutantes e a viagem até Echoes. O Lado B é a ' +
-      'versão brasileira, para cafés, bares de rock nacional e quintais: ' +
-      'Beatles e Tropicália, o mergulho nos Mutantes e os anos 70 de Secos & ' +
-      'Molhados, Raul e Novos Baianos.',
+      'conta uma história do começo ao fim da noite. O Lado A é a ' +
+      'psicodelia internacional, com Beatles do Sgt. Pepper\'s, Pink Floyd ' +
+      'de 1967 a 1975 e o Dark Side of the Moon inteiro no final. O Lado B ' +
+      'é a psicodelia brasileira, de Tropicália, Mutantes, Secos & Molhados, ' +
+      'Raul, Jorge Ben, Novos Baianos e Clube da Esquina. O Indie ' +
+      'Psicodélico é a festa: Tame Impala, Arctic Monkeys, Lana Del Rey, ' +
+      'MGMT e companhia.',
 
     aoVivo:
       'Notebook e controladora, mixando ao vivo, com as transições feitas à ' +
@@ -926,12 +935,10 @@ export const bandas: BandaConfig[] = [
 
     // Na página de DJ, este bloco aparece como "A noite".
     discografia:
-      'Cerca de 6h30 de música. Abre com 1h30 de curadoria dos anos 60 ' +
-      'enquanto a casa enche, de Jefferson Airplane a The Byrds, terminando ' +
-      'em White Rabbit. Depois vem o set ao vivo de 4h, em quatro blocos com ' +
-      'três pausas curtas, e o grande final é o Dark Side of the Moon ' +
-      'inteiro. Para descer da viagem, 1h de anos 70, lento e hipnótico. O ' +
-      'formato se ajusta ao horário da casa.',
+      'Cerca de 6h30 de música, nos três shows: 1h30 de curadoria de ' +
+      'abertura enquanto a casa enche, o set ao vivo de 4h em quatro blocos ' +
+      'com três pausas curtas e 1h de curadoria de saída. Na festa, a ' +
+      'abertura é um esquenta de 1h. O formato se ajusta ao horário da casa.',
 
     formacao: [
       'Johann Sebastian K. — discotecagem',
@@ -940,13 +947,13 @@ export const bandas: BandaConfig[] = [
       'Liga no som da casa (RCA ou P10)',
     ],
     referencias: [
-      'The Beatles',
       'Pink Floyd',
+      'The Beatles',
       'Os Mutantes',
-      'The Doors',
       'Raul Seixas',
       'Secos & Molhados',
-      'Jefferson Airplane',
+      'Tame Impala',
+      'Arctic Monkeys',
     ],
 
     // Fotos do media kit (já com o tom sépia dele), entre 450 e 820px de
@@ -959,11 +966,11 @@ export const bandas: BandaConfig[] = [
     ],
 
     lp: {
-      chamada: 'Uma noite para ouvir, não para pular.',
+      chamada: 'Três noites, o mesmo ritual.',
       subchamada:
-        'Rock psicodélico para ouvir de perto. Seis horas e meia de música ' +
-        'montadas como um disco, de 1966 ao Dark Side of the Moon inteiro, ' +
-        'no volume de quem quer conversar.',
+        'Rock psicodélico montado como um disco: abertura, quatro capítulos ' +
+        'e um fim. Dois shows para ouvir de perto e uma festa para dançar a ' +
+        'psicodelia de agora.',
       pilares: [
         {
           titulo: 'Curadoria por época',
@@ -989,8 +996,8 @@ export const bandas: BandaConfig[] = [
           duracao: '1h30',
           titulo: 'Curadoria de abertura',
           texto:
-            'Anos 60 enquanto a casa enche: Jefferson Airplane, Donovan, The ' +
-            'Doors, Love, The Byrds. Termina em White Rabbit, que chama o DJ.',
+            'Uma playlist do mesmo universo do show, em volume de conversa, ' +
+            'enquanto a casa enche. A última faixa chama o DJ.',
         },
         {
           duracao: '4h',
@@ -1002,19 +1009,23 @@ export const bandas: BandaConfig[] = [
         {
           duracao: '1h',
           titulo: 'Curadoria de saída',
-          texto:
-            'Anos 70, lento e hipnótico, para descer da viagem: Black ' +
-            'Sabbath, Led Zeppelin, Raul Seixas, The Doors.',
+          texto: 'Lenta e hipnótica, para descer da viagem enquanto a casa esvazia.',
         },
       ],
       noiteNota:
-        'Cerca de 6h30 de música. Nas pausas, uma seleção curada mantém o ' +
-        'clima. O formato se ajusta ao horário da casa.',
+        'Cerca de 6h30 de música, nos três shows. Na festa, a abertura é um ' +
+        'esquenta de 1h. Nas pausas, uma seleção curada mantém o clima. O ' +
+        'formato se ajusta ao horário da casa.',
       lados: [
         {
           lado: 'Lado A',
-          nome: 'Versão internacional',
-          paraQuem: 'Para bares de coquetel, vinho e conversa longa.',
+          letra: 'A',
+          nome: 'Psicodelia internacional, para ouvir',
+          resumo:
+            'Beatles do Sgt. Pepper\'s, Pink Floyd de 1967 a 1975 e o Dark ' +
+            'Side of the Moon inteiro no final.',
+          paraQuem: 'Bares de coquetel, vinho e conversa longa',
+          clima: 'Contemplativo, volume de conversa',
           blocos: [
             {
               titulo: 'Beatles psicodélico',
@@ -1043,41 +1054,101 @@ export const bandas: BandaConfig[] = [
               faixas: 'Shine On You Crazy Diamond · Wish You Were Here · High Hopes',
             },
           ],
+          nota: 'Antes do set, 1h30 de curadoria dos anos 60. Depois, 1h de anos 70 para descer da viagem.',
         },
         {
           lado: 'Lado B',
-          nome: 'Versão brasileira',
-          paraQuem: 'Para casas de alma brasileira: cafés, bares de rock nacional, quintais.',
+          letra: 'B',
+          nome: 'Psicodelia brasileira, para ouvir e cantar',
+          resumo:
+            'Tropicália, Mutantes, Secos & Molhados, Raul, Jorge Ben, Novos ' +
+            'Baianos e o Clube da Esquina.',
+          paraQuem: 'Cafés, bares de rock nacional, quintais',
+          clima: 'Contemplativo, com coro no refrão',
           blocos: [
             {
-              titulo: 'Beatles e Tropicália',
-              duracao: 'cerca de 1h',
+              titulo: 'Tropicália 1967–69',
+              duracao: 'cerca de 55 min',
               texto:
-                'Londres e Bahia conversando. Cada pedaço do Sgt. Pepper\'s ' +
-                'ganha uma resposta brasileira.',
-              faixas: 'Alegria, Alegria · Panis et Circenses · Divino Maravilhoso · Aquele Abraço',
+                'Caetano, Gil, Gal, Tom Zé e Mutantes se revezando, do hino ' +
+                'Tropicália até Aquele Abraço.',
+              faixas: 'Panis et Circenses · Domingo no Parque · Divino Maravilhoso · Parque Industrial',
             },
             {
-              titulo: 'Mutantes 1968–70',
-              duracao: 'cerca de 56 min',
-              texto: 'O mergulho nos Mutantes, de A Minha Menina a Meu Refrigerador Não Funciona.',
-              faixas: 'Ando Meio Desligado · Mágica · Banho de Lua · 2001',
-            },
-            {
-              titulo: 'Anos 70 brasileiros',
-              duracao: 'cerca de 1h',
+              titulo: 'Mutantes e Floyd 67',
+              duracao: 'cerca de 57 min',
               texto:
-                'A fase mais teatral: Secos & Molhados, Raul, os Mutantes de ' +
-                '72 e os Novos Baianos.',
-              faixas: 'Sangue Latino · Sociedade Alternativa · Preta Pretinha · Primavera nos Dentes',
+                'O mergulho nos Mutantes de 68 a 71, aberto e fechado pelo ' +
+                'Pink Floyd de Syd Barrett.',
+              faixas: 'Astronomy Domine · A Minha Menina · Ando Meio Desligado · Interstellar Overdrive',
             },
             {
-              titulo: 'O grande final',
-              duracao: 'cerca de 1h10',
-              texto: 'O mesmo fecho do Lado A: o Dark Side of the Moon inteiro e o adeus do Pink Floyd.',
-              faixas: 'Wish You Were Here · High Hopes',
+              titulo: 'Anos 70 místicos',
+              duracao: 'cerca de 55 min',
+              texto:
+                'Secos & Molhados, Raul, a Tábua de Esmeralda de Jorge Ben, ' +
+                'Novos Baianos e Tim Maia Racional.',
+              faixas: 'Sangue Latino · Os Alquimistas Estão Chegando · Preta Pretinha · Sociedade Alternativa',
+            },
+            {
+              titulo: 'Clube da Esquina',
+              duracao: 'cerca de 54 min',
+              texto:
+                'A viagem mineira de Milton e Lô, Arnaldo Baptista, e o fim ' +
+                'com todo mundo cantando.',
+              faixas: 'O Trem Azul · Clube da Esquina nº 2 · Vapor Barato · Balada do Louco',
             },
           ],
+          nota:
+            'Abertura com bossa virando Tropicália, de Edu Lobo a Gil. Saída ' +
+            'com os anos 70 lentos de Belchior, O Terço e Raul.',
+        },
+        {
+          lado: 'Indie Psicodélico',
+          letra: 'C',
+          nome: 'A festa, para dançar',
+          resumo:
+            'Tame Impala, Arctic Monkeys, The Last Shadow Puppets, Lana Del ' +
+            'Rey, MGMT, The Voidz e Foster the People.',
+          paraQuem: 'Bares com pista, sexta e sábado',
+          clima: 'Sobe, escurece e explode no último bloco',
+          blocos: [
+            {
+              titulo: 'Tame Impala',
+              duracao: 'cerca de 59 min',
+              texto:
+                'Abre com os quase 8 minutos de Let It Happen e passeia por ' +
+                'Currents, Lonerism e The Slow Rush.',
+              faixas: 'Let It Happen · Elephant · Borderline · Feels Like We Only Go Backwards',
+            },
+            {
+              titulo: 'Arctic no deserto',
+              duracao: 'cerca de 59 min',
+              texto:
+                'Humbug no centro, com The Last Shadow Puppets e The Voidz. ' +
+                'Guitarras pesadas e escuras.',
+              faixas: 'Crying Lightning · Pyramid of Bones · The Age of the Understatement · 505',
+            },
+            {
+              titulo: 'Noir',
+              duracao: 'cerca de 1h',
+              texto:
+                'O momento lento e sensual: o AM alternando com Lana Del Rey ' +
+                'e The Neighbourhood.',
+              faixas: 'Do I Wanna Know? · Brooklyn Baby · Daddy Issues · Sweater Weather',
+            },
+            {
+              titulo: 'O pico da festa',
+              duracao: 'cerca de 1h',
+              texto:
+                'Só hino: MGMT, Foster the People, Cage the Elephant e o caos ' +
+                'colorido do The Voidz.',
+              faixas: 'Time to Pretend · Electric Feel · The Less I Know the Better · Kids',
+            },
+          ],
+          nota:
+            'Esquenta de 1h com um pouco de cada artista. Final de 1h no clima ' +
+            'lounge do Tranquility Base, com Lana e The Voidz.',
         },
       ],
       quem: {
@@ -1108,23 +1179,23 @@ export const bandas: BandaConfig[] = [
           'Luz baixa, se possível',
         ],
         clima: [
-          'Volume de conversa: ninguém precisa gritar',
+          'Lados A e B: volume de conversa, ninguém precisa gritar',
+          'Indie Psicodélico: volume de pista',
           'Montagem antes da casa abrir',
           'Arte de divulgação no padrão Golden Eye para o Instagram do bar',
         ],
       },
-      cache: {
-        valor: 'R$ 250',
-        unidade: 'a noite',
-        inclui:
+      contratar: {
+        titulo: 'Escolha a noite e mande a data',
+        texto:
           'Noite completa: curadoria de abertura, set ao vivo de 4h e ' +
-          'curadoria de saída. Lado A ou Lado B, à escolha da casa.',
+          'curadoria de saída. Lado A, Lado B ou Indie Psicodélico, à escolha ' +
+          'da casa. Cachê e media kit pelo WhatsApp.',
         extras: [
           'Formato híbrido, com teclado ou baixo ao vivo: sob consulta.',
           'Noites fixas no mês e datas especiais: vamos conversar.',
         ],
       },
-      mediaKit: '/midia/media-kit-dj-sebastian-k.pdf',
     },
   },
 ]

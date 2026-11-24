@@ -9,8 +9,8 @@ import { produtora, type BandaConfig } from '@/config/site'
 //  LP DE VENDA DO DJ — /bandas/<slug> quando a banda tem `lp`
 //
 //  Quem chega aqui é dono de bar. A ordem responde as perguntas dele: que
-//  noite é essa, como ela anda, qual disco serve pra minha casa, quem toca,
-//  o que eu preciso ter e quanto custa. Todo bloco termina no WhatsApp.
+//  noite é essa, qual dos três shows serve pra minha casa, como ela anda,
+//  quem toca e o que eu preciso ter. O cachê não aparece: vai pelo WhatsApp.
 // ============================================================================
 
 export function LpDj({ banda }: { banda: BandaConfig }) {
@@ -70,15 +70,15 @@ export function LpDj({ banda }: { banda: BandaConfig }) {
               >
                 Contratar a noite
               </a>
-              <a href="#a-noite" className="botao-fantasma w-full sm:w-auto">
-                Ver como é a noite
+              <a href="#shows" className="botao-fantasma w-full sm:w-auto">
+                Ver os três shows
               </a>
             </div>
             <p
               className="surgir mt-5 text-sm text-texto-fraco"
               style={{ animationDelay: '350ms' }}
             >
-              {lp.cache.valor} {lp.cache.unidade} · noite completa · {banda.cidade}
+              {lp.lados.map((l) => l.lado).join(' · ')} · {banda.cidade}
             </p>
           </div>
 
@@ -132,6 +132,49 @@ export function LpDj({ banda }: { banda: BandaConfig }) {
         </div>
       </section>
 
+      {/* ================= OS TRÊS SHOWS ================= */}
+      <section id="shows" className="scroll-mt-20 px-5 pb-20 sm:pb-28">
+        <div className="mx-auto max-w-6xl">
+          <div className="sm:text-center">
+            <p className="fala">Escolha a noite</p>
+            <h2 className="mt-4 font-display text-4xl font-bold text-texto sm:text-5xl">
+              Três shows, um para cada casa
+            </h2>
+          </div>
+          <div className="mt-14 grid gap-5 md:grid-cols-3">
+            {lp.lados.map((l) => (
+              <a
+                key={l.lado}
+                href={`#show-${l.letra.toLowerCase()}`}
+                className="cartao group flex flex-col p-7 transition-colors hover:border-ouro/50"
+              >
+                <p className="font-display text-6xl font-black leading-none">
+                  <span className="texto-ouro">{l.letra}</span>
+                </p>
+                <h3 className="mt-4 font-display text-2xl font-bold text-texto">{l.lado}</h3>
+                <p className="cinema mt-1 text-lg text-ouro-claro">{l.nome}</p>
+                <p className="mt-4 text-[15px] leading-relaxed text-texto-suave">{l.resumo}</p>
+                <dl className="mt-6 space-y-3 border-t border-borda pt-5 text-sm">
+                  <div>
+                    <dt className="text-[11px] uppercase tracking-[0.22em] text-texto-fraco">Para</dt>
+                    <dd className="mt-1 text-texto">{l.paraQuem}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[11px] uppercase tracking-[0.22em] text-texto-fraco">Clima</dt>
+                    <dd className="mt-1 text-texto">{l.clima}</dd>
+                  </div>
+                </dl>
+                <p className="mt-auto pt-6 text-sm font-medium text-ouro-claro group-hover:underline">
+                  Ver o set →
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="divisor mx-auto max-w-5xl" />
+
       {/* ================= A NOITE ================= */}
       <section id="a-noite" className="scroll-mt-20 px-5 py-20 sm:py-28">
         <div className="mx-auto max-w-5xl">
@@ -175,24 +218,28 @@ export function LpDj({ banda }: { banda: BandaConfig }) {
 
       <div className="divisor mx-auto max-w-5xl" />
 
-      {/* ================= LADO A / LADO B ================= */}
+      {/* ================= OS SETS, BLOCO A BLOCO ================= */}
       <section className="px-5 py-20 sm:py-28">
         <div className="mx-auto max-w-6xl">
           <div className="sm:text-center">
-            <p className="fala">Escolha o disco</p>
+            <p className="fala">Os sets</p>
             <h2 className="mt-4 font-display text-4xl font-bold text-texto sm:text-5xl">
-              Dois sets de 4h, um para cada casa
+              Quatro capítulos em cada noite
             </h2>
           </div>
 
-          <div className="mt-14 grid gap-6 lg:grid-cols-2">
+          <div className="mt-14 grid gap-6 lg:grid-cols-3">
             {lp.lados.map((l) => (
-              <article key={l.lado} className="cartao flex flex-col p-7 sm:p-9">
+              <article
+                key={l.lado}
+                id={`show-${l.letra.toLowerCase()}`}
+                className="cartao flex scroll-mt-24 flex-col p-7"
+              >
                 <p className="text-[11px] uppercase tracking-[0.26em] text-ouro">{l.nome}</p>
-                <h3 className="mt-2 font-display text-4xl font-black">
+                <h3 className="mt-2 font-display text-3xl font-black">
                   <span className="texto-ouro">{l.lado}</span>
                 </h3>
-                <p className="mt-3 text-[15px] text-texto">{l.paraQuem}</p>
+                <p className="mt-3 text-[15px] text-texto">{l.paraQuem}.</p>
 
                 <ol className="mt-7 space-y-6 border-l border-ouro/25 pl-6">
                   {l.blocos.map((b) => (
@@ -210,9 +257,12 @@ export function LpDj({ banda }: { banda: BandaConfig }) {
                     </li>
                   ))}
                 </ol>
+                {l.nota && (
+                  <p className="mt-6 text-xs leading-relaxed text-texto-fraco">{l.nota}</p>
+                )}
 
                 <a
-                  href={whats(`Oi! Quero o ${l.lado} do ${banda.nome} na minha casa.`)}
+                  href={whats(`Oi! Quero o show ${l.lado} do ${banda.nome} na minha casa.`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="botao-fantasma mt-auto self-start !mt-8"
@@ -298,19 +348,18 @@ export function LpDj({ banda }: { banda: BandaConfig }) {
         limite={4}
       />
 
-      {/* ================= CACHÊ + CONTRATAR ================= */}
+      {/* ================= CONTRATAR (sem preço: o cachê vai pelo WhatsApp) ================= */}
       <section id="contratar" className="px-5 py-24 sm:py-32">
         <div className="cartao cartao-ouro mx-auto max-w-2xl p-8 text-center sm:p-12">
-          <p className="fala">Cachê</p>
-          <p className="mt-5 font-display text-6xl font-black sm:text-7xl">
-            <span className="texto-ouro">{lp.cache.valor}</span>
-          </p>
-          <p className="cinema mt-1 text-xl text-texto">{lp.cache.unidade}</p>
+          <p className="fala">Contratar</p>
+          <h2 className="mt-4 font-display text-3xl font-bold text-texto sm:text-4xl">
+            {lp.contratar.titulo}
+          </h2>
           <p className="mx-auto mt-6 max-w-md text-[15px] leading-relaxed text-texto-suave">
-            {lp.cache.inclui}
+            {lp.contratar.texto}
           </p>
           <ul className="mx-auto mt-4 max-w-md space-y-1 text-sm text-texto-fraco">
-            {lp.cache.extras.map((e) => (
+            {lp.contratar.extras.map((e) => (
               <li key={e}>{e}</li>
             ))}
           </ul>
@@ -324,11 +373,14 @@ export function LpDj({ banda }: { banda: BandaConfig }) {
             >
               Marcar uma data
             </a>
-            {lp.mediaKit && (
-              <a href={lp.mediaKit} download className="botao-fantasma w-full sm:w-auto">
-                Baixar o media kit
-              </a>
-            )}
+            <a
+              href={whats(`Oi! Pode me mandar o media kit do ${banda.nome}?`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="botao-fantasma w-full sm:w-auto"
+            >
+              Pedir o media kit
+            </a>
           </div>
           <p className="mt-7 text-xs text-texto-fraco">
             {produtora.whatsappLabel} · {produtora.email}
@@ -340,7 +392,7 @@ export function LpDj({ banda }: { banda: BandaConfig }) {
 
       <BarraCompra
         nome={banda.nome}
-        quando={`${lp.cache.valor} ${lp.cache.unidade}`}
+        quando={`${lp.lados.length} shows à escolha da casa`}
         href={contratar}
         rotulo="Contratar"
       />
